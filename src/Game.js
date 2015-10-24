@@ -1,28 +1,12 @@
 /* jshint browser:true */
-// create BasicGame Class
-BasicGame = {
-
-};
-
 // create Game function in BasicGame
 BasicGame.Game = function (game) {
-};
 
+};
 // set Game function prototype
 BasicGame.Game.prototype = {
 
     init: function () {
-        this.input.maxPointers = 1;
-        this.stage.disableVisibilityChange = true;
-        this.stage.backgroundColor = '#fff';
-        
-        this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-        this.scale.pageAlignHorizontally = true;
-        this.scale.pageAlignVertically = true;
-        // Force the orientation in landscape or portrait.
-        // * Set first to true to force landscape. 
-        // * Set second to true to force portrait.
-        this.scale.forceOrientation(false, true);
         
         this.physics.startSystem(Phaser.Physics.P2JS);
         this.physics.p2.restitution = 0.2; //this gives bounce
@@ -49,12 +33,7 @@ BasicGame.Game.prototype = {
 
     preload: function () {
 
-        this.load.image('rock', 'asset/a_0.png');
-        //rock2 code
-        this.load.image('bottle', 'asset/bottle1.png');
-        this.load.spritesheet('bottleSht', 'asset/bottleSheet.png', 20, 55, 6);
-        this.load.audio('breakBottle', ['asset/bottleBreak2.wav']);
-        this.load.audio('rockHit', ['asset/rockHit.wav']);
+   
     },
 
     create: function () {
