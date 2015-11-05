@@ -50,6 +50,8 @@ BasicGame.Game.prototype = {
 		this.rock.body.velocity.x = 20;
 		this.rock.body.velocity.y = 150;
 		this.rock.body.angularDamping = 0.5;
+
+
 		
 		
 		//new set collision group and tell what to collide with
@@ -179,14 +181,15 @@ BasicGame.Game.prototype = {
 			this.trails=	this.add.group();
 			this.add.spriteBatch(this.trails);
 		}
-		if(this.trails.length> 30)
+		if(this.trails.length> 10)
 			this.trails.removeChildAt(0);
-		
-		temp=	this.add.sprite(this.rock.x, this.rock.y, "rock");
+
+		temp=	this.add.sprite(this.rock.x, this.rock.y, "firepuff");
 		temp.anchor.setTo(0.5, 0.5);
-		temp.scale.setTo(0.06, 0.06);
+		temp.scale.setTo(0.2, 0.2);
 		temp=	temp.sendToBack();
-		temp.tint=	0xde0000;
+	    //temp.tint=	0xde0000;
+		temp.animations.add('light').play('light');
 		this.rock.bringToTop();
 		this.rock.tint=	0xac2010;
 		this.trails.add(temp);
