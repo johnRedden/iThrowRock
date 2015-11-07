@@ -7,7 +7,9 @@ BasicGame.Game = function (game) {
 // set Game function prototype
 BasicGame.Game.prototype = {
 
-	init: function () {
+    init: function () {
+
+        this.stage.backgroundColor = '#bfbfdf';
 		
 		this.physics.startSystem(Phaser.Physics.P2JS);
 		this.physics.p2.restitution = 0.2; //this gives bounce
@@ -28,7 +30,10 @@ BasicGame.Game.prototype = {
 		this.rockCollisionGroup = this.physics.p2.createCollisionGroup();
 		this.bottleCollisionGroup = this.physics.p2.createCollisionGroup();
 		this.emptyCollisionGroup = this.physics.p2.createCollisionGroup();
+		this.menuCollisionGroup = this.physics.p2.createCollisionGroup();
 		this.physics.p2.updateBoundsCollisionGroup();
+
+
 		
 	},
 
@@ -102,6 +107,26 @@ BasicGame.Game.prototype = {
 		this.input.onDown.add(this.rockGrab, this);
 		this.input.onUp.add(this.rockDrop, this);
 		this.input.addMoveCallback(this.rockMove, this);
+
+	    //munu at bottom  **************************************
+		this.menuGroup = this.add.group();
+		
+		var menuButton = this.add.button(this.world.width / 2, this.world.height - 30, "menubutton", this.toggleMenu,this);
+		menuButton.anchor.set(0.5);
+
+		this.menuGroup.add(menuButton);
+		var resetGame = this.add.button(this.world.width / 2, this.world.height + 30, "resetgame", function () {
+            // game reset functionality
+		    this.state.start('MainMenu');
+		},this);
+		resetGame.anchor.set(0.5);
+		this.menuGroup.add(resetGame);
+		var thankYou = this.add.button(this.world.width / 2, this.world.height + 90, "thankyou", function () {
+            // maybe a credits state here.
+		}, this);
+		thankYou.anchor.set(0.5);
+		this.menuGroup.add(thankYou);
+	    //******************************************************
 		
 
 	},
@@ -237,8 +262,22 @@ BasicGame.Game.prototype = {
 			
 			bottle.revive();
 		}
-	}
+	},
 
-	//*****************************************
+	
+
+    // bottom menu utility methods
+	toggleMenu: function () {
+         if(this.menuGroup.y == 0){
+             var menuTween = this.add.tween(this.menuGroup).to({
+                 y: -180     
+             }, 500, Phaser.Easing.Bounce.Out, true);
+         }
+        if(this.menuGroup.y == -180){
+            var menuTween = this.add.tween(this.menuGroup).to({
+                y: 0    
+            }, 500, Phaser.Easing.Bounce.Out, true);     
+        }
+    },
 
 };

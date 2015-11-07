@@ -29,6 +29,11 @@ BasicGame.Preloader.prototype = {
 
         this.load.audio('breakBottle', ['asset/bottleBreak2.wav']);
         this.load.audio('rockHit', ['asset/rockHit.wav']);
+
+        //menu stuff
+        this.load.image("menubutton", "asset/menu/menubutton.png");
+        this.load.image("resetgame", "asset/menu/resetgame.png");
+        this.load.image("thankyou", "asset/menu/thankyou.png")
         
 
     },
