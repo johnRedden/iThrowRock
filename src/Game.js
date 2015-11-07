@@ -10,8 +10,9 @@ BasicGame.Game.prototype = {
 	trailing:	0,
 	score:	0,
     init: function () {
+        
 
-        this.stage.backgroundColor = '#bfbfdf';
+        this.stage.backgroundColor = '#fff'; //white
 		
 		this.physics.startSystem(Phaser.Physics.P2JS);
 		this.physics.p2.restitution = 0.2; //this gives bounce
@@ -19,11 +20,17 @@ BasicGame.Game.prototype = {
 		
 		//draw the board
 		var graphics = this.add.graphics(0, 0);
-		graphics.beginFill(0xc0c0c0,0);
-		graphics.lineStyle(2, 0xc0c0c0, 0.5);
 		this.boundaryLine = this.world.height/2;
-		graphics.moveTo(0, this.boundaryLine);
+
+        graphics.beginFill(0xadd8e6,1);  // blue 
+        graphics.drawRect(0,0,this.world.width,this.boundaryLine);
+        graphics.beginFill(0x98fb98,0.5); //green 0.5 opacity
+        graphics.drawRect(0,this.boundaryLine,this.world.width,this.boundaryLine);
+        
+		graphics.lineStyle(6, 0xc0c0c0, 1);//light gray
+        graphics.moveTo(0, this.boundaryLine);
 		graphics.lineTo(this.world.width, this.boundaryLine); 
+        
 		
 		//new
 		// collision groups http://phaser.io/examples/v2/p2-physics/collision-groups
@@ -32,10 +39,7 @@ BasicGame.Game.prototype = {
 		this.rockCollisionGroup = this.physics.p2.createCollisionGroup();
 		this.bottleCollisionGroup = this.physics.p2.createCollisionGroup();
 		this.emptyCollisionGroup = this.physics.p2.createCollisionGroup();
-		this.menuCollisionGroup = this.physics.p2.createCollisionGroup();
 		this.physics.p2.updateBoundsCollisionGroup();
-
-
 		
 	},
 
@@ -58,8 +62,6 @@ BasicGame.Game.prototype = {
 		this.rock.body.velocity.y = 150;
 		this.rock.body.angularDamping = 0.5;
 
-
-		
 		
 		//new set collision group and tell what to collide with
 		this.rock.body.setCollisionGroup(this.rockCollisionGroup);
@@ -68,7 +70,7 @@ BasicGame.Game.prototype = {
 		//rock2 BOTTLE code ****************
 		//new
 		this.bottles = this.add.group();
-		for(var i = 0; i<5; i++){
+		for(var i = 0; i<BasicGame.numGreenBottles; i++){
 			this.bottles.create(10,this.rnd.integerInRange(10,100),'bottleSht');
 		}
 		//enable physics on the whole group

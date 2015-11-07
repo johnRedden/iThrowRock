@@ -33,7 +33,8 @@ BasicGame.Preloader.prototype = {
         //menu stuff
         this.load.image("menubutton", "asset/menu/menubutton.png");
         this.load.image("resetgame", "asset/menu/resetgame.png");
-        this.load.image("thankyou", "asset/menu/thankyou.png")
+        this.load.image("thankyou", "asset/menu/thankyou.png");
+        this.load.image("playBtn", "asset/menu/playbutton.png");
         
 
     },
