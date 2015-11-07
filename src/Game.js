@@ -2,11 +2,12 @@
 /* global Phaser, BasicGame */
 // create Game function in BasicGame
 BasicGame.Game = function (game) {
-
+	
 };
 // set Game function prototype
 BasicGame.Game.prototype = {
-
+	bStartedTrail:	false,
+	trailing:	0,
     init: function () {
 
         this.stage.backgroundColor = '#bfbfdf';
@@ -135,17 +136,20 @@ BasicGame.Game.prototype = {
 		return Math.sqrt(x*x+y*y);
 	},
 	update: function(){
-		if(this.getDistance(this.rock.body.velocity.x, this.rock.body.velocity.y)> 400)
+		if(this.trailing!= 0)
 		{
-			this.rockTrailing();
-			this.bStartedTrail=	true;
-		}
-		else
-		{
-			this.rock.tint=	0xffffff;
-			if(this.trails!= null)
-				this.deleteRockTrailing();
-			this.bStartedTrail=	false;
+			if(this.getDistance(this.rock.body.velocity.x, this.rock.body.velocity.y)> 400)
+			{
+				this.rockTrailing();
+				this.bStartedTrail=	true;
+			}
+			else
+			{
+				this.rock.tint=	0xffffff;
+				if(this.trails!= null)
+					this.deleteRockTrailing();
+				this.bStartedTrail=	false;
+			}
 		}
 		this.bottles.forEach(function (bottle) {
 
@@ -155,9 +159,7 @@ BasicGame.Game.prototype = {
 			
 		},this);
 		
-	},
-	bStartedTrail:	false,
-	
+	},s
 	
 	// utility functions for the rock grab *****************
 	rockGrab: function (pointer) {
