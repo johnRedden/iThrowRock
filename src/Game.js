@@ -111,17 +111,17 @@ BasicGame.Game.prototype = {
 	    //munu at bottom  **************************************
 		this.menuGroup = this.add.group();
 		
-		var menuButton = this.add.button(this.world.width / 2, this.world.height - 30, "menubutton", this.toggleMenu,this);
+		var menuButton = this.add.button(this.world.width / 2,  30, "menubutton", this.toggleMenu,this);
 		menuButton.anchor.set(0.5);
 
 		this.menuGroup.add(menuButton);
-		var resetGame = this.add.button(this.world.width / 2, this.world.height + 30, "resetgame", function () {
+		var resetGame = this.add.button(this.world.width / 2, -30, "resetgame", function () {
             // game reset functionality
 		    this.state.start('MainMenu');
 		},this);
 		resetGame.anchor.set(0.5);
 		this.menuGroup.add(resetGame);
-		var thankYou = this.add.button(this.world.width / 2, this.world.height + 90, "thankyou", function () {
+		var thankYou = this.add.button(this.world.width / 2, -90, "thankyou", function () {
             // maybe a credits state here.
 		}, this);
 		thankYou.anchor.set(0.5);
@@ -270,10 +270,10 @@ BasicGame.Game.prototype = {
 	toggleMenu: function () {
          if(this.menuGroup.y == 0){
              var menuTween = this.add.tween(this.menuGroup).to({
-                 y: -180     
+                 y: 180     
              }, 500, Phaser.Easing.Bounce.Out, true);
          }
-        if(this.menuGroup.y == -180){
+        if(this.menuGroup.y == 180){
             var menuTween = this.add.tween(this.menuGroup).to({
                 y: 0    
             }, 500, Phaser.Easing.Bounce.Out, true);     
