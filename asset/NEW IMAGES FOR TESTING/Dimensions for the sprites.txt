@@ -1,0 +1,16 @@
+Image Name  | Qty of pics |        | Width |  | Height |
+---------------------------------------------------------
+
+music_status  2 pics  Each frame==> W: 115 px  H:160 px
+
+fire_tail     7 pics  Each frame==> W:264  px  H:179 px
+
+green_sheet   6 pics  Each frame==> W:112.5px  H:169 px
+
+wood_spritesheet 5 pics Each frame> W:110  px  H:77  px
+
+btn_play      2 pics Each frame ==> W:304  px  H:111 px
+
+btn_next      2 pics Each frame ==> W:304  px  H:111 px
+
+btn_replay    2 pics Each frame ==> W:304  px  H:111 px
