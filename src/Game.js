@@ -8,6 +8,7 @@ BasicGame.Game = function (game) {
 BasicGame.Game.prototype = {
 	bStartedTrail:	false,
 	trailing:	0,
+	score:	0,
     init: function () {
 
         this.stage.backgroundColor = '#bfbfdf';
@@ -128,8 +129,12 @@ BasicGame.Game.prototype = {
 		thankYou.anchor.set(0.5);
 		this.menuGroup.add(thankYou);
 	    //******************************************************
-		
-
+	    
+		this.scoreText=	this.add.text(this.world.width-200, this.world.centerY-24, "Score: "+this.score, {
+			fontFamily:	"arial",
+			fontSize:	"16px",
+			fill:	"#101820"
+		});
 	},
 	getDistance:    function(x, y)
 	{
@@ -159,7 +164,7 @@ BasicGame.Game.prototype = {
 			
 		},this);
 		
-	},s
+	},
 	
 	// utility functions for the rock grab *****************
 	rockGrab: function (pointer) {
@@ -235,13 +240,13 @@ BasicGame.Game.prototype = {
 
 	// Rock2 Bottle utility methods
 	bottleHit2: function(rock, bottle){
-				
 		if(this.getDistance(rock.velocity.x, rock.velocity.y) > 400){
 			this.bottleBreak.play();
 			//last true kills the sprite
 			bottle.sprite.animations.play('splode',30,false,true); 
 			//bottle.sprite.kill();
 			this.time.events.add(Phaser.Timer.SECOND * 2, this.spawnBottle, this);
+			this.increaseScore(10); // Use the type of bottle to know what your score is
 		}
 		
 	},
@@ -265,9 +270,13 @@ BasicGame.Game.prototype = {
 			bottle.revive();
 		}
 	},
-
 	
-
+	increaseScore:	function(amount)
+	{
+		this.score+=	amount;
+		this.scoreText.setText("Score: "+this.score);
+	},
+	
     // bottom menu utility methods
 	toggleMenu: function () {
          if(this.menuGroup.y == 0){
