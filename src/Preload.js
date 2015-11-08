@@ -1,4 +1,4 @@
-﻿
+
 BasicGame.Preloader = function (game) {
 
 
@@ -35,6 +35,7 @@ BasicGame.Preloader.prototype = {
         this.load.image("resetgame", "asset/menu/resetgame.png");
         this.load.image("thankyou", "asset/menu/thankyou.png");
         this.load.image("playBtn", "asset/menu/playbutton.png");
+        this.load.spritesheet('musicToggle', 'asset/music_status.png',115,160,2);
         
 
     },

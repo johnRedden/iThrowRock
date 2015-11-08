@@ -111,8 +111,8 @@ BasicGame.Game.prototype = {
 		this.input.onDown.add(this.rockGrab, this);
 		this.input.onUp.add(this.rockDrop, this);
 		this.input.addMoveCallback(this.rockMove, this);
-
-	    // munu at bottom  **************************************
+        
+        // munu at bottom  **************************************
 		this.menuGroup = this.add.group();
 		
 		var menuButton = this.add.button(this.world.width / 2,  30, "menubutton", this.toggleMenu,this);
@@ -121,7 +121,7 @@ BasicGame.Game.prototype = {
 		this.menuGroup.add(menuButton);
 		var resetGame = this.add.button(this.world.width / 2, -30, "resetgame", function () {
             // game reset functionality
-		    this.state.start('MainMenu');
+            this.state.start('MainMenu');
 		},this);
 		resetGame.anchor.set(0.5);
 		this.menuGroup.add(resetGame);
@@ -130,9 +130,9 @@ BasicGame.Game.prototype = {
 		}, this);
 		thankYou.anchor.set(0.5);
 		this.menuGroup.add(thankYou);
-	    //******************************************************
-	    
-		this.scoreText=	this.add.text(this.world.width-200, this.world.centerY-24, "Score: "+this.score, {
+        //******************************************************
+        
+		this.scoreText=	this.add.text(10, this.world.centerY-24, "Score: "+this.score+"\nLevel: "+BasicGame.level, {
 			fontFamily:	"arial",
 			fontSize:	"16px",
 			fill:	"#101820"
@@ -153,7 +153,7 @@ BasicGame.Game.prototype = {
 			else
 			{
 				this.rock.tint=	0xffffff;
-				if(this.trails!= null)
+				if(this.trails!== null)
 					this.deleteRockTrailing();
 				this.bStartedTrail=	false;
 			}
@@ -210,7 +210,7 @@ BasicGame.Game.prototype = {
 		
 		if(!this.bStartedTrail)
 		{
-			if(this.trails!= null)
+			if(this.trails!== null)
 				this.trails.removeAll(true);
 			this.trails=	this.add.group();
 			this.add.spriteBatch(this.trails);
@@ -222,7 +222,7 @@ BasicGame.Game.prototype = {
 		temp.anchor.setTo(0.5, 0.5);
 		temp.scale.setTo(0.2, 0.2);
 		temp=	temp.sendToBack();
-	    //temp.tint=	0xde0000;
+        //temp.tint=	0xde0000;
 		temp.animations.add('light').play('light');
 		this.rock.bringToTop();
 		this.rock.tint=	0xac2010;
@@ -256,7 +256,7 @@ BasicGame.Game.prototype = {
 		// grab a dead bottle from the group
 		var bottle = this.bottles.getFirstDead();
 		
-		if(bottle != null){
+		if(bottle !== null){
 			bottle.animations.stop('splode',true);
 			bottle.body.x = -10;
 			bottle.body.velocity.x = this.rnd.integerInRange(50,150);
@@ -276,12 +276,12 @@ BasicGame.Game.prototype = {
 	increaseScore:	function(amount)
 	{
 		this.score+=	amount;
-		this.scoreText.setText("Score: "+this.score);
+		this.scoreText.setText("Score: "+this.score+"\nLevel: "+BasicGame.level);
 	},
 	
     // bottom menu utility methods
 	toggleMenu: function () {
-         if(this.menuGroup.y == 0){
+         if(this.menuGroup.y === 0){
              this.add.tween(this.menuGroup).to({
                  y: 180     
              }, 500, Phaser.Easing.Bounce.Out, true);

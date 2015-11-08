@@ -1,10 +1,14 @@
-﻿/* jshint browser:true */
+/* jshint browser:true */
+/* global BasicGame:true,Phaser:true*/
 // create BasicGame Class
 BasicGame = {
 
     /* Here we've just got some global level vars that persist regardless of State swaps */
     score: 0,
+    level: 1,
     numGreenBottles:5,
+    highScore: 0,
+    highLevel: 0,
 
     /* If the music in your game needs to play through-out a few State swaps, then you could reference it here */
     // music: true,
