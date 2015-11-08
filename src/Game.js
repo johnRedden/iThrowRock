@@ -79,10 +79,10 @@ BasicGame.Game.prototype = {
 		this.bottles.setAll('body.static', true); 
 		// use forEach to access each individual bottle
 		this.bottles.forEach(function (bottle) {
-			var scaleFactor = this.rnd.realInRange(.6,1);
+			var scaleFactor = this.rnd.realInRange(0.3,0.6);
 			bottle.scale.setTo(scaleFactor,scaleFactor);
 			
-			bottle.body.setRectangle(scaleFactor*15,scaleFactor*40);
+			bottle.body.setRectangle(scaleFactor*20,scaleFactor*100);
 			bottle.body.velocity.x = this.rnd.integerInRange(50,150);
 			bottle.body.angularVelocity = this.rnd.integerInRange(-5,5);
 			
@@ -112,7 +112,7 @@ BasicGame.Game.prototype = {
 		this.input.onUp.add(this.rockDrop, this);
 		this.input.addMoveCallback(this.rockMove, this);
 
-	    //munu at bottom  **************************************
+	    // munu at bottom  **************************************
 		this.menuGroup = this.add.group();
 		
 		var menuButton = this.add.button(this.world.width / 2,  30, "menubutton", this.toggleMenu,this);
@@ -143,7 +143,7 @@ BasicGame.Game.prototype = {
 		return Math.sqrt(x*x+y*y);
 	},
 	update: function(){
-		if(this.trailing!= 0)
+		if(this.trailing !== 0)
 		{
 			if(this.getDistance(this.rock.body.velocity.x, this.rock.body.velocity.y)> 400)
 			{
@@ -262,9 +262,9 @@ BasicGame.Game.prototype = {
 			bottle.body.velocity.x = this.rnd.integerInRange(50,150);
 			bottle.body.angularVelocity = this.rnd.integerInRange(-5,5);
 			
-			var scaleFactor = this.rnd.realInRange(.6,1);
+			var scaleFactor = this.rnd.realInRange(0.3,0.6);
 			bottle.scale.setTo(scaleFactor,scaleFactor);
-			bottle.body.setRectangle(scaleFactor*15,scaleFactor*40);
+			bottle.body.setRectangle(scaleFactor*20,scaleFactor*100);
 						bottle.body.setCollisionGroup(this.bottleCollisionGroup);
 			bottle.body.collides(this.rockCollisionGroup);
 			bottle.body.static = true;
@@ -282,12 +282,12 @@ BasicGame.Game.prototype = {
     // bottom menu utility methods
 	toggleMenu: function () {
          if(this.menuGroup.y == 0){
-             var menuTween = this.add.tween(this.menuGroup).to({
+             this.add.tween(this.menuGroup).to({
                  y: 180     
              }, 500, Phaser.Easing.Bounce.Out, true);
          }
         if(this.menuGroup.y == 180){
-            var menuTween = this.add.tween(this.menuGroup).to({
+            this.add.tween(this.menuGroup).to({
                 y: 0    
             }, 500, Phaser.Easing.Bounce.Out, true);     
         }

@@ -24,7 +24,7 @@ BasicGame.Preloader.prototype = {
         this.load.image('rock', 'asset/a_0.png');
   
         this.load.image('bottle', 'asset/bottle1.png');
-        this.load.spritesheet('bottleSht', 'asset/bottleSheet.png', 20, 55, 6);
+        this.load.spritesheet('bottleSht', 'asset/green_sheet.png', 112.5, 169, 6);
         this.load.spritesheet('firepuff','asset/fireball_spritesheet.png',264,179,14);
 
         this.load.audio('breakBottle', ['asset/bottleBreak2.wav']);
