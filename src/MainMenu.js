@@ -49,9 +49,11 @@ BasicGame.MainMenu.prototype = {
         if(this.musicBtn.frame===0){
             this.musicBtn.frame=1;
             // turn music off
+            BasicGame.music = false;
         }else{
             this.musicBtn.frame=0;
             //turn music on
+            BasicGame.music = true;
         }
     
     },

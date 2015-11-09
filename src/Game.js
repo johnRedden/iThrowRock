@@ -243,12 +243,23 @@ BasicGame.Game.prototype = {
 	// Rock2 Bottle utility methods
 	bottleHit2: function(rock, bottle){
 		if(this.getDistance(rock.velocity.x, rock.velocity.y) > 400){
-			this.bottleBreak.play();
-			//last true kills the sprite
+            
+            if(BasicGame.music){ //todo: change to sound when btn implemented
+			     this.bottleBreak.play();
+            }
+            //NEED to turn off the abiltiy for the sprit to get hit when animation is playing
+			//last true in aminations.play kills the sprite
 			bottle.sprite.animations.play('splode',30,false,true); 
 			//bottle.sprite.kill();
-			this.time.events.add(Phaser.Timer.SECOND * 2, this.spawnBottle, this);
-			this.increaseScore(10); // Use the type of bottle to know what your score is
+			//this.time.events.add(Phaser.Timer.SECOND * 2, this.spawnBottle, this);
+			bottle.sprite.events.onKilled.add(function(){
+                this.increaseScore(10); // Use the type of bottle to know what your score is
+                if(this.bottles.countDead()===BasicGame.numGreenBottles){
+                    BasicGame.level+=1;
+                    this.spawnBottles();
+                };
+            },this);
+            
 		}
 		
 	},
@@ -272,6 +283,24 @@ BasicGame.Game.prototype = {
 			bottle.revive();
 		}
 	},
+    spawnBottles: function(){
+        this.bottles.forEach(function (bottle) {
+			bottle.animations.stop('splode',true);
+			bottle.body.x = -10;
+			bottle.body.velocity.x = this.rnd.integerInRange(50,150)*BasicGame.level; // whoa...
+			bottle.body.angularVelocity = this.rnd.integerInRange(-5,5);
+			
+			var scaleFactor = this.rnd.realInRange(0.3,0.6);
+			bottle.scale.setTo(scaleFactor,scaleFactor);
+			bottle.body.setRectangle(scaleFactor*20,scaleFactor*100);
+						bottle.body.setCollisionGroup(this.bottleCollisionGroup);
+			bottle.body.collides(this.rockCollisionGroup);
+			bottle.body.static = true;
+			
+			bottle.revive();
+
+		},this);
+    },
 	
 	increaseScore:	function(amount)
 	{

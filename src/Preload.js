@@ -23,7 +23,7 @@ BasicGame.Preloader.prototype = {
         //	Here we load the rest of the assets our game needs.
         this.load.image('rock', 'asset/a_0.png');
   
-        this.load.image('bottle', 'asset/bottle1.png');
+        //this.load.image('bottle', 'asset/bottle1.png');
         this.load.spritesheet('bottleSht', 'asset/green_sheet.png', 112.5, 169, 6);
         this.load.spritesheet('firepuff','asset/fireball_spritesheet.png',264,179,14);
 
