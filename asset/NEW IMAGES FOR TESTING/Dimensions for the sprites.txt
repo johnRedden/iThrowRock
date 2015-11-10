@@ -1,7 +1,7 @@
 Image Name  | Qty of pics |        | Width |  | Height |
 ---------------------------------------------------------
 
-music_status  2 pics  Each frame==> W: 115 px  H:160 px
+music_status  2 pics  Each frame==> W: 135 px  H:160 px     updated: 11/9/15 - cory
 
 fire_tail     7 pics  Each frame==> W:264  px  H:179 px
 
