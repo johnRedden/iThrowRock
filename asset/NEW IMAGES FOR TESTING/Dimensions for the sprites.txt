@@ -14,3 +14,5 @@ btn_play      2 pics Each frame ==> W:304  px  H:111 px
 btn_next      2 pics Each frame ==> W:304  px  H:111 px
 
 btn_replay    2 pics Each frame ==> W:304  px  H:111 px
+
+fx_status     2 pics Each frame ==> W:210  px  H:160 px
