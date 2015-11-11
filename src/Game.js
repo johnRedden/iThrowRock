@@ -7,8 +7,9 @@ BasicGame.Game = function (game) {
 // set Game function prototype
 BasicGame.Game.prototype = {
 	bStartedTrail:	false,
-	trailing:	0,
+	trailing:	1,
 	score:	0,
+	combo:	0,
     init: function () {
         
 
@@ -210,10 +211,9 @@ BasicGame.Game.prototype = {
 		
 		if(!this.bStartedTrail)
 		{
-			if(this.trails!== null)
+			if(this.trails!= null)
 				this.trails.removeAll(true);
 			this.trails=	this.add.group();
-			this.add.spriteBatch(this.trails);
 		}
 		if(this.trails.length> 10)
 			this.trails.removeChildAt(0);
@@ -229,7 +229,7 @@ BasicGame.Game.prototype = {
 		this.trails.add(temp);
 	},
 	deleteRockTrailing:	function()	{
-		if(this.trails.length> 0)
+		if(this.trails!= null && this.trails.length> 0)
 			this.trails.removeChildAt(0);
 	},
 	rockHit: function(){
@@ -242,24 +242,44 @@ BasicGame.Game.prototype = {
 
 	// Rock2 Bottle utility methods
 	bottleHit2: function(rock, bottle){
-		if(this.getDistance(rock.velocity.x, rock.velocity.y) > 400){
+		if(this.getDistance(rock.velocity.x, rock.velocity.y) > 400 && !bottle.sprite.animplayed){
             
             if(BasicGame.music){ //todo: change to sound when btn implemented
 			     this.bottleBreak.play();
             }
             //NEED to turn off the abiltiy for the sprit to get hit when animation is playing
 			//last true in aminations.play kills the sprite
-			bottle.sprite.animations.play('splode',30,false,true); 
 			//bottle.sprite.kill();
 			//this.time.events.add(Phaser.Timer.SECOND * 2, this.spawnBottle, this);
-			bottle.sprite.events.onKilled.add(function(){
-                this.increaseScore(10); // Use the type of bottle to know what your score is
-                if(this.bottles.countDead()===BasicGame.numGreenBottles){
-                    BasicGame.level+=1;
-                    this.spawnBottles();
-                };
-            },this);
-            
+			if(!bottle.sprite.animplayed)
+			{
+				bottle.sprite.animations.play('splode',30,false,true); 
+				bottle.sprite.events.onKilled.add(function(){
+					bottle.sprite.animplayed=	false;
+	                this.combo++;
+	                this.increaseScore(10*this.combo); // Use the type of bottle to know what your score is
+	                if(this.comboText!= null)
+	                {
+	                	if(this.combo> 1)
+	                		this.comboText.setText("Combo! x"+this.combo);
+	                }
+	                else
+	                	this.comboText=	this.add.text(this.world.width-200, this.world.centerY-20,
+	                		((this.combo> 1) ? "Combo! x"+this.combo : "")
+	                	);
+	                if(this.comboTimer!= null)
+	                	this.time.events.remove(this.comboTimer);
+	                this.comboTimer=	this.time.events.add(Phaser.Timer.SECOND, function(){
+	                	this.combo= 0;
+	                	this.comboText.setText("");
+	                }, this);
+	                if(this.bottles.countDead()===BasicGame.numGreenBottles){
+	                    BasicGame.level+=1;
+	                    this.spawnBottles();
+	                };
+	            },this);
+			}
+			bottle.sprite.animplayed=	true;
 		}
 		
 	},
@@ -289,6 +309,8 @@ BasicGame.Game.prototype = {
 			bottle.body.x = -10;
 			bottle.body.velocity.x = this.rnd.integerInRange(50,150)*BasicGame.level; // whoa...
 			bottle.body.angularVelocity = this.rnd.integerInRange(-5,5);
+			if(bottle.body.angularVelocity== 0)
+				bottle.body.angularVelocity=	4;
 			
 			var scaleFactor = this.rnd.realInRange(0.3,0.6);
 			bottle.scale.setTo(scaleFactor,scaleFactor);
