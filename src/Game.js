@@ -40,6 +40,7 @@ BasicGame.Game.prototype = {
 		this.rockCollisionGroup = this.physics.p2.createCollisionGroup();
 		this.bottleCollisionGroup = this.physics.p2.createCollisionGroup();
 		this.emptyCollisionGroup = this.physics.p2.createCollisionGroup();
+        this.blockerCollisionGroup = this.physics.p2.createCollisionGroup();
 		this.physics.p2.updateBoundsCollisionGroup();
 		
 	},
@@ -67,6 +68,7 @@ BasicGame.Game.prototype = {
 		//new set collision group and tell what to collide with
 		this.rock.body.setCollisionGroup(this.rockCollisionGroup);
 		this.rock.body.collides(this.bottleCollisionGroup,this.bottleHit2,this);
+        this.rock.body.collides(this.blockerCollisionGroup,this.blockerHit,this);
 		
 		//rock2 BOTTLE code ****************
 		//new
@@ -87,7 +89,7 @@ BasicGame.Game.prototype = {
 			bottle.body.velocity.x = this.rnd.integerInRange(50,150);
 			bottle.body.angularVelocity = this.rnd.integerInRange(-5,5);
 			
-			//bottle.scale.setTo(this.rnd.realInRange(0.5,1),this.rnd.realInRange(0.5,1));
+			bottle.scale.setTo(this.rnd.realInRange(0.5,1),this.rnd.realInRange(0.5,1));
 			bottle.animations.add('splode');
 			
 			bottle.body.setCollisionGroup(this.bottleCollisionGroup);
@@ -97,7 +99,16 @@ BasicGame.Game.prototype = {
 			
 		},this);
 		
-		
+        // initialize wood blocker *******************
+		this.wood = this.add.sprite(0, this.world.centerY - 100, 'woodBlocker');
+        this.wood.scale.setTo(0.7,0.25);
+        
+        this.physics.p2.enable(this.wood, false);
+        this.wood.kill(); //only spawn on level 2
+        //this.wood.body.setRectangle(scaleFactor*20,scaleFactor*100);
+        //this.spawnWoodBlocker();
+        //***********************************************
+        
 		
 		this.bottleBreak =  this.add.audio('breakBottle');
 		this.rockHitSnd =  this.add.audio('rockHit');
@@ -166,6 +177,10 @@ BasicGame.Game.prototype = {
 			}
 			
 		},this);
+        // wood not always there
+        if(this.wood.body.x > this.world.width+25){
+				this.wood.body.x = -10;
+			}
 		
 	},
 	
@@ -238,11 +253,27 @@ BasicGame.Game.prototype = {
 		}
 	},
 	//*************************************
+    
+    blockerHit: function(){
+        console.log(this.wood.frame);
+		this.rockHitSnd.play('rockSrt');
+        if(this.wood.frame===4){
+            this.wood.lifespan = 1000;
+            this.wood.body.velocity.y=75;
+            this.wood.body.angularVelocity = this.rnd.integerInRange(20,45);
+            
+            this.increaseScore(50);
+            
+        }else{
+            this.wood.frame+=1;
+        }
+        
+	},
 
 
 	// Rock2 Bottle utility methods
 	bottleHit2: function(rock, bottle){
-		if(this.getDistance(rock.velocity.x, rock.velocity.y) > 400 && !bottle.sprite.animplayed){
+		if(this.getDistance(rock.velocity.x, rock.velocity.y) > 400){
             
             if(BasicGame.music){ //todo: change to sound when btn implemented
 			     this.bottleBreak.play();
@@ -251,35 +282,33 @@ BasicGame.Game.prototype = {
 			//last true in aminations.play kills the sprite
 			//bottle.sprite.kill();
 			//this.time.events.add(Phaser.Timer.SECOND * 2, this.spawnBottle, this);
-			if(!bottle.sprite.animplayed)
-			{
-				bottle.sprite.animations.play('splode',30,false,true); 
-				bottle.sprite.events.onKilled.add(function(){
-					bottle.sprite.animplayed=	false;
-	                this.combo++;
-	                this.increaseScore(10*this.combo); // Use the type of bottle to know what your score is
-	                if(this.comboText!= null)
-	                {
-	                	if(this.combo> 1)
-	                		this.comboText.setText("Combo! x"+this.combo);
-	                }
-	                else
-	                	this.comboText=	this.add.text(this.world.width-200, this.world.centerY-20,
-	                		((this.combo> 1) ? "Combo! x"+this.combo : "")
-	                	);
-	                if(this.comboTimer!= null)
-	                	this.time.events.remove(this.comboTimer);
-	                this.comboTimer=	this.time.events.add(Phaser.Timer.SECOND, function(){
-	                	this.combo= 0;
-	                	this.comboText.setText("");
-	                }, this);
-	                if(this.bottles.countDead()===BasicGame.numGreenBottles){
-	                    BasicGame.level+=1;
-	                    this.spawnBottles();
-	                };
-	            },this);
-			}
-			bottle.sprite.animplayed=	true;
+
+			bottle.sprite.animations.play('splode',30,false,true); 
+			bottle.sprite.events.onKilled.add(function(){
+                this.combo++;
+                this.increaseScore(10*this.combo); // Use the type of bottle to know what your score is
+                if(this.comboText!= null)
+                {
+                	if(this.combo> 1)
+                		this.comboText.setText("Combo! x"+this.combo);
+                }
+                else
+                	this.comboText=	this.add.text(this.world.width-200, this.world.centerY-20,
+                		((this.combo> 1) ? "Combo! x"+this.combo : "")
+                	);
+                if(this.comboTimer!= null)
+                	this.time.events.remove(this.comboTimer);
+                this.comboTimer=	this.time.events.add(Phaser.Timer.SECOND, function(){
+                	this.combo= 0;
+                	this.comboText.setText("");
+                }, this);
+                if(this.bottles.countDead()===BasicGame.numGreenBottles){
+	                BasicGame.level+=1;
+	                this.spawnBottles();
+	                if(BasicGame.level>1)
+	                    this.spawnWoodBlocker();
+                };
+            },this);
 		}
 		
 	},
@@ -322,6 +351,20 @@ BasicGame.Game.prototype = {
 			bottle.revive();
 
 		},this);
+    },
+    spawnWoodBlocker: function(){
+        this.wood.revive();
+        this.wood.frame = 0;
+        
+        this.wood.body.setCollisionGroup(this.blockerCollisionGroup);
+        this.wood.body.collides(this.rockCollisionGroup);
+        this.wood.body.x = -10;
+        this.wood.body.y = this.world.centerY - 100;
+        this.wood.body.static = true;
+        this.wood.body.velocity.y = 0;
+        this.wood.body.velocity.x = this.rnd.integerInRange(50,150);
+        this.wood.body.angularVelocity = this.rnd.integerInRange(3,7);
+        
     },
 	
 	increaseScore:	function(amount)
