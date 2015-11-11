@@ -7,7 +7,7 @@ BasicGame.Game = function (game) {
 // set Game function prototype
 BasicGame.Game.prototype = {
 	bStartedTrail:	false,
-	trailing:	1,
+	trailing:	0,
 	score:	0,
 	combo:	0,
     init: function () {
