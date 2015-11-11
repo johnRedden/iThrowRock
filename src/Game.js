@@ -39,6 +39,7 @@ BasicGame.Game.prototype = {
 		this.rockCollisionGroup = this.physics.p2.createCollisionGroup();
 		this.bottleCollisionGroup = this.physics.p2.createCollisionGroup();
 		this.emptyCollisionGroup = this.physics.p2.createCollisionGroup();
+        this.blockerCollisionGroup = this.physics.p2.createCollisionGroup();
 		this.physics.p2.updateBoundsCollisionGroup();
 		
 	},
@@ -66,6 +67,7 @@ BasicGame.Game.prototype = {
 		//new set collision group and tell what to collide with
 		this.rock.body.setCollisionGroup(this.rockCollisionGroup);
 		this.rock.body.collides(this.bottleCollisionGroup,this.bottleHit2,this);
+        this.rock.body.collides(this.blockerCollisionGroup,this.blockerHit,this);
 		
 		//rock2 BOTTLE code ****************
 		//new
@@ -86,7 +88,7 @@ BasicGame.Game.prototype = {
 			bottle.body.velocity.x = this.rnd.integerInRange(50,150);
 			bottle.body.angularVelocity = this.rnd.integerInRange(-5,5);
 			
-			//bottle.scale.setTo(this.rnd.realInRange(0.5,1),this.rnd.realInRange(0.5,1));
+			bottle.scale.setTo(this.rnd.realInRange(0.5,1),this.rnd.realInRange(0.5,1));
 			bottle.animations.add('splode');
 			
 			bottle.body.setCollisionGroup(this.bottleCollisionGroup);
@@ -96,7 +98,16 @@ BasicGame.Game.prototype = {
 			
 		},this);
 		
-		
+        // initialize wood blocker *******************
+		this.wood = this.add.sprite(0, this.world.centerY - 100, 'woodBlocker');
+        this.wood.scale.setTo(0.7,0.25);
+        
+        this.physics.p2.enable(this.wood, false);
+        this.wood.kill(); //only spawn on level 2
+        //this.wood.body.setRectangle(scaleFactor*20,scaleFactor*100);
+        //this.spawnWoodBlocker();
+        //***********************************************
+        
 		
 		this.bottleBreak =  this.add.audio('breakBottle');
 		this.rockHitSnd =  this.add.audio('rockHit');
@@ -165,6 +176,10 @@ BasicGame.Game.prototype = {
 			}
 			
 		},this);
+        // wood not always there
+        if(this.wood.body.x > this.world.width+25){
+				this.wood.body.x = -10;
+			}
 		
 	},
 	
@@ -238,6 +253,22 @@ BasicGame.Game.prototype = {
 		}
 	},
 	//*************************************
+    
+    blockerHit: function(){
+        console.log(this.wood.frame);
+		this.rockHitSnd.play('rockSrt');
+        if(this.wood.frame===4){
+            this.wood.lifespan = 1000;
+            this.wood.body.velocity.y=75;
+            this.wood.body.angularVelocity = this.rnd.integerInRange(20,45);
+            
+            this.increaseScore(50);
+            
+        }else{
+            this.wood.frame+=1;
+        }
+        
+	},
 
 
 	// Rock2 Bottle utility methods
@@ -257,6 +288,8 @@ BasicGame.Game.prototype = {
                 if(this.bottles.countDead()===BasicGame.numGreenBottles){
                     BasicGame.level+=1;
                     this.spawnBottles();
+                    if(BasicGame.level>1)
+                        this.spawnWoodBlocker();
                 };
             },this);
             
@@ -300,6 +333,20 @@ BasicGame.Game.prototype = {
 			bottle.revive();
 
 		},this);
+    },
+    spawnWoodBlocker: function(){
+        this.wood.revive();
+        this.wood.frame = 0;
+        
+        this.wood.body.setCollisionGroup(this.blockerCollisionGroup);
+        this.wood.body.collides(this.rockCollisionGroup);
+        this.wood.body.x = -10;
+        this.wood.body.y = this.world.centerY - 100;
+        this.wood.body.static = true;
+        this.wood.body.velocity.y = 0;
+        this.wood.body.velocity.x = this.rnd.integerInRange(50,150);
+        this.wood.body.angularVelocity = this.rnd.integerInRange(3,7);
+        
     },
 	
 	increaseScore:	function(amount)
