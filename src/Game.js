@@ -320,6 +320,20 @@ BasicGame.Game.prototype = {
         if(this.getDistance(this.rock.body.velocity.x, this.rock.body.velocity.y) > 500){
             console.log('hit dark');
             // this.rock gets BIG for 3 seconds or so
+            this.bottleBreak.play();
+            this.darkBottle.kill();
+		  
+            this.rock.scale.setTo(0.2,0.2);
+            //losing collide with bounds??
+            //this.rock.body.setRectangle(40,40);
+            this.time.events.add(Phaser.Timer.SECOND *3, function(){
+                //back to normal
+                this.rock.scale.setTo(0.06,0.06);
+                // scale the hit rectangle back
+                //this.rock.body.setRectangle(25,20);
+                this.spawnDarkBottle();
+            }, this);
+        
         }
     },
 

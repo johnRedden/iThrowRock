@@ -35,6 +35,9 @@ BasicGame.MainMenu.prototype = {
 			fontSize:	"16px",
 			fill:	"#101820"
 		});
+        
+        BasicGame.level = 1;
+        BasicGame.score = 0;
    
 
     },
