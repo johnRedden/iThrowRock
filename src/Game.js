@@ -12,6 +12,13 @@ BasicGame.Game.prototype = {
 	combo:	0,
     init: function () {
         
+        if(BasicGame.music){
+            this.backgroundMusic = this.add.audio('gameMusic');
+            this.backgroundMusic.volume = 0.3;
+            this.backgroundMusic.loop = true;
+            this.backgroundMusic.play();
+        }
+        
 
         this.stage.backgroundColor = '#fff'; //white
 		
@@ -133,6 +140,7 @@ BasicGame.Game.prototype = {
 		this.menuGroup.add(menuButton);
 		var resetGame = this.add.button(this.world.width / 2, -30, "resetgame", function () {
             // game reset functionality
+            this.backgroundMusic.stop();
             this.state.start('MainMenu');
 		},this);
 		resetGame.anchor.set(0.5);
@@ -255,7 +263,7 @@ BasicGame.Game.prototype = {
 	//*************************************
     
     blockerHit: function(){
-        console.log(this.wood.frame);
+       
 		this.rockHitSnd.play('rockSrt');
         if(this.wood.frame===4){
             this.wood.lifespan = 1000;

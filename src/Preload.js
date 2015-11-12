@@ -12,6 +12,14 @@ BasicGame.Preloader.prototype = {
         //	A nice sparkly background and a loading progress bar
         //var tmpImg1 = this.cache.getImage('preloaderBackground');
         //this.add.sprite(this.world.centerX - tmpImg1.width / 2.0, 20, 'preloaderBackground');
+        
+                // title
+        this.title=	this.add.text(20, 20, "iThrowRock - \nNeed a SplashScreen \nLoading...", {
+			fontFamily:	"arial",
+			fontSize:	"24px",
+            fontStyle: "italic",
+			fill:	"#bfbfdf"
+		});
 
         this.preloadBar = this.add.sprite(50, 170, 'preloaderBar');
 
@@ -29,6 +37,7 @@ BasicGame.Preloader.prototype = {
 
         this.load.audio('breakBottle', ['asset/bottleBreak2.wav']);
         this.load.audio('rockHit', ['asset/rockHit.wav']);
+        this.load.audio('gameMusic', ['asset/pentagram_rage.mp3']);
 
         //menu stuff
         this.load.image("menubutton", "asset/menu/menubutton.png");
@@ -54,13 +63,15 @@ BasicGame.Preloader.prototype = {
 
         this.state.start('MainMenu');
 
-        /*
-		if (this.cache.isSoundDecoded('titleMusic') && this.ready == false)
+       /*
+       //the following code does not work in the emulator.
+		if (this.cache.isSoundDecoded('gameMusic'))
 		{
-			this.ready = true;
-			//this.state.start('MainMenu');
+			//this.ready = true;
+			this.state.start('MainMenu');
 		}
         */
+        
 
     }
 
