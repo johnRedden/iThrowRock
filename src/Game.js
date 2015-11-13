@@ -156,7 +156,7 @@ BasicGame.Game.prototype = {
         // munu at bottom  **************************************
 		this.menuGroup = this.add.group();
 		
-		var menuButton = this.add.button(this.world.width / 2,  30, "menubutton", this.toggleMenu,this);
+		var menuButton = this.add.button(this.world.width / 1.06,  275, "menubutton", this.toggleMenu,this);
 		menuButton.anchor.set(0.5);
 
 		this.menuGroup.add(menuButton);
