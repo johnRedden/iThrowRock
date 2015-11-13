@@ -355,7 +355,8 @@ BasicGame.Game.prototype = {
 	// Rock2 Bottle utility methods
 	bottleHit2: function(rock, bottle){
 		if(this.getDistance(rock.velocity.x, rock.velocity.y) > 400){
-            
+			// GETS THE BOTTLE WHOO! We can use this for a legit reference instead of a parameter
+            console.log(this.bottles.getAt(this.bottles.getIndex(bottle.sprite)));
             if(BasicGame.music){ //todo: change to sound when btn implemented
 			     this.bottleBreak.play();
             }
