@@ -66,7 +66,7 @@ BasicGame.Game.prototype = {
 		this.rock.scale.setTo(0.06,0.06);
 		
 		// turn false the collision circle in production
-		this.physics.p2.enable(this.rock, false); //change to true to see hitcircle
+		this.physics.p2.enable(this.rock, true); //change to true to see hitcircle
 		this.rock.body.setRectangle(25,20);
 		this.rock.body.collideWorldBounds = true;
 		this.rock.body.velocity.x = 20;
@@ -324,11 +324,25 @@ BasicGame.Game.prototype = {
             this.darkBottle.kill();
 		  
             this.rock.scale.setTo(0.2,0.2);
+            this.rock.body.setRectangle(100, 85);
+			this.rock.body.setCollisionGroup(this.rockCollisionGroup);
+			this.rock.body.collides(this.bottleCollisionGroup,this.bottleHit2,this);
+	        this.rock.body.collides(this.blockerCollisionGroup,this.blockerHit,this);
+	        this.rock.body.collides(this.molotovCollisionGroup,this.molotovHit,this);
+	        this.rock.body.collides(this.darkBottleCollisionGroup,this.darkBottleHit,this);
+			this.rock.body.collideWorldBounds = true;
             //losing collide with bounds??
             //this.rock.body.setRectangle(40,40);
             this.time.events.add(Phaser.Timer.SECOND *3, function(){
                 //back to normal
                 this.rock.scale.setTo(0.06,0.06);
+                this.rock.body.setRectangle(25, 20);
+				this.rock.body.setCollisionGroup(this.rockCollisionGroup);
+				this.rock.body.collides(this.bottleCollisionGroup,this.bottleHit2,this);
+		        this.rock.body.collides(this.blockerCollisionGroup,this.blockerHit,this);
+		        this.rock.body.collides(this.molotovCollisionGroup,this.molotovHit,this);
+		        this.rock.body.collides(this.darkBottleCollisionGroup,this.darkBottleHit,this);
+				this.rock.body.collideWorldBounds = true;
                 // scale the hit rectangle back
                 //this.rock.body.setRectangle(25,20);
                 this.spawnDarkBottle();
