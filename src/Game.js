@@ -69,7 +69,7 @@ BasicGame.Game.prototype = {
 		//new set collision group and tell what to collide with
 		this.rock.body.setCollisionGroup(this.rockCollisionGroup);
 		this.rock.body.collides(this.bottleCollisionGroup,this.bottleHit2,this);
-        this.rock.body.collides(this.blockerCollisionGroup,this.blockerHit,this);
+        this.rock.body.collides(this.blockerCollisionGroup,this.bloardHit,this);
         this.rock.body.collides(this.molotovCollisionGroup,this.molotovHit,this);
         this.rock.body.collides(this.darkBottleCollisionGroup,this.darkBottleHit,this);
 		
@@ -102,14 +102,18 @@ BasicGame.Game.prototype = {
 			
 		},this);
 		
-        // initialize wood blocker *******************
-		this.wood = this.add.sprite(0, this.world.centerY - 100, 'woodBlocker');
-        this.wood.scale.setTo(0.7,0.25);
-        
-        this.physics.p2.enable(this.wood, false);
-        this.wood.kill(); //only spawn on level 2
-        //this.wood.body.setRectangle(scaleFactor*20,scaleFactor*100);
-        //this.spawnWoodBlocker();
+        // initialize wood boards *******************
+        this.boards = this.add.group();
+        for(var i = 0; i<3; i++){
+			var temp = this.boards.create(0, 0,'woodBlocker');
+            temp.scale.setTo(0.7,0.25);
+            temp.kill();
+		}
+        this.physics.p2.enable(this.boards, false);
+		// use set all to setAll for same value
+		this.boards.setAll('body.static', true);
+        this.boards.setAll('body.velocity.x', 100);
+        this.spawnBoards();
         //***********************************************
         
         this.molotov = this.add.sprite(10, this.world.centerY - 100, 'molotov');
@@ -117,8 +121,6 @@ BasicGame.Game.prototype = {
         this.molotov.anchor.setTo(0.5, 0.5);
         this.physics.p2.enable(this.molotov, false);
         this.molotov.body.setRectangle(20,60);
-        //this.molotov.kill(); //only spawn on level 2
-        //this.wood.body.setRectangle(scaleFactor*20,scaleFactor*100);
         this.spawnMolotov();
         
         this.darkBottle = this.add.sprite(10, this.world.centerY - 100, 'darkBottle');
@@ -140,7 +142,7 @@ BasicGame.Game.prototype = {
 		//***rock2 code *************
 					
 		
-		//input event liseteners
+		//input event listeners
 		this.input.onDown.add(this.rockGrab, this);
 		this.input.onUp.add(this.rockDrop, this);
 		this.input.addMoveCallback(this.rockMove, this);
@@ -199,10 +201,15 @@ BasicGame.Game.prototype = {
 			}
 			
 		},this);
-        // wood not always there
-        if(this.wood.body.x > this.world.width+25){
-				this.wood.body.x = -10;
-        }
+        //TODO: use for each alive -- more efficient
+        this.boards.forEachAlive(function (board) {
+
+			if(board.body.x > this.world.width+25){
+				board.body.x = -10;
+			}
+			
+		},this);
+
         if(this.molotov.body.x > this.world.width+25){
             this.molotov.kill();
             this.spawnMolotov();
@@ -286,20 +293,6 @@ BasicGame.Game.prototype = {
 	},
 	//*************************************
     
-    blockerHit: function(){
-        
-        if(this.wood.frame===4){
-            this.wood.lifespan = 1000;
-            this.wood.body.velocity.y=75;
-            this.wood.body.angularVelocity = this.rnd.integerInRange(20,45);
-            
-            this.increaseScore(50);
-            
-        }else{
-            this.wood.frame+=1;
-        }
-        
-	},
     molotovHit: function(){
         
         if(this.getDistance(this.rock.body.velocity.x, this.rock.body.velocity.y) > 500){
@@ -349,7 +342,7 @@ BasicGame.Game.prototype = {
 	bottleHit2: function(rock, bottle){
 		if(this.getDistance(rock.velocity.x, rock.velocity.y) > 400){
 			// GETS THE BOTTLE WHOO! We can use this for a legit reference instead of a parameter
-            console.log(this.bottles.getAt(this.bottles.getIndex(bottle.sprite)));
+            //console.log(this.bottles.getAt(this.bottles.getIndex(bottle.sprite)));
             if(BasicGame.sound){ 
 			     this.bottleBreak.play();
             }
@@ -380,33 +373,13 @@ BasicGame.Game.prototype = {
                 if(this.bottles.countDead()===BasicGame.numGreenBottles){
 	                BasicGame.level+=1;
 	                this.spawnBottles();
-	                if(BasicGame.level>1)
-	                    this.spawnWoodBlocker();
+                    this.spawnBoards();
                 };
             },this);
 		}
 		
 	},
-	spawnBottle: function(){
-		// grab a dead bottle from the group
-		var bottle = this.bottles.getFirstDead();
-		
-		if(bottle !== null){
-			bottle.animations.stop('splode',true);
-			bottle.body.x = -10;
-			bottle.body.velocity.x = this.rnd.integerInRange(50,150);
-			bottle.body.angularVelocity = this.rnd.integerInRange(-5,5);
-			
-			var scaleFactor = this.rnd.realInRange(0.3,0.6);
-			bottle.scale.setTo(scaleFactor,scaleFactor);
-			bottle.body.setRectangle(scaleFactor*20,scaleFactor*100);
-						bottle.body.setCollisionGroup(this.bottleCollisionGroup);
-			bottle.body.collides(this.rockCollisionGroup);
-			bottle.body.static = true;
-			
-			bottle.revive();
-		}
-	},
+
     spawnBottles: function(){
         this.bottles.forEach(function (bottle) {
 			bottle.animations.stop('splode',true);
@@ -427,19 +400,47 @@ BasicGame.Game.prototype = {
 
 		},this);
     },
-    spawnWoodBlocker: function(){
-        this.wood.revive();
-        this.wood.frame = 0;
-        
-        this.wood.body.setCollisionGroup(this.blockerCollisionGroup);
-        this.wood.body.collides(this.rockCollisionGroup);
-        this.wood.body.x = -10;
-        this.wood.body.y = this.world.centerY - 100;
-        this.wood.body.static = true;
-        this.wood.body.velocity.y = 0;
-        this.wood.body.velocity.x = this.rnd.integerInRange(50,150);
-        this.wood.body.angularVelocity = this.rnd.integerInRange(3,7);
-        
+
+    spawnBoards: function(){
+        var num = 0;
+        // number of boards based on level.
+        if(BasicGame.level<5) num = 1;        
+        if(BasicGame.level>=5 && BasicGame.level<10) num = 2;
+        if(BasicGame.level>=10) num = 3;
+                
+        for(var i=0; i<num - this.boards.countLiving(); i++){
+            var board = this.boards.getFirstDead();
+            
+            if(board){
+                board.body.x = -10;
+                board.body.y = this.world.centerY-this.rnd.integerInRange(10,100);
+                board.body.velocity.x = this.rnd.integerInRange(50,200);
+                board.body.velocity.y = 0;
+                board.body.angularVelocity = this.rnd.integerInRange(-5,5);
+                if(board.body.angularVelocity== 0)
+                    board.body.angularVelocity=	4;
+
+                board.body.setCollisionGroup(this.blockerCollisionGroup);
+                board.body.collides(this.rockCollisionGroup, this.boardHit,this);
+                
+                board.body.static = true;
+                
+                board.frame=0;
+                board.revive();
+            }
+        }
+    },
+    boardHit: function(arg){
+        var board = arg.sprite;
+        // each board is a spritesheet
+        if(board.frame===4){
+            board.lifespan = 1000;
+            board.body.velocity.y=75;
+            board.body.angularVelocity = this.rnd.integerInRange(20,45);
+            this.increaseScore(50);
+        }else{
+            board.frame+=1;
+        }
     },
     spawnMolotov: function(){
         this.molotov.revive();

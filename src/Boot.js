@@ -7,6 +7,7 @@ BasicGame = {
     score: 0,
     level: 1,
     numGreenBottles:5,
+    numWoodBlockers:3,
     highScore: 0,
     highLevel: 0,
     music: false, //start with no music
