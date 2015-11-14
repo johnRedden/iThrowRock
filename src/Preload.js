@@ -39,7 +39,7 @@ BasicGame.Preloader.prototype = {
 
         this.load.audio('breakBottle', ['asset/bottleBreak2.wav']);
         this.load.audio('rockHit', ['asset/rockHit.wav']);
-        this.load.audio('gameMusic', ['asset/pentagram_rage.mp3']);
+        this.load.audio('gameMusic', ['asset/pentagram_rage.ogg', 'asset/pentagram_rage.mp3']);
 
         //menu stuff
         this.load.image("menubutton", "asset/menu/menubutton.png");
@@ -47,6 +47,7 @@ BasicGame.Preloader.prototype = {
         this.load.image("thankyou", "asset/menu/thankyou.png");
         this.load.image("playBtn", "asset/menu/playbutton.png");
         this.load.spritesheet('musicToggle', 'asset/music_status.png',135,160,2);
+        this.load.spritesheet('soundfxToggle','asset/fx_status.png',210,160,2);
         this.load.spritesheet('woodBlocker', 'asset/wood_spritesheet.png',110,77,5);
         
 
@@ -60,19 +61,18 @@ BasicGame.Preloader.prototype = {
     },
 
     update: function () {
-
-        //Todo: pause a bit
-
-        this.state.start('MainMenu');
-
-       /*
+       
        //the following code does not work in the emulator.
 		if (this.cache.isSoundDecoded('gameMusic'))
 		{
+            BasicGame.backgroundMusic = this.add.audio('gameMusic');
+            BasicGame.backgroundMusic.volume = 0.3;
+            BasicGame.backgroundMusic.loop = true;
+            //BasicGame.backgroundMusic.stop();
 			//this.ready = true;
 			this.state.start('MainMenu');
 		}
-        */
+       
         
 
     }

@@ -12,14 +12,6 @@ BasicGame.Game.prototype = {
 	combo:	0,
     init: function () {
         
-        if(BasicGame.music){
-            this.backgroundMusic = this.add.audio('gameMusic');
-            this.backgroundMusic.volume = 0.3;
-            this.backgroundMusic.loop = true;
-            this.backgroundMusic.play();
-        }
-        
-
         this.stage.backgroundColor = '#fff'; //white
 		
 		this.physics.startSystem(Phaser.Physics.P2JS);
@@ -162,7 +154,7 @@ BasicGame.Game.prototype = {
 		this.menuGroup.add(menuButton);
 		var resetGame = this.add.button(this.world.width / 2, -30, "resetgame", function () {
             // game reset functionality
-            this.backgroundMusic.stop();
+            //this.backgroundMusic.stop();
             this.state.start('MainMenu');
 		},this);
 		resetGame.anchor.set(0.5);
@@ -287,14 +279,15 @@ BasicGame.Game.prototype = {
 	},
 	rockHit: function(){
 		if(!this.rock.grabbed){
-			this.rockHitSnd.play('rockSrt');
+            if(BasicGame.sound){
+                this.rockHitSnd.play('rockSrt');
+            }
 		}
 	},
 	//*************************************
     
     blockerHit: function(){
-       
-		this.rockHitSnd.play('rockSrt');
+        
         if(this.wood.frame===4){
             this.wood.lifespan = 1000;
             this.wood.body.velocity.y=75;
@@ -357,7 +350,7 @@ BasicGame.Game.prototype = {
 		if(this.getDistance(rock.velocity.x, rock.velocity.y) > 400){
 			// GETS THE BOTTLE WHOO! We can use this for a legit reference instead of a parameter
             console.log(this.bottles.getAt(this.bottles.getIndex(bottle.sprite)));
-            if(BasicGame.music){ //todo: change to sound when btn implemented
+            if(BasicGame.sound){ 
 			     this.bottleBreak.play();
             }
             //NEED to turn off the abiltiy for the sprit to get hit when animation is playing

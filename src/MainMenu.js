@@ -5,16 +5,24 @@ BasicGame.MainMenu = function (game) {
 
 BasicGame.MainMenu.prototype = {
 
-    create: function () {
+    create: function () {        
         this.stage.backgroundColor = '#add8e6'; //blue??
 
         this.playbtn = this.add.button(this.world.centerX + 35, 150, 'playBtn', this.startGame, this);
         
         //music on...off button
         var tmpImg1 = this.cache.getImage('musicToggle');
-        this.musicBtn = this.add.button(this.world.centerX, this.world.height - tmpImg1.height/2.0, 'musicToggle',this.changeMusic, this);
+        var tmpImg2 = this.cache.getImage('soundfxToggle');
+        this.musicBtn = this.add.button(this.world.centerX-50, this.world.height - tmpImg1.height/2.0, 'musicToggle',this.changeMusic, this);
+        this.soundBtn = this.add.button(this.world.centerX+50, this.world.height - tmpImg1.height/2.0, 'soundfxToggle',this.changeSound, this);
         this.musicBtn.scale.setTo(0.5,0.5);
         this.musicBtn.anchor.setTo(0.5,0.5);
+        this.soundBtn.scale.setTo(0.5,0.5);
+        this.soundBtn.anchor.setTo(0.5,0.5);
+        
+        // change music global in Boot if wanting music on init.
+        this.musicCheck();
+        this.soundCheck();
         //***********************
         
         // title
@@ -49,16 +57,47 @@ BasicGame.MainMenu.prototype = {
     },
     
     changeMusic: function(){
-        if(this.musicBtn.frame===0){
-            this.musicBtn.frame=1;
+        //change logic
+        if(BasicGame.music){
             // turn music off
             BasicGame.music = false;
+            this.musicCheck();
+            
         }else{
-            this.musicBtn.frame=0;
             //turn music on
             BasicGame.music = true;
-        }
+            this.musicCheck();
+        }    
+    },
+    changeSound: function(){
+         //change logic
+        if(BasicGame.sound){
+            // turn sound off
+            BasicGame.sound = false;
+            this.soundCheck();
+            
+        }else{
+            //turn sound on
+            BasicGame.sound = true;
+            this.soundCheck();
+        }  
     
+    },
+    musicCheck: function(){
+        if(BasicGame.music){
+            BasicGame.backgroundMusic.play();
+            this.musicBtn.frame=0;
+        }else{
+            BasicGame.backgroundMusic.stop();
+            this.musicBtn.frame=1;
+        }  
+    },
+    soundCheck: function(){
+        if(BasicGame.sound){
+            this.soundBtn.frame=0;
+        }else{
+            this.soundBtn.frame=1;
+        }  
     },
 
     startGame: function (btn) {

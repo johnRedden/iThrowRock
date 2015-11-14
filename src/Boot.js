@@ -9,8 +9,9 @@ BasicGame = {
     numGreenBottles:5,
     highScore: 0,
     highLevel: 0,
-    music: true,
+    music: false, //start with no music
     sound: true,
+    backgroundMusic: null,
 
     /* Your game can check BasicGame.orientated in internal loops to know if it should pause or not */
     //orientated: false,
