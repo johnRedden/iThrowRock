@@ -73,34 +73,15 @@ BasicGame.Game.prototype = {
         this.rock.body.collides(this.molotovCollisionGroup,this.molotovHit,this);
         this.rock.body.collides(this.darkBottleCollisionGroup,this.darkBottleHit,this);
 		
-		//rock2 BOTTLE code ****************
-		//new
+		//green BOTTLE group code code ****************
 		this.bottles = this.add.group();
 		for(var i = 0; i<BasicGame.numGreenBottles; i++){
-			this.bottles.create(10,this.rnd.integerInRange(10,100),'bottleSht');
+			var bottle = this.bottles.create(10,this.rnd.integerInRange(10,100),'bottleSht');
+            bottle.animations.add('splode');
 		}
 		//enable physics on the whole group
 		this.physics.p2.enable(this.bottles, false);
-		// use set all to setAll for same value
-		this.bottles.setAll('body.static', true); 
-		// use forEach to access each individual bottle
-		this.bottles.forEach(function (bottle) {
-			var scaleFactor = this.rnd.realInRange(0.3,0.6);
-			bottle.scale.setTo(scaleFactor,scaleFactor);
-			
-			bottle.body.setRectangle(scaleFactor*20,scaleFactor*100);
-			bottle.body.velocity.x = this.rnd.integerInRange(50,150);
-			bottle.body.angularVelocity = this.rnd.integerInRange(-5,5);
-			
-			bottle.scale.setTo(this.rnd.realInRange(0.5,1),this.rnd.realInRange(0.5,1));
-			bottle.animations.add('splode');
-			
-			bottle.body.setCollisionGroup(this.bottleCollisionGroup);
-			bottle.body.collides(this.rockCollisionGroup);
-			bottle.body.static = true;
-			
-			
-		},this);
+        this.spawnBottles();
 		
         // initialize wood boards *******************
         this.boards = this.add.group();
@@ -111,8 +92,8 @@ BasicGame.Game.prototype = {
 		}
         this.physics.p2.enable(this.boards, false);
 		// use set all to setAll for same value
-		this.boards.setAll('body.static', true);
-        this.boards.setAll('body.velocity.x', 100);
+		//this.boards.setAll('body.static', true);
+        //this.boards.setAll('body.velocity.x', 100);
         this.spawnBoards();
         //***********************************************
         
@@ -194,8 +175,7 @@ BasicGame.Game.prototype = {
 				this.bStartedTrail=	false;
 			}
 		}
-		this.bottles.forEach(function (bottle) {
-
+		this.bottles.forEachAlive(function (bottle) {
 			if(bottle.body.x > this.world.width+25){
 				bottle.body.x = -10;
 			}
@@ -392,7 +372,7 @@ BasicGame.Game.prototype = {
 			var scaleFactor = this.rnd.realInRange(0.3,0.6);
 			bottle.scale.setTo(scaleFactor,scaleFactor);
 			bottle.body.setRectangle(scaleFactor*20,scaleFactor*100);
-						bottle.body.setCollisionGroup(this.bottleCollisionGroup);
+            bottle.body.setCollisionGroup(this.bottleCollisionGroup);
 			bottle.body.collides(this.rockCollisionGroup);
 			bottle.body.static = true;
 			
