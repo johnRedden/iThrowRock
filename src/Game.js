@@ -8,7 +8,6 @@ BasicGame.Game = function (game) {
 BasicGame.Game.prototype = {
 	bStartedTrail:	false,
 	trailing:	0,
-	score:	0,
 	combo:	0,
     init: function () {
         
@@ -55,7 +54,7 @@ BasicGame.Game.prototype = {
 		this.rock.scale.setTo(0.06,0.06);
 		
 		// turn false the collision circle in production
-		this.physics.p2.enable(this.rock, true); //change to true to see hitcircle
+		this.physics.p2.enable(this.rock, false); //change to true to see hitcircle
 		this.rock.body.setRectangle(25,20);
 		this.rock.body.collideWorldBounds = true;
 		this.rock.body.velocity.x = 20;
@@ -88,9 +87,6 @@ BasicGame.Game.prototype = {
             temp.kill();
 		}
         this.physics.p2.enable(this.boards, false);
-		// use set all to setAll for same value
-		//this.boards.setAll('body.static', true);
-        //this.boards.setAll('body.velocity.x', 100);
         this.spawnBoards();
         //***********************************************
         
@@ -144,11 +140,18 @@ BasicGame.Game.prototype = {
 		this.menuGroup.add(thankYou);
         //******************************************************
         
-		this.scoreText=	this.add.text(10, this.world.centerY-24, "Score: "+this.score+"\nLevel: "+BasicGame.level, {
+		this.scoreText=	this.add.text(10, this.world.centerY-24, "Score: "+BasicGame.score+"\nLevel: "+BasicGame.level, {
 			fontFamily:	"arial",
 			fontSize:	"16px",
 			fill:	"#101820"
 		});
+        this.levelTxt =	this.add.text(this.world.centerX, this.world.centerY/2, "Level: "+BasicGame.level, {
+			fontFamily:	"arial",
+			fontSize:	"28px",
+			fill:	"#fff"
+		});
+        this.levelTxt.anchor.set(0.5,0.5);
+        this.levelTxt.lifespan = 2000;
 	},
 	getDistance:    function(x, y)
 	{
@@ -177,7 +180,6 @@ BasicGame.Game.prototype = {
 			
 		},this);
         this.boards.forEachAlive(function (board) {
-
 			if(board.body.x > this.world.width+25){
 				board.body.x = -10;
 			}
@@ -276,9 +278,7 @@ BasicGame.Game.prototype = {
         }
     },
     darkBottleHit: function(){
-        
-        if(this.getDistance(this.rock.body.velocity.x, this.rock.body.velocity.y) > 500){
-            console.log('hit dark');
+        if(this.getSpeed(this.rock.body.velocity.x, this.rock.body.velocity.y) > BasicGame.breakSpeedDarkBottle){
             // this.rock gets BIG for 3 seconds or so
             this.bottleBreak.play();
             this.darkBottle.kill();
@@ -314,19 +314,11 @@ BasicGame.Game.prototype = {
 
 	// Rock2 Bottle utility methods
 	bottleHit2: function(rock, bottle){
-        
-		if(this.getDistance(rock.velocity.x, rock.velocity.y) > 400 && !bottle.sprite.animations.currentAnim.isPlaying){
-            
-			// GETS THE BOTTLE WHOO! We can use this for a legit reference instead of a parameter
-            //console.log(this.bottles.getAt(this.bottles.getIndex(bottle.sprite)));
+        // bottle needs to be going fast enough and not playing its animation
+		if(this.getSpeed(rock.velocity.x, rock.velocity.y) > BasicGame.breakSpeedGreenBottle && !bottle.sprite.animations.currentAnim.isPlaying){
             if(BasicGame.sound){ 
 			     this.bottleBreak.play();
             }
-            //NEED to turn off the abiltiy for the sprit to get hit when animation is playing
-			//last true in aminations.play kills the sprite
-			//bottle.sprite.kill();
-			//this.time.events.add(Phaser.Timer.SECOND * 2, this.spawnBottle, this);
-
 			bottle.sprite.animations.play('splode',30,false,true); 
 			bottle.sprite.events.onKilled.add(function(){
                 this.combo++;
@@ -348,6 +340,7 @@ BasicGame.Game.prototype = {
                 }, this);
                 if(this.bottles.countDead()===BasicGame.numGreenBottles){
 	                BasicGame.level+=1;
+                    this.announceLevel();
 	                this.spawnBottles();
                     this.spawnBoards();
                 };
@@ -358,9 +351,11 @@ BasicGame.Game.prototype = {
 
     spawnBottles: function(){
         this.bottles.forEach(function (bottle) {
+            
 			bottle.animations.stop('splode',true);
 			bottle.body.x = -10;
-			bottle.body.velocity.x = this.rnd.integerInRange(50,150)*BasicGame.level; // whoa...
+            // NEED a better level up AI
+			bottle.body.velocity.x = this.rnd.integerInRange(50,150)*BasicGame.level/2.0; // whoa...
 			bottle.body.angularVelocity = this.rnd.integerInRange(-5,5);
 			if(bottle.body.angularVelocity== 0)
 				bottle.body.angularVelocity=	4;
@@ -395,10 +390,8 @@ BasicGame.Game.prototype = {
                 board.body.angularVelocity = this.rnd.integerInRange(-5,5);
                 if(board.body.angularVelocity== 0)
                     board.body.angularVelocity=	4;
-
                 board.body.setCollisionGroup(this.blockerCollisionGroup);
                 board.body.collides(this.rockCollisionGroup, this.boardHit,this);
-                
                 board.body.static = true;
                 
                 board.frame=0;
@@ -447,9 +440,16 @@ BasicGame.Game.prototype = {
 	
 	increaseScore:	function(amount)
 	{
-		this.score+=	amount;
-		this.scoreText.setText("Score: "+this.score+"\nLevel: "+BasicGame.level);
+		BasicGame.score+=	amount;
+		this.scoreText.setText("Score: "+BasicGame.score+"\nLevel: "+BasicGame.level);
 	},
+    announceLevel: function(){
+        this.levelTxt.setText("Level: "+BasicGame.level);
+        this.levelTxt.revive();
+        this.levelTxt.lifespan = 2000;
+        // update the score
+        this.scoreText.setText("Score: "+BasicGame.score+"\nLevel: "+BasicGame.level);
+    },
 	
     // bottom menu utility methods
 	toggleMenu: function () {
@@ -464,5 +464,6 @@ BasicGame.Game.prototype = {
             }, 500, Phaser.Easing.Bounce.Out, true);     
         }
     },
+    getSpeed: function(x, y){ return Math.sqrt(x*x+y*y);},
 
 };
