@@ -31,14 +31,11 @@ BasicGame.Game.prototype = {
         graphics.moveTo(0, this.boundaryLine);
 		graphics.lineTo(this.world.width, this.boundaryLine); 
         
-		
-		//new
-		// collision groups http://phaser.io/examples/v2/p2-physics/collision-groups
+		//Set collision groups http://phaser.io/examples/v2/p2-physics/collision-groups
 		this.physics.p2.setImpactEvents(true);
 		//  Create our collision groups. One for the rocks, one for the bottles
 		this.rockCollisionGroup = this.physics.p2.createCollisionGroup();
 		this.bottleCollisionGroup = this.physics.p2.createCollisionGroup();
-		this.emptyCollisionGroup = this.physics.p2.createCollisionGroup();
         this.blockerCollisionGroup = this.physics.p2.createCollisionGroup();
         this.molotovCollisionGroup = this.physics.p2.createCollisionGroup();
         this.darkBottleCollisionGroup = this.physics.p2.createCollisionGroup();
@@ -52,7 +49,7 @@ BasicGame.Game.prototype = {
 	},
 
 	create: function () {
-		// Add logo to the center of the stage
+		// Add rock to the center of the stage
 		this.rock = this.add.sprite(this.world.centerX, this.world.centerY, 'rock');
 		this.rock.anchor.setTo(0.5, 0.5);
 		this.rock.scale.setTo(0.06,0.06);
@@ -66,7 +63,7 @@ BasicGame.Game.prototype = {
 		this.rock.body.angularDamping = 0.5;
 
 		
-		//new set collision group and tell what to collide with
+		//new set collision group and tell what to collide with and which functions to callback
 		this.rock.body.setCollisionGroup(this.rockCollisionGroup);
 		this.rock.body.collides(this.bottleCollisionGroup,this.bottleHit2,this);
         this.rock.body.collides(this.blockerCollisionGroup,this.bloardHit,this);
@@ -109,8 +106,6 @@ BasicGame.Game.prototype = {
         this.darkBottle.anchor.setTo(0.5, 0.5);
         this.physics.p2.enable(this.darkBottle, false);
         this.darkBottle.body.setRectangle(20,60);
-        //this.molotov.kill(); //only spawn on level 2
-        //this.wood.body.setRectangle(scaleFactor*20,scaleFactor*100);
         this.spawnDarkBottle();
         
 		
@@ -181,7 +176,6 @@ BasicGame.Game.prototype = {
 			}
 			
 		},this);
-        //TODO: use for each alive -- more efficient
         this.boards.forEachAlive(function (board) {
 
 			if(board.body.x > this.world.width+25){
@@ -320,7 +314,9 @@ BasicGame.Game.prototype = {
 
 	// Rock2 Bottle utility methods
 	bottleHit2: function(rock, bottle){
-		if(this.getDistance(rock.velocity.x, rock.velocity.y) > 400){
+        
+		if(this.getDistance(rock.velocity.x, rock.velocity.y) > 400 && !bottle.sprite.animations.currentAnim.isPlaying){
+            
 			// GETS THE BOTTLE WHOO! We can use this for a legit reference instead of a parameter
             //console.log(this.bottles.getAt(this.bottles.getIndex(bottle.sprite)));
             if(BasicGame.sound){ 
