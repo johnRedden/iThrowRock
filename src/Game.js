@@ -179,22 +179,23 @@ BasicGame.Game.prototype = {
 			}
 			
 		},this);
+        
+        // Update breakable objects on screen *****
         this.boards.forEachAlive(function (board) {
 			if(board.body.x > this.world.width+25){
 				board.body.x = -10;
 			}
-			
 		},this);
         this.molotovs.forEachAlive(function (molotov) {
 			if(molotov.body.x > this.world.width+25){
 				molotov.body.x = -10;
 			}
-            
 		},this);
         if(this.darkBottle.body.x > this.world.width+25){
             this.darkBottle.kill();
             this.spawnDarkBottle();
         }
+        //****************************************
 	},
 	
 	// utility functions for the rock grab *****************
@@ -401,11 +402,17 @@ BasicGame.Game.prototype = {
     },
     molotovHit: function(arg){
         var molotov = arg.sprite;
-        if(BasicGame.sound){ 
-			     this.bottleBreak.play();
+        
+        if(this.getSpeed(this.rock.body.velocity.x, this.rock.body.velocity.y) > BasicGame.breakSpeedMolotov){
+            if(BasicGame.sound){this.bottleBreak.play()};
+            // do something enormous
+            molotov.kill();
+            var temp=	this.add.sprite(molotov.x, molotov.y, "firepuff");
+            temp.anchor.setTo(0.5, 0.5);
+            temp.animations.add('explode').play('explode',30,true);
+            //TODO: memory leak here?  Need to destray (no just kill) this sprite
+            //TODO: add lives or a way to end the game
         }
-        // do something
-        molotov.lifespan = 100;
 
     },
     spawnDarkBottle: function(){
@@ -422,12 +429,10 @@ BasicGame.Game.prototype = {
         
     },
     darkBottleHit: function(){
-        if(BasicGame.sound){ 
-			     this.bottleBreak.play();
-        }
+
         if(this.getSpeed(this.rock.body.velocity.x, this.rock.body.velocity.y) > BasicGame.breakSpeedDarkBottle){
             // this.rock gets BIG for 3 seconds or so
-            this.bottleBreak.play();
+            if(BasicGame.sound){this.bottleBreak.play()};
             this.darkBottle.kill();
 		 
             this.rock.scale.setTo(0.2,0.2);
@@ -436,7 +441,6 @@ BasicGame.Game.prototype = {
 			this.rock.body.collides([this.bottleCollisionGroup,this.boardCollisionGroup, this.molotovCollisionGroup, this.darkBottleCollisionGroup]);
 			this.rock.body.collideWorldBounds = true;
             
-            //losing collide with bounds??
             //this.rock.body.setRectangle(40,40);
             this.time.events.add(Phaser.Timer.SECOND *3, function(){
                 //back to normal
