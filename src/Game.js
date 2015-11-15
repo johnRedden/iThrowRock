@@ -35,7 +35,7 @@ BasicGame.Game.prototype = {
 		//  Create our collision groups. One for the rocks, one for the bottles
 		this.rockCollisionGroup = this.physics.p2.createCollisionGroup();
 		this.bottleCollisionGroup = this.physics.p2.createCollisionGroup();
-        this.blockerCollisionGroup = this.physics.p2.createCollisionGroup();
+        this.boardCollisionGroup = this.physics.p2.createCollisionGroup();
         this.molotovCollisionGroup = this.physics.p2.createCollisionGroup();
         this.darkBottleCollisionGroup = this.physics.p2.createCollisionGroup();
 		this.physics.p2.updateBoundsCollisionGroup();
@@ -61,13 +61,9 @@ BasicGame.Game.prototype = {
 		this.rock.body.velocity.y = 150;
 		this.rock.body.angularDamping = 0.5;
 
-		
-		//new set collision group and tell what to collide with and which functions to callback
+		//new set collision group note: no callbacks on rock.body.collides
 		this.rock.body.setCollisionGroup(this.rockCollisionGroup);
-		this.rock.body.collides(this.bottleCollisionGroup,this.bottleHit2,this);
-        this.rock.body.collides(this.blockerCollisionGroup,this.bloardHit,this);
-        this.rock.body.collides(this.molotovCollisionGroup,this.molotovHit,this);
-        this.rock.body.collides(this.darkBottleCollisionGroup,this.darkBottleHit,this);
+        this.rock.body.collides([this.bottleCollisionGroup,this.boardCollisionGroup, this.molotovCollisionGroup, this.darkBottleCollisionGroup]);
 		
 		//green BOTTLE group code code ****************
 		this.bottles = this.add.group();
@@ -90,12 +86,16 @@ BasicGame.Game.prototype = {
         this.spawnBoards();
         //***********************************************
         
-        this.molotov = this.add.sprite(10, this.world.centerY - 100, 'molotov');
-        this.molotov.scale.setTo(0.2,0.2);
-        this.molotov.anchor.setTo(0.5, 0.5);
-        this.physics.p2.enable(this.molotov, false);
-        this.molotov.body.setRectangle(20,60);
-        this.spawnMolotov();
+        // initialize molotovs boards *******************
+        this.molotovs = this.add.group();
+        for(var i = 0; i<3; i++){
+			var temp = this.molotovs.create(0, 0,'molotov');
+            temp.scale.setTo(0.2,0.2);
+            temp.kill();
+		}
+        this.physics.p2.enable(this.molotovs, false);
+        this.spawnMolotovs();
+        //***********************************************
         
         this.darkBottle = this.add.sprite(10, this.world.centerY - 100, 'darkBottle');
         this.darkBottle.scale.setTo(0.3,0.3);
@@ -111,7 +111,7 @@ BasicGame.Game.prototype = {
 		this.rockHitSnd.addMarker('rockSrt',0.15,0.5);
 		this.rock.grabbed = false;
 		this.rock.body.onBeginContact.add(this.rockHit, this);
-		//***rock2 code *************
+		//*************
 					
 		
 		//input event listeners
@@ -185,16 +185,16 @@ BasicGame.Game.prototype = {
 			}
 			
 		},this);
-
-        if(this.molotov.body.x > this.world.width+25){
-            this.molotov.kill();
-            this.spawnMolotov();
-        }
+        this.molotovs.forEachAlive(function (molotov) {
+			if(molotov.body.x > this.world.width+25){
+				molotov.body.x = -10;
+			}
+            
+		},this);
         if(this.darkBottle.body.x > this.world.width+25){
             this.darkBottle.kill();
             this.spawnDarkBottle();
         }
-		
 	},
 	
 	// utility functions for the rock grab *****************
@@ -269,51 +269,9 @@ BasicGame.Game.prototype = {
 	},
 	//*************************************
     
-    molotovHit: function(){
-        
-        if(this.getDistance(this.rock.body.velocity.x, this.rock.body.velocity.y) > 500){
-            console.log('hit molotov');
-            // Enormous Explosion 
-            // You die!
-        }
-    },
-    darkBottleHit: function(){
-        if(this.getSpeed(this.rock.body.velocity.x, this.rock.body.velocity.y) > BasicGame.breakSpeedDarkBottle){
-            // this.rock gets BIG for 3 seconds or so
-            this.bottleBreak.play();
-            this.darkBottle.kill();
-		  
-            this.rock.scale.setTo(0.2,0.2);
-            this.rock.body.setRectangle(100, 85);
-			this.rock.body.setCollisionGroup(this.rockCollisionGroup);
-			this.rock.body.collides(this.bottleCollisionGroup,this.bottleHit2,this);
-	        this.rock.body.collides(this.blockerCollisionGroup,this.blockerHit,this);
-	        this.rock.body.collides(this.molotovCollisionGroup,this.molotovHit,this);
-	        this.rock.body.collides(this.darkBottleCollisionGroup,this.darkBottleHit,this);
-			this.rock.body.collideWorldBounds = true;
-            //losing collide with bounds??
-            //this.rock.body.setRectangle(40,40);
-            this.time.events.add(Phaser.Timer.SECOND *3, function(){
-                //back to normal
-                this.rock.scale.setTo(0.06,0.06);
-                this.rock.body.setRectangle(25, 20);
-				this.rock.body.setCollisionGroup(this.rockCollisionGroup);
-				this.rock.body.collides(this.bottleCollisionGroup,this.bottleHit2,this);
-		        this.rock.body.collides(this.blockerCollisionGroup,this.blockerHit,this);
-		        this.rock.body.collides(this.molotovCollisionGroup,this.molotovHit,this);
-		        this.rock.body.collides(this.darkBottleCollisionGroup,this.darkBottleHit,this);
-				this.rock.body.collideWorldBounds = true;
-                // scale the hit rectangle back
-                //this.rock.body.setRectangle(25,20);
-                this.spawnDarkBottle();
-            }, this);
-        
-        }
-    },
-
 
 	// Rock2 Bottle utility methods
-	bottleHit2: function(rock, bottle){
+	bottleHit2: function(bottle,rock){
         // bottle needs to be going fast enough and not playing its animation
 		if(this.getSpeed(rock.velocity.x, rock.velocity.y) > BasicGame.breakSpeedGreenBottle && !bottle.sprite.animations.currentAnim.isPlaying){
             if(BasicGame.sound){ 
@@ -343,6 +301,7 @@ BasicGame.Game.prototype = {
                     this.announceLevel();
 	                this.spawnBottles();
                     this.spawnBoards();
+                    this.spawnMolotovs();
                 };
             },this);
 		}
@@ -364,7 +323,7 @@ BasicGame.Game.prototype = {
 			bottle.scale.setTo(scaleFactor,scaleFactor);
 			bottle.body.setRectangle(scaleFactor*20,scaleFactor*100);
             bottle.body.setCollisionGroup(this.bottleCollisionGroup);
-			bottle.body.collides(this.rockCollisionGroup);
+			bottle.body.collides(this.rockCollisionGroup,this.bottleHit2,this);
 			bottle.body.static = true;
 			
 			bottle.revive();
@@ -390,7 +349,7 @@ BasicGame.Game.prototype = {
                 board.body.angularVelocity = this.rnd.integerInRange(-5,5);
                 if(board.body.angularVelocity== 0)
                     board.body.angularVelocity=	4;
-                board.body.setCollisionGroup(this.blockerCollisionGroup);
+                board.body.setCollisionGroup(this.boardCollisionGroup);
                 board.body.collides(this.rockCollisionGroup, this.boardHit,this);
                 board.body.static = true;
                 
@@ -411,24 +370,49 @@ BasicGame.Game.prototype = {
             board.frame+=1;
         }
     },
-    spawnMolotov: function(){
-        this.molotov.revive();
-        
-        this.molotov.body.setCollisionGroup(this.molotovCollisionGroup);
-        this.molotov.body.collides(this.rockCollisionGroup);
-        this.molotov.body.x = -10;
-        this.molotov.body.y = this.world.centerY - this.rnd.integerInRange(10,200);
-        this.molotov.body.static = true;
-        this.molotov.body.velocity.y = 0;
-        this.molotov.body.velocity.x = this.rnd.integerInRange(70,200);
-        this.molotov.body.angularVelocity = this.rnd.integerInRange(3,7);
-        
+    spawnMolotovs: function(){
+        var num = 0;
+        // number of boards based on level.
+        if(BasicGame.level<5) num = 1;        
+        if(BasicGame.level>=5 && BasicGame.level<10) num = 2;
+        if(BasicGame.level>=10) num = 3;
+                
+        for(var i=0; i<num - this.molotovs.countLiving(); i++){
+            var molotov = this.molotovs.getFirstDead();
+            
+            if(molotov){
+                molotov.body.setRectangle(20,60);
+                molotov.body.x = -10;
+                molotov.body.y = this.world.centerY-this.rnd.integerInRange(10,100);
+                molotov.body.velocity.x = this.rnd.integerInRange(50,200);
+                molotov.body.velocity.y = 0;
+                molotov.body.angularVelocity = this.rnd.integerInRange(-5,5);
+                if(molotov.body.angularVelocity== 0)
+                    molotov.body.angularVelocity=	4;
+                molotov.body.setCollisionGroup(this.molotovCollisionGroup);
+                molotov.body.collides(this.rockCollisionGroup, this.molotovHit,this);
+                molotov.body.static = true;
+                //molotov.body.setRectangle(20,60);
+                
+                //board.frame=0;
+                molotov.revive();
+            }
+        }
+    },
+    molotovHit: function(arg){
+        var molotov = arg.sprite;
+        if(BasicGame.sound){ 
+			     this.bottleBreak.play();
+        }
+        // do something
+        molotov.lifespan = 100;
+
     },
     spawnDarkBottle: function(){
         this.darkBottle.revive();
         
         this.darkBottle.body.setCollisionGroup(this.darkBottleCollisionGroup);
-        this.darkBottle.body.collides(this.rockCollisionGroup);
+        this.darkBottle.body.collides(this.rockCollisionGroup,this.darkBottleHit,this);
         this.darkBottle.body.x = -10;
         this.darkBottle.body.y = this.world.centerY - this.rnd.integerInRange(10,200);
         this.darkBottle.body.static = true;
@@ -436,6 +420,37 @@ BasicGame.Game.prototype = {
         this.darkBottle.body.velocity.x = this.rnd.integerInRange(70,200);
         this.darkBottle.body.angularVelocity = this.rnd.integerInRange(3,7);
         
+    },
+    darkBottleHit: function(){
+        if(BasicGame.sound){ 
+			     this.bottleBreak.play();
+        }
+        if(this.getSpeed(this.rock.body.velocity.x, this.rock.body.velocity.y) > BasicGame.breakSpeedDarkBottle){
+            // this.rock gets BIG for 3 seconds or so
+            this.bottleBreak.play();
+            this.darkBottle.kill();
+		 
+            this.rock.scale.setTo(0.2,0.2);
+            this.rock.body.setRectangle(100, 85);
+			this.rock.body.setCollisionGroup(this.rockCollisionGroup);
+			this.rock.body.collides([this.bottleCollisionGroup,this.boardCollisionGroup, this.molotovCollisionGroup, this.darkBottleCollisionGroup]);
+			this.rock.body.collideWorldBounds = true;
+            
+            //losing collide with bounds??
+            //this.rock.body.setRectangle(40,40);
+            this.time.events.add(Phaser.Timer.SECOND *3, function(){
+                //back to normal
+                this.rock.scale.setTo(0.06,0.06);
+                this.rock.body.setRectangle(25, 20);
+				this.rock.body.setCollisionGroup(this.rockCollisionGroup);
+				this.rock.body.collides([this.bottleCollisionGroup,this.boardCollisionGroup, this.molotovCollisionGroup, this.darkBottleCollisionGroup]);
+				this.rock.body.collideWorldBounds = true;
+                // scale the hit rectangle back
+                //this.rock.body.setRectangle(25,20);
+                this.spawnDarkBottle();
+            }, this);
+            
+        }
     },
 	
 	increaseScore:	function(amount)
