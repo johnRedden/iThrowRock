@@ -32,6 +32,10 @@ BasicGame.Preloader.prototype = {
         this.load.image('rock', 'asset/a_0.png');
         this.load.image('molotov', 'asset/molotov_1.png');
         this.load.image('darkBottle', 'asset/dark_bottle.png');
+        this.load.image('shard01', 'asset/bottle_shard_base.png');
+        this.load.image('shard02', 'asset/bottle_shard_middle.png');
+        this.load.image('shard03', 'asset/bottle_shard_top.png');
+        this.load.image('shard04', 'asset/bottle_shard_triangle.png');
   
         //this.load.image('bottle', 'asset/bottle1.png');
         this.load.spritesheet('bottleSht', 'asset/green_sheet.png', 112.5, 169, 6);

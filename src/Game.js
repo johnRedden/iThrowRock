@@ -278,6 +278,7 @@ BasicGame.Game.prototype = {
 			     this.bottleBreak.play();
             }
 			bottle.sprite.animations.play('splode',30,false,true); 
+            this.spawnShards(bottle.sprite);
 			bottle.sprite.events.onKilled.add(function(){
                 this.combo++;
                 this.increaseScore(10*this.combo); // Use the type of bottle to know what your score is
@@ -396,27 +397,50 @@ BasicGame.Game.prototype = {
                 
                 //board.frame=0;
                 molotov.revive();
+                //molotov.events.onKilled.add(this.spawnShards,this);
             }
         }
     },
     molotovHit: function(arg){
         var molotov = arg.sprite;
         
+        
         if(this.getSpeed(this.rock.body.velocity.x, this.rock.body.velocity.y) > BasicGame.breakSpeedMolotov){
+            molotov.kill();
             if(BasicGame.sound){
                 this.bottleBreak.play();
                 this.bottleExplode.play();
                 this.dieYouDie();
             };
-            // do something enormous
-            molotov.kill();
+            
+            //try to make shards
+            
             var temp=	this.add.sprite(molotov.x, molotov.y, "firepuff");
             temp.anchor.setTo(0.5, 0.5);
             temp.animations.add('explode').play('explode',30,true);
             //TODO: memory leak here?  Need to destray (no just kill) this sprite
             //TODO: add lives or a way to end the game
+ 
         }
 
+    },
+    spawnShards: function(sprite){
+            var shards =	this.add.group();
+      
+            shards.create(sprite.body.x,sprite.body.y,'shard01');
+            shards.create(sprite.body.x,sprite.body.y,'shard02');
+            shards.create(sprite.body.x,sprite.body.y,'shard03');
+            shards.create(sprite.body.x,sprite.body.y,'shard04');
+            this.physics.p2.enable(shards, false);
+            //MEMORY LEAK CHECK: destry these shards and group?
+            shards.forEach(function (shard) {
+                shard.scale.setTo(0.5,0.5);
+                shard.body.angularVelocity = 14;
+                shard.lifespan = 1000;  //kill at end of time I think?
+                // destroy shard but the group survives (or is it a local var?)
+                shard.events.onKilled.add(function(arg){arg.destroy()},this);
+            });
+           
     },
     spawnDarkBottle: function(){
         this.darkBottle.revive();
