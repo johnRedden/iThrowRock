@@ -38,6 +38,7 @@ BasicGame.Preloader.prototype = {
         this.load.spritesheet('firepuff','asset/fireball_spritesheet.png',264,179,14);
 
         this.load.audio('breakBottle', ['asset/bottleBreak2.wav']);
+        this.load.audio('explodeBottle', ['asset/explode.wav']);
         this.load.audio('rockHit', ['asset/rockHit.wav']);
         this.load.audio('gameMusic', ['asset/pentagram_rage.ogg', 'asset/pentagram_rage.mp3']);
 

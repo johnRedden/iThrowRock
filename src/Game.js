@@ -106,15 +106,20 @@ BasicGame.Game.prototype = {
         
 		
 		this.bottleBreak =  this.add.audio('breakBottle');
+        this.bottleExplode =  this.add.audio('explodeBottle');
 		this.rockHitSnd =  this.add.audio('rockHit');
 		//add start marker to rock hit sound
 		this.rockHitSnd.addMarker('rockSrt',0.15,0.5);
-		this.rock.grabbed = false;
 		this.rock.body.onBeginContact.add(this.rockHit, this);
 		//*************
-					
 		
-		//input event listeners
+		//input (grab functionality)
+        this.rock.grabbed = false;
+        this.throwHandle = this.add.sprite(0, 0);
+        this.physics.p2.enable(this.throwHandle, false);
+        this.throwHandle.body.static = true;
+        this.throwConstraint = null;
+        //event listeners 
 		this.input.onDown.add(this.rockGrab, this);
 		this.input.onUp.add(this.rockDrop, this);
 		this.input.addMoveCallback(this.rockMove, this);
@@ -201,35 +206,29 @@ BasicGame.Game.prototype = {
 	// utility functions for the rock grab *****************
 	rockGrab: function (pointer) {
 		if(pointer.y > this.boundaryLine && this.rock.y > this.boundaryLine){
-			this.rock.body.angularVelocity = 0;
+            this.rock.body.angularVelocity = 0;
 			this.rock.grabbed = true;
-			//create a sprite at the pointer
-			pointer.handle = this.add.sprite(pointer.x, pointer.y);
-			this.physics.p2.enable(pointer.handle, false);
-
-			pointer.handle.body.setRectangle(5);
-			pointer.handle.anchor.setTo(0.5, 0.5);
-			pointer.handle.body.static = true;
-			pointer.handle.body.collideWorldBounds = true;
-
-			//create a constraint with the rock and the pointer
-			pointer.rockConstraint = this.physics.p2.createLockConstraint(this.rock, pointer.handle );
+			//move the blank sprite to the pointer
+			this.throwHandle.body.x = pointer.x;
+            this.throwHandle.body.y = pointer.y;
+			//create a constraint with the rock and the blank sprite
+			this.throwConstraint = this.physics.p2.createLockConstraint(this.rock, this.throwHandle );
 		}
-		
 	},
 	rockMove: function(pointer, x, y, isDown) {
-		//at this point the constraint may is attached
-		if(pointer.rockConstraint){
-			pointer.handle.body.x = x;
-			pointer.handle.body.y = y;
+		if(this.rock.grabbed){
+			this.throwHandle.body.x = x;
+			this.throwHandle.body.y = y;
+            //ROCK DROP at BOUNDARY -- can remove this for testing
+            if(this.rock.body.y<this.boundaryLine){
+                this.rockDrop(pointer);
+            }
 		}
 	}, 
 	rockDrop: function(pointer){
-		if(pointer.rockConstraint){
-			this.physics.p2.removeConstraint(pointer.rockConstraint);
-			pointer.handle.destroy();
-			
-			pointer.rockConstraint = null;
+		if(this.rock.grabbed){
+			this.physics.p2.removeConstraint(this.throwConstraint);			
+			this.throwConstraint = null;
 			this.rock.grabbed = false;
 		}
 	},
@@ -404,7 +403,11 @@ BasicGame.Game.prototype = {
         var molotov = arg.sprite;
         
         if(this.getSpeed(this.rock.body.velocity.x, this.rock.body.velocity.y) > BasicGame.breakSpeedMolotov){
-            if(BasicGame.sound){this.bottleBreak.play()};
+            if(BasicGame.sound){
+                this.bottleBreak.play();
+                this.bottleExplode.play();
+                this.dieYouDie();
+            };
             // do something enormous
             molotov.kill();
             var temp=	this.add.sprite(molotov.x, molotov.y, "firepuff");
@@ -484,5 +487,11 @@ BasicGame.Game.prototype = {
         }
     },
     getSpeed: function(x, y){ return Math.sqrt(x*x+y*y);},
+    dieYouDie: function(){
+        this.levelTxt.setText("You Die!");
+        this.levelTxt.revive();
+        this.levelTxt.lifespan = 2000;
+        
+    },
 
 };
