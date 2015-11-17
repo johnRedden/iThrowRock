@@ -279,9 +279,7 @@ BasicGame.Game.prototype = {
 			}
 			bottle.sprite.animations.play('splode',30,false,true); 
 			this.spawnShards(bottle.sprite);
-			bottle.sprite.events.onKilled.add(function(){
-				bottle.sprite.events.onKilled.removeAll();
-				console.log("in");
+			bottle.sprite.events.onKilled.addOnce(function(){
 				this.combo++;
 				this.increaseScore(10*this.combo); // Use the type of bottle to know what your score is
 				if(this.comboText!= null)
@@ -325,10 +323,8 @@ BasicGame.Game.prototype = {
 			bottle.scale.setTo(scaleFactor,scaleFactor);
 			bottle.body.setRectangle(scaleFactor*20,scaleFactor*100);
 			bottle.body.static = true;
-			bottle.body.clearCollision();
-			bottle.body.collides(this.rockCollisionGroup,this.bottleHit2,this);
 			bottle.body.setCollisionGroup(this.bottleCollisionGroup);
-			console.log(bottle.body);
+			bottle.body.collides(this.rockCollisionGroup,this.bottleHit2,this);
 			
 			bottle.revive();
 
