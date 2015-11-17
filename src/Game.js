@@ -72,7 +72,7 @@ BasicGame.Game.prototype = {
 			bottle.animations.add('splode');
 		}
 		//enable physics on the whole group
-		this.physics.p2.enable(this.bottles, true);
+		this.physics.p2.enable(this.bottles, false);
 		this.spawnBottles();
 		
 		// initialize wood boards *******************
