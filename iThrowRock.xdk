@@ -6,7 +6,7 @@
       "projectTypeName": "com.intel.xdk.projecttype.webapp",
       "src": "",
       "projectGuid": "d7e29b2a-088a-4d12-9db7-c65aa72208f3",
-      "lastModifiedDate": 1447306397080,
+      "lastModifiedDate": 1447817790231,
       "creationDate": 1447016422216
     },
     "sourceDirectory": "",
@@ -50,7 +50,14 @@
           "intents": [],
           "navigation": []
         },
-        "icons_": [],
+        "icons_": [
+          {
+            "relPath": "icons/smallest_icon_test_36x36.png",
+            "density": "ldpi",
+            "height": 36,
+            "width": 36
+          }
+        ],
         "splashes_": [],
         "addlPermissions_": "",
         "excludedLibraries_": "",
