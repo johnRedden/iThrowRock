@@ -1,18 +1,24 @@
-Image Name  | Qty of pics |        | Width |  | Height |
+Image Name  | Qty of pics |        | Width |  | Height |       | fps/notes |             | updated|
 ---------------------------------------------------------
 
-music_status  2 pics  Each frame==> W: 135 px  H:160 px     updated: 11/9/15 - cory
+music_status     2 pics  Each frame==> W:210  px  H:160 px                                updated: 11/18/15 - cory  
 
-fire_tail     7 pics  Each frame==> W:264  px  H:179 px
+fire_tail        7 pics  Each frame==> W:264  px  H:179 px
 
-green_sheet   6 pics  Each frame==> W:112.5px  H:169 px
+green_sheet      6 pics  Each frame==> W:112.5px  H:169 px
 
-wood_spritesheet 5 pics Each frame> W:110  px  H:77  px
+wood_spritesheet 5 pics Each  frame==> W:110  px  H:77  px
 
-btn_play      2 pics Each frame ==> W:304  px  H:111 px
+btn_play         2 pics Each frame ==> W:304  px  H:111 px
 
-btn_next      2 pics Each frame ==> W:304  px  H:111 px
+btn_next         2 pics Each frame ==> W:304  px  H:111 px
 
-btn_replay    2 pics Each frame ==> W:304  px  H:111 px
+btn_replay       2 pics Each frame ==> W:304  px  H:111 px
 
-fx_status     2 pics Each frame ==> W:210  px  H:160 px
+fx_status        2 pics Each frame ==> W:210  px  H:160 px
+
+bottle_glow      2 pics Each frame ==> W:160  px  H:160 px   4 fps runs smoothest         updated: 11/18/15
+
+dark_spritesheet 2 pics Each frame ==> W:160  px  H:210 px   4 fps runs smoothest         updated: 11/18/15
+
+molotov_burn     2 pics Each frame ==> W:160  px  H:268 px   8 fps runs nice              updated: 11/18/15
