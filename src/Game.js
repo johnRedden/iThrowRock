@@ -77,32 +77,40 @@ BasicGame.Game.prototype = {
 		
 		// initialize wood boards *******************
 		this.boards = this.add.group();
+		this.addToSpecialGroup(this.boards, 3, 'woodBlocker', 0.7, 0.25);/*
 		for(var i = 0; i<3; i++){
 			var temp = this.boards.create(0, 0,'woodBlocker');
 			temp.scale.setTo(0.7,0.25);
 			temp.kill();
-		}
+		}*/
 		this.physics.p2.enable(this.boards, false);
 		this.spawnBoards();
 		//***********************************************
 		
 		// initialize molotovs boards *******************
 		this.molotovs = this.add.group();
+		this.addToSpecialGroup(this.molotovs, 3, 'molotov', 0.2, 0.2);/*
 		for(var i = 0; i<3; i++){
 			var temp = this.molotovs.create(0, 0,'molotov');
 			temp.scale.setTo(0.2,0.2);
 			temp.kill();
-		}
+		}*/
 		this.physics.p2.enable(this.molotovs, false);
 		this.spawnMolotovs();
 		//***********************************************
 		
+		this.darkBottles=	this.add.group();
+		this.addToSpecialGroup(this.darkBottles, 3, 'darkBottle', 0.3, 0.3);
+		this.physics.p2.enable(this.darkBottles);
+		this.spawnDarkBottles();
+		
+		/*
 		this.darkBottle = this.add.sprite(10, this.world.centerY - 100, 'darkBottle');
 		this.darkBottle.scale.setTo(0.3,0.3);
 		this.darkBottle.anchor.setTo(0.5, 0.5);
 		this.physics.p2.enable(this.darkBottle, false);
 		this.darkBottle.body.setRectangle(20,60);
-		this.spawnDarkBottle();
+		this.spawnDarkBottle();*/
 		
 		
 		this.bottleBreak =  this.add.audio('breakBottle');
@@ -158,6 +166,16 @@ BasicGame.Game.prototype = {
 		this.levelTxt.anchor.set(0.5,0.5);
 		this.levelTxt.lifespan = 2000;
 	},
+	addToSpecialGroup:	function(group, size, textureID, scaleX, scaleY)	{
+		for(var i = 0; i<3; i++)
+		{
+			// Variables
+			var temp = group.create(0, 0, textureID);
+			
+			temp.scale.setTo(scaleX, scaleY);
+			temp.kill();
+		}
+	},
 	getDistance:    function(x, y)
 	{
 		return Math.sqrt(x*x+y*y);
@@ -178,29 +196,16 @@ BasicGame.Game.prototype = {
 				this.bStartedTrail=	false;
 			}
 		}
-		this.bottles.forEachAlive(function (bottle) {
-			if(bottle.body.x > this.world.width+25){
-				bottle.body.x = -10;
-			}
-			
-		},this);
-		
-		// Update breakable objects on screen *****
-		this.boards.forEachAlive(function (board) {
-			if(board.body.x > this.world.width+25){
-				board.body.x = -10;
-			}
-		},this);
-		this.molotovs.forEachAlive(function (molotov) {
-			if(molotov.body.x > this.world.width+25){
-				molotov.body.x = -10;
-			}
-		},this);
-		if(this.darkBottle.body.x > this.world.width+25){
-			this.darkBottle.kill();
-			this.spawnDarkBottle();
-		}
+		this.bottles.forEachAlive(this.resetObjLocation,this);
+		this.boards.forEachAlive(this.resetObjLocation,this);
+		this.molotovs.forEachAlive(this.resetObjLocation,this);
+		this.darkBottles.forEachAlive(this.resetObjLocation, this);
 		//****************************************
+	},
+	
+	resetObjLocation:	function(obj)	{
+		if(obj.body.x> this.world.width+25)
+			obj.body.x=	-10;
 	},
 	
 	// utility functions for the rock grab *****************
@@ -281,7 +286,7 @@ BasicGame.Game.prototype = {
 			this.spawnShards(bottle.sprite);
 			bottle.sprite.events.onKilled.addOnce(function(){
 				this.combo++;
-				this.increaseScore(10*this.combo); // Use the type of bottle to know what your score is
+				this.increaseScore((10+2*(BasicGame.level-1))*this.combo);
 				if(this.comboText!= null)
 				{
 					if(this.combo> 1)
@@ -330,8 +335,43 @@ BasicGame.Game.prototype = {
 
 		},this);
 	},
-
+	spawnSpecialsGroup:	function(group, collisionGroup, rockHitEvent, modifyEvent)	{
+		// Variables
+		var	num=	0;
+		
+		if(BasicGame.level< 5)	num=	1;
+		else if(BasicGame.level>= 5 && BasicGame.level< 10)	num=	2;
+		else	num=	3;
+		
+		for(var i= 0; i< num-group.countLiving(); i++)
+		{
+			// Variables
+			var	item=	group.getFirstDead();
+			
+			if(item)
+			{
+				item.body.x=	-10;
+				item.body.y=	this.world.centerY-this.rnd.integerInRange(10, 100);
+				item.body.velocity.x=	this.rnd.integerInRange(50, 200);
+				item.body.velocity.y=	0;
+				item.body.angularVelocity=	this.rnd.integerInRange(-5, 5);
+				if(item.body.angularVelocity== 0)
+					item.body.angularVelocity=	4;
+				item.body.setCollisionGroup(collisionGroup);
+				item.body.collides(this.rockCollisionGroup, rockHitEvent, this);
+				item.body.static=	true;
+				
+				if(modifyEvent)
+					modifyEvent(item);
+				item.revive();
+			}
+		}
+	},
 	spawnBoards: function(){
+		this.spawnSpecialsGroup(this.boards, this.boardCollisionGroup, this.boardHit, function(board){
+			board.frame=	0;
+		});
+		/*
 		var num = 0;
 		// number of boards based on level.
 		if(BasicGame.level<5) num = 1;        
@@ -356,7 +396,7 @@ BasicGame.Game.prototype = {
 				board.frame=0;
 				board.revive();
 			}
-		}
+		}*/
 	},
 	boardHit: function(arg){
 		var board = arg.sprite;
@@ -371,6 +411,11 @@ BasicGame.Game.prototype = {
 		}
 	},
 	spawnMolotovs: function(){
+		this.spawnSpecialsGroup(this.molotovs, this.molotovCollisionGroup, this.molotovHit, function(molotov)	{
+			molotov.body.setRectangle(20, 60);
+			//molotov.events.onKilled.addOnce(this.spawnShards,this);
+		});
+		/*
 		var num = 0;
 		// number of boards based on level.
 		if(BasicGame.level<5) num = 1;        
@@ -396,9 +441,8 @@ BasicGame.Game.prototype = {
 				
 				//board.frame=0;
 				molotov.revive();
-				//molotov.events.onKilled.add(this.spawnShards,this);
 			}
-		}
+		}*/
 	},
 	molotovHit: function(arg){
 		var molotov = arg.sprite;
@@ -437,9 +481,12 @@ BasicGame.Game.prototype = {
 				shard.body.angularVelocity = 14;
 				shard.lifespan = 1000;  //kill at end of time I think?
 				// destroy shard but the group survives (or is it a local var?)
-				shard.events.onKilled.add(function(arg){arg.destroy()},this);
+				shard.events.onKilled.addOnce(function(arg){arg.destroy()},this);
 			});
 		   
+	},
+	spawnDarkBottles:	function(){
+		this.spawnSpecialsGroup(this.darkBottles, this.darkBottleCollisionGroup, this.darkBottleHit);
 	},
 	spawnDarkBottle: function(){
 		this.darkBottle.revive();
@@ -454,12 +501,14 @@ BasicGame.Game.prototype = {
 		this.darkBottle.body.angularVelocity = this.rnd.integerInRange(3,7);
 		
 	},
-	darkBottleHit: function(){
-
+	darkBottleHit: function(args){
+		// Variables
+		var	dbottle=	args.sprite;
+		
 		if(this.getSpeed(this.rock.body.velocity.x, this.rock.body.velocity.y) > BasicGame.breakSpeedDarkBottle){
 			// this.rock gets BIG for 3 seconds or so
 			if(BasicGame.sound){this.bottleBreak.play()};
-			this.darkBottle.kill();
+			dbottle.kill();
 		 
 			this.rock.scale.setTo(0.2,0.2);
 			this.rock.body.setRectangle(100, 85);
@@ -477,7 +526,7 @@ BasicGame.Game.prototype = {
 				this.rock.body.collideWorldBounds = true;
 				// scale the hit rectangle back
 				//this.rock.body.setRectangle(25,20);
-				this.spawnDarkBottle();
+				this.spawnDarkBottles();
 			}, this);
 			
 		}
