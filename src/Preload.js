@@ -54,7 +54,7 @@ BasicGame.Preloader.prototype = {
         this.load.spritesheet('musicToggle', 'asset/music_status_new.png',210,160,2);
         this.load.spritesheet('soundfxToggle','asset/fx_status.png',210,160,2);
         this.load.spritesheet('woodBlocker', 'asset/wood_spritesheet.png',110,77,5);
-        
+        this.load.spritesheet("goldenBottle", "asset/bottle_glow.png", 160, 160, 2);  
 
     },
 
