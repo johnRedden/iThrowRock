@@ -412,7 +412,7 @@ BasicGame.Game.prototype = {
 	},
 	spawnMolotovs: function(){
 		this.spawnSpecialsGroup(this.molotovs, this.molotovCollisionGroup, this.molotovHit, function(molotov)	{
-			molotov.body.setRectangle(20, 60);
+			//molotov.body.setRectangle(20, 60);
 			//molotov.events.onKilled.addOnce(this.spawnShards,this);
 		});
 		/*
