@@ -95,7 +95,11 @@ BasicGame.Game.prototype = {
 		
         // initialize dark bottles
 		this.darkBottles=	this.add.group();
-		this.addToSpecialGroup(this.darkBottles, 3, 'darkBottle', 0.3, 0.3);
+		this.addToSpecialGroup(this.darkBottles, 3, 'darkBottleSht', 0.3, 0.3);
+        this.darkBottles.forEach(function (dark) {
+                dark.animations.add('toxic');
+                //dark.animations.play('toxic',4,true,false);
+        },this);
 		this.physics.p2.enable(this.darkBottles);
 		this.spawnDarkBottles();
 		//*******************************************
@@ -423,21 +427,12 @@ BasicGame.Game.prototype = {
 		   
 	},
 	spawnDarkBottles:	function(){
-		this.spawnSpecialsGroup(this.darkBottles, this.darkBottleCollisionGroup, this.darkBottleHit);
+		this.spawnSpecialsGroup(this.darkBottles, this.darkBottleCollisionGroup, this.darkBottleHit,function(darkbottle){
+			darkbottle.frame=	0;
+            // set the hit box somehow
+		});
 	},
-	spawnDarkBottle: function(){
-		this.darkBottle.revive();
-		
-		this.darkBottle.body.setCollisionGroup(this.darkBottleCollisionGroup);
-		this.darkBottle.body.collides(this.rockCollisionGroup,this.darkBottleHit,this);
-		this.darkBottle.body.x = -10;
-		this.darkBottle.body.y = this.world.centerY - this.rnd.integerInRange(10,200);
-		this.darkBottle.body.static = true;
-		this.darkBottle.body.velocity.y = 0;
-		this.darkBottle.body.velocity.x = this.rnd.integerInRange(70,200);
-		this.darkBottle.body.angularVelocity = this.rnd.integerInRange(3,7);
-		
-	},
+
 	darkBottleHit: function(args){
 		// Variables
 		var	dbottle=	args.sprite;
@@ -445,7 +440,8 @@ BasicGame.Game.prototype = {
 		if(this.getSpeed(this.rock.body.velocity.x, this.rock.body.velocity.y) > BasicGame.breakSpeedDarkBottle){
 			// this.rock gets BIG for 3 seconds or so
 			if(BasicGame.sound){this.bottleBreak.play()};
-			dbottle.kill();
+            dbottle.animations.play('toxic',15,false,true); // last true gives a kill
+			//dbottle.kill();
 		 
 			this.rock.scale.setTo(0.2,0.2);
 			this.rock.body.setRectangle(100, 85);
