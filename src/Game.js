@@ -85,19 +85,27 @@ BasicGame.Game.prototype = {
 		
 		// initialize molotovs boards *******************
 		this.molotovs = this.add.group();
-		this.addToSpecialGroup(this.molotovs, 3, 'molotov', 0.2, 0.2);
+		this.addToSpecialGroup(this.molotovs, 3, 'molotovSht', 0.35, 0.35, function(molotov) {
+                molotov.animations.add('fire');
+                molotov.animations.play('fire',8,true,false);
+        });
 		this.physics.p2.enable(this.molotovs, false);
 		this.spawnMolotovs();
 		//***********************************************
 		
+        // initialize dark bottles
 		this.darkBottles=	this.add.group();
-		this.addToSpecialGroup(this.darkBottles, 3, 'darkBottle', 0.3, 0.3);
+		this.addToSpecialGroup(this.darkBottles, 3, 'darkBottleSht', 0.3, 0.3, function(dark) {
+                dark.animations.add('toxic');
+                //dark.animations.play('toxic',4,true,false);
+        });
 		this.physics.p2.enable(this.darkBottles);
 		this.spawnDarkBottles();
 		
 		this.goldenBottles=	this.add.group();
 		this.addToSpecialGroup(this.goldenBottles, 1, "goldenBottle", 0.65, 0.65, function(gbottle)	{
 			gbottle.animations.add('glow');
+			gbottle.animations.play("glow", 3, true);
 		});
 		this.physics.p2.enable(this.goldenBottles);
 		this.spawnGoldenBottles();
@@ -156,14 +164,18 @@ BasicGame.Game.prototype = {
 		this.levelTxt.anchor.set(0.5,0.5);
 		this.levelTxt.lifespan = 2000;
 	},
-	addToSpecialGroup:	function(group, size, textureID, scaleX, scaleY, func)	{
-		for(var i = 0; i<3; i++)
+	addToSpecialGroup:	function(group, size, textureID, scaleX, scaleY, modifyEvent)	{
+		for(var i = 0; i<size; i++)
 		{
 			// Variables
 			var temp = group.create(0, 0, textureID);
 			
-			if(func)
-				func(temp);
+			if(modifyEvent)
+			{
+				this.deletemelaterfunc=	modifyEvent;
+				this.deletemelaterfunc(item);
+				this.deletemelaterfunc=	null;
+			}
 			temp.scale.setTo(scaleX, scaleY);
 			temp.kill();
 		}
@@ -354,7 +366,11 @@ BasicGame.Game.prototype = {
 				item.body.static=	true;
 				
 				if(modifyEvent)
-					modifyEvent(item);
+				{
+					this.deletemelaterfunc=	modifyEvent;
+					this.deletemelaterfunc(item);
+					this.deletemelaterfunc=	null;
+				}
 				item.revive();
 			}
 		}
@@ -378,7 +394,9 @@ BasicGame.Game.prototype = {
 	},
 	spawnMolotovs: function(){
 		this.spawnSpecialsGroup(this.molotovs, this.molotovCollisionGroup, this.molotovHit, function(molotov)	{
-			molotov.body.setRectangle(20, 60);
+            // implement ghost rock when death occurs
+            // the molotove hit box needs adjusting still
+			//molotov.body.setRectangle(20, 60);
 			//molotov.events.onKilled.addOnce(this.spawnShards,this);
 		});
 	},
@@ -416,15 +434,19 @@ BasicGame.Game.prototype = {
 			//MEMORY LEAK CHECK: destry these shards and group?
 			shards.forEach(function (shard) {
 				shard.scale.setTo(0.5,0.5);
-				shard.body.angularVelocity = 14;
+                shard.body.velocity.x = this.rnd.integerInRange(20,100);
+				shard.body.angularVelocity = this.rnd.integerInRange(1,30);;
 				shard.lifespan = 1000;  //kill at end of time I think?
 				// destroy shard but the group survives (or is it a local var?)
 				shard.events.onKilled.addOnce(function(arg){arg.destroy()},this);
-			});
+			},this);
 		   
 	},
 	spawnDarkBottles:	function(){
-		this.spawnSpecialsGroup(this.darkBottles, this.darkBottleCollisionGroup, this.darkBottleHit);
+		this.spawnSpecialsGroup(this.darkBottles, this.darkBottleCollisionGroup, this.darkBottleHit,function(darkbottle){
+			darkbottle.frame=	0;
+            // set the hit box somehow
+		});
 	},
 	darkBottleHit: function(args){
 		// Variables
@@ -433,7 +455,8 @@ BasicGame.Game.prototype = {
 		if(this.getSpeed(this.rock.body.velocity.x, this.rock.body.velocity.y) > BasicGame.breakSpeedDarkBottle){
 			// this.rock gets BIG for 3 seconds or so
 			if(BasicGame.sound){this.bottleBreak.play()};
-			dbottle.kill();
+            dbottle.animations.play('toxic',15,false,true); // last true gives a kill
+			//dbottle.kill();
 		 
 			this.rock.scale.setTo(0.2,0.2);
 			this.rock.body.setRectangle(100, 85);
@@ -458,9 +481,7 @@ BasicGame.Game.prototype = {
 	},
 	spawnGoldenBottles:	function()	{
 		//if(this.rnd.integerInRange(0, 10)=== 0)
-			this.spawnSpecialsGroup(this.goldenBottles, this.goldenBottleCollisionGroup, this.goldenBottleHit, function(gbottle){
-				gbottle.animations.play("glow", 3, true);
-			});
+			this.spawnSpecialsGroup(this.goldenBottles, this.goldenBottleCollisionGroup, this.goldenBottleHit);
 	},
 	goldenBottleHit:	function(args)	{
 		// Variables
