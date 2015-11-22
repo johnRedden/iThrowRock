@@ -77,40 +77,28 @@ BasicGame.Game.prototype = {
 		
 		// initialize wood boards *******************
 		this.boards = this.add.group();
-		this.addToSpecialGroup(this.boards, 3, 'woodBlocker', 0.7, 0.25);/*
-		for(var i = 0; i<3; i++){
-			var temp = this.boards.create(0, 0,'woodBlocker');
-			temp.scale.setTo(0.7,0.25);
-			temp.kill();
-		}*/
+		this.addToSpecialGroup(this.boards, 3, 'woodBlocker', 0.7, 0.25);
 		this.physics.p2.enable(this.boards, false);
 		this.spawnBoards();
 		//***********************************************
 		
 		// initialize molotovs boards *******************
 		this.molotovs = this.add.group();
-		this.addToSpecialGroup(this.molotovs, 3, 'molotov', 0.2, 0.2);/*
-		for(var i = 0; i<3; i++){
-			var temp = this.molotovs.create(0, 0,'molotov');
-			temp.scale.setTo(0.2,0.2);
-			temp.kill();
-		}*/
+		this.addToSpecialGroup(this.molotovs, 3, 'molotovSht', 0.35, 0.35);
+        this.molotovs.forEach(function (molotov) {
+                molotov.animations.add('fire');
+                molotov.animations.play('fire',8,true,false);
+        },this);
 		this.physics.p2.enable(this.molotovs, false);
 		this.spawnMolotovs();
 		//***********************************************
 		
+        // initialize dark bottles
 		this.darkBottles=	this.add.group();
 		this.addToSpecialGroup(this.darkBottles, 3, 'darkBottle', 0.3, 0.3);
 		this.physics.p2.enable(this.darkBottles);
 		this.spawnDarkBottles();
-		
-		/*
-		this.darkBottle = this.add.sprite(10, this.world.centerY - 100, 'darkBottle');
-		this.darkBottle.scale.setTo(0.3,0.3);
-		this.darkBottle.anchor.setTo(0.5, 0.5);
-		this.physics.p2.enable(this.darkBottle, false);
-		this.darkBottle.body.setRectangle(20,60);
-		this.spawnDarkBottle();*/
+		//*******************************************
 		
 		
 		this.bottleBreak =  this.add.audio('breakBottle');
@@ -167,7 +155,7 @@ BasicGame.Game.prototype = {
 		this.levelTxt.lifespan = 2000;
 	},
 	addToSpecialGroup:	function(group, size, textureID, scaleX, scaleY)	{
-		for(var i = 0; i<3; i++)
+		for(var i = 0; i<size; i++)
 		{
 			// Variables
 			var temp = group.create(0, 0, textureID);
@@ -371,32 +359,6 @@ BasicGame.Game.prototype = {
 		this.spawnSpecialsGroup(this.boards, this.boardCollisionGroup, this.boardHit, function(board){
 			board.frame=	0;
 		});
-		/*
-		var num = 0;
-		// number of boards based on level.
-		if(BasicGame.level<5) num = 1;        
-		if(BasicGame.level>=5 && BasicGame.level<10) num = 2;
-		if(BasicGame.level>=10) num = 3;
-				
-		for(var i=0; i<num - this.boards.countLiving(); i++){
-			var board = this.boards.getFirstDead();
-			
-			if(board){
-				board.body.x = -10;
-				board.body.y = this.world.centerY-this.rnd.integerInRange(10,100);
-				board.body.velocity.x = this.rnd.integerInRange(50,200);
-				board.body.velocity.y = 0;
-				board.body.angularVelocity = this.rnd.integerInRange(-5,5);
-				if(board.body.angularVelocity== 0)
-					board.body.angularVelocity=	4;
-				board.body.setCollisionGroup(this.boardCollisionGroup);
-				board.body.collides(this.rockCollisionGroup, this.boardHit,this);
-				board.body.static = true;
-				
-				board.frame=0;
-				board.revive();
-			}
-		}*/
 	},
 	boardHit: function(arg){
 		var board = arg.sprite;
@@ -412,37 +374,11 @@ BasicGame.Game.prototype = {
 	},
 	spawnMolotovs: function(){
 		this.spawnSpecialsGroup(this.molotovs, this.molotovCollisionGroup, this.molotovHit, function(molotov)	{
+            // implement ghost rock when death occurs
+            // the molotove hit box needs adjusting still
 			//molotov.body.setRectangle(20, 60);
 			//molotov.events.onKilled.addOnce(this.spawnShards,this);
 		});
-		/*
-		var num = 0;
-		// number of boards based on level.
-		if(BasicGame.level<5) num = 1;        
-		if(BasicGame.level>=5 && BasicGame.level<10) num = 2;
-		if(BasicGame.level>=10) num = 3;
-				
-		for(var i=0; i<num - this.molotovs.countLiving(); i++){
-			var molotov = this.molotovs.getFirstDead();
-			
-			if(molotov){
-				molotov.body.setRectangle(20,60);
-				molotov.body.x = -10;
-				molotov.body.y = this.world.centerY-this.rnd.integerInRange(10,100);
-				molotov.body.velocity.x = this.rnd.integerInRange(50,200);
-				molotov.body.velocity.y = 0;
-				molotov.body.angularVelocity = this.rnd.integerInRange(-5,5);
-				if(molotov.body.angularVelocity== 0)
-					molotov.body.angularVelocity=	4;
-				molotov.body.setCollisionGroup(this.molotovCollisionGroup);
-				molotov.body.collides(this.rockCollisionGroup, this.molotovHit,this);
-				molotov.body.static = true;
-				//molotov.body.setRectangle(20,60);
-				
-				//board.frame=0;
-				molotov.revive();
-			}
-		}*/
 	},
 	molotovHit: function(arg){
 		var molotov = arg.sprite;
@@ -478,11 +414,12 @@ BasicGame.Game.prototype = {
 			//MEMORY LEAK CHECK: destry these shards and group?
 			shards.forEach(function (shard) {
 				shard.scale.setTo(0.5,0.5);
-				shard.body.angularVelocity = 14;
+                shard.body.velocity.x = this.rnd.integerInRange(20,100);
+				shard.body.angularVelocity = this.rnd.integerInRange(1,30);;
 				shard.lifespan = 1000;  //kill at end of time I think?
 				// destroy shard but the group survives (or is it a local var?)
 				shard.events.onKilled.addOnce(function(arg){arg.destroy()},this);
-			});
+			},this);
 		   
 	},
 	spawnDarkBottles:	function(){
