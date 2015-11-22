@@ -87,15 +87,14 @@ BasicGame.Game.prototype = {
 		this.spawnBoards();
 		//***********************************************
 		
-		// initialize molotovs boards *******************     
+		// initialize molotovs boards *******************
 		this.molotovs = this.add.group();
-		this.addToSpecialGroup(this.molotovs, 3, 'molotovAnim', 0.5, 0.5);
-		this.molotovs.forEach(function (molotov) {
-            //console.log(molotov);
-            molotov.animations.add('fire');
-            molotov.animations.play('fire',8,true,false);
-            
-        },this);
+		this.addToSpecialGroup(this.molotovs, 3, 'molotov', 0.2, 0.2);/*
+		for(var i = 0; i<3; i++){
+			var temp = this.molotovs.create(0, 0,'molotov');
+			temp.scale.setTo(0.2,0.2);
+			temp.kill();
+		}*/
 		this.physics.p2.enable(this.molotovs, false);
 		this.spawnMolotovs();
 		//***********************************************
