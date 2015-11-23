@@ -172,9 +172,10 @@ BasicGame.Game.prototype = {
 			
 			if(modifyEvent)
 			{
-				this.deletemelaterfunc=	modifyEvent;
-				this.deletemelaterfunc(item);
-				this.deletemelaterfunc=	null;
+                modifyEvent(temp);
+				//this.deletemelaterfunc=	modifyEvent;
+				//this.deletemelaterfunc(item);
+				//this.deletemelaterfunc=	null;
 			}
 			temp.scale.setTo(scaleX, scaleY);
 			temp.kill();
