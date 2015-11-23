@@ -102,13 +102,13 @@ BasicGame.Game.prototype = {
 		this.physics.p2.enable(this.darkBottles);
 		this.spawnDarkBottles();
 		
-		this.goldenBottles=	this.add.group();
-		this.addToSpecialGroup(this.goldenBottles, 1, "goldenBottle", 0.65, 0.65, function(gbottle)	{
-			gbottle.animations.add('glow');
-			gbottle.animations.play("glow", 3, true);
-		});
-		this.physics.p2.enable(this.goldenBottles);
-		this.spawnGoldenBottles();
+		this.goldenBottle=	this.add.sprite(0, 0, "goldenBottle");
+		this.physics.p2.enable(this.goldenBottle);
+		this.goldenBottle.animations.add("glow");
+		this.goldenBottle.animations.play("glow", 3, true);
+		this.goldenBottle.scale.setTo(0.65, 0.65);
+		this.goldenBottle.kill();
+		this.spawnGoldenBottle();
 		
 		
 		this.bottleBreak =  this.add.audio('breakBottle');
@@ -482,18 +482,27 @@ BasicGame.Game.prototype = {
 			
 		}
 	},
-	spawnGoldenBottles:	function()	{
-		//if(this.rnd.integerInRange(0, 10)=== 0)
-			this.spawnSpecialsGroup(this.goldenBottles, this.goldenBottleCollisionGroup, this.goldenBottleHit);
+	spawnGoldenBottle:	function()	{
+		if(this.rnd.integerInRange(0, 10)=== 0) // 10% Chance of spawning
+		{
+			this.goldenBottle.body.x=	-10;
+			this.goldenBottle.body.y=	this.world.centerY-this.rnd.integerInRange(10, 100);
+			this.goldenBottle.body.velocity.x=	this.rnd.integerInRange(50, 200);
+			this.goldenBottle.body.velocity.y=	0;
+			this.goldenBottle.body.angularVelocity=	this.rnd.integerInRange(-5, 5);
+			if(this.goldenBottle.body.angularVelocity== 0)
+				this.goldenBottle.body.angularVelocity=	4;
+			this.goldenBottle.body.setCollisionGroup(this.goldenBottleCollisionGroup);
+			this.goldenBottle.body.collides(this.rockCollisionGroup, this.goldenBottleHit, this);
+			this.goldenBottle.body.static=	true;
+			this.goldenBottle.revive();
+		}
 	},
 	goldenBottleHit:	function(args)	{
-		// Variables
-		var	gbottle=	args.sprite;
-		
 		if(this.getSpeed(this.rock.body.velocity.x, this.rock.body.velocity.y) > BasicGame.breakSpeedDarkBottle){
 			// Thrasher mode for 3 seconds or so
 			if(BasicGame.sound){this.bottleBreak.play()};
-			gbottle.kill();
+			this.goldenBottle.kill();
 		 	
 		 	this.trailing=	1;
             //change color of stage to indicate thrasher mode.
@@ -504,7 +513,7 @@ BasicGame.Game.prototype = {
 				this.trailing=	0;
 				this.rock.tint=	0xffffff;
                 this.stage.backgroundColor = '#ffffff';
-				this.spawnGoldenBottles();
+				this.spawnGoldenBottle();
 			}, this);
 			
 		}
