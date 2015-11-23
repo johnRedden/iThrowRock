@@ -290,6 +290,7 @@ BasicGame.Game.prototype = {
 			bottle.sprite.animations.play('splode',30,false,true); 
 			this.spawnShards(bottle.sprite);
 			bottle.sprite.events.onKilled.addOnce(function(){
+				this.spawnGoldenBottle();
 				this.combo++;
 				this.increaseScore((10+2*(BasicGame.level-1))*this.combo);
 				if(this.comboText!= null)
@@ -483,7 +484,9 @@ BasicGame.Game.prototype = {
 		}
 	},
 	spawnGoldenBottle:	function()	{
-		if(this.rnd.integerInRange(0, 10)=== 0) // 10% Chance of spawning
+		if(this.goldenBottle.alive || this.trailing!= 0)
+			return;
+		if(this.rnd.integerInRange(0, 25)=== 0) // 4% Chance of spawning
 		{
 			this.goldenBottle.body.x=	-10;
 			this.goldenBottle.body.y=	this.world.centerY-this.rnd.integerInRange(10, 100);
