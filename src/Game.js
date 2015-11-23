@@ -396,8 +396,9 @@ BasicGame.Game.prototype = {
 	spawnMolotovs: function(){
 		this.spawnSpecialsGroup(this.molotovs, this.molotovCollisionGroup, this.molotovHit, function(molotov)	{
             // implement ghost rock when death occurs
-            // the molotove hit box needs adjusting still
-			//molotov.body.setRectangle(20, 60);
+            // have to reset collision group after rectangle set
+			molotov.body.setRectangle(20, 60);
+            molotov.body.setCollisionGroup(this.molotovCollisionGroup);
 			//molotov.events.onKilled.addOnce(this.spawnShards,this);
 		});
 	},
@@ -447,6 +448,7 @@ BasicGame.Game.prototype = {
 		this.spawnSpecialsGroup(this.darkBottles, this.darkBottleCollisionGroup, this.darkBottleHit,function(darkbottle){
 			darkbottle.frame=	0;
             // set the hit box somehow
+            // look at spawn molotovs to see how
 		});
 	},
 	darkBottleHit: function(args){
@@ -489,16 +491,19 @@ BasicGame.Game.prototype = {
 		var	gbottle=	args.sprite;
 		
 		if(this.getSpeed(this.rock.body.velocity.x, this.rock.body.velocity.y) > BasicGame.breakSpeedDarkBottle){
-			// this.rock gets BIG for 3 seconds or so
+			// Thrasher mode for 3 seconds or so
 			if(BasicGame.sound){this.bottleBreak.play()};
 			gbottle.kill();
 		 	
 		 	this.trailing=	1;
+            //change color of stage to indicate thrasher mode.
+            this.stage.backgroundColor = '#ff0000';
 			
 			//this.rock.body.setRectangle(40,40);
 			this.time.events.add(Phaser.Timer.SECOND *8, function(){
 				this.trailing=	0;
 				this.rock.tint=	0xffffff;
+                this.stage.backgroundColor = '#ffffff';
 				this.spawnGoldenBottles();
 			}, this);
 			
@@ -535,6 +540,7 @@ BasicGame.Game.prototype = {
 		this.levelTxt.setText("You Die!");
 		this.levelTxt.revive();
 		this.levelTxt.lifespan = 2000;
+        // Check for remaining lives and change life indicator here
 		
 	},
 
