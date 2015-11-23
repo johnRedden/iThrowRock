@@ -30,6 +30,7 @@ BasicGame.Preloader.prototype = {
 
         //	Here we load the rest of the assets our game needs.
         this.load.image('rock', 'asset/a_0.png');
+        this.load.spritesheet("deathrock", "asset/rock_death.png", 90, 79, 4);
         //this.load.image('molotov', 'asset/molotov_1.png');
         //this.load.image('darkBottle', 'asset/dark_bottle.png');
         this.load.image('shard01', 'asset/bottle_shard_base.png');

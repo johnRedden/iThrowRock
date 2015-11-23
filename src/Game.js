@@ -54,6 +54,14 @@ BasicGame.Game.prototype = {
 		this.rock.anchor.setTo(0.5, 0.5);
 		this.rock.scale.setTo(0.06,0.06);
 		
+		// Adds the death rock
+		this.deathRock=	this.add.sprite(0, 0, "deathrock");
+		this.deathRock.animations.add("toheaven");
+		this.deathRock.visible=	false;
+		this.deathRock.anchor.setTo(0.5, 0.5);
+		this.physics.p2.enable(this.deathRock);
+		this.deathRock.static=	true;
+		
 		// turn false the collision circle in production
 		this.physics.p2.enable(this.rock, false); //change to true to see hitcircle
 		this.rock.body.setRectangle(25,20);
@@ -424,10 +432,9 @@ BasicGame.Game.prototype = {
 			var temp=	this.add.sprite(molotov.x, molotov.y, "firepuff");
 			temp.anchor.setTo(0.5, 0.5);
 			temp.animations.add('explode').play('explode',30,true);
-			this.damageLife();
-			//TODO: memory leak here?  Need to destray (no just kill) this sprite
-			//TODO: add lives or a way to end the game
- 
+			if(this.trailing== 0) // Only take damage if thrasher mode is off
+				this.damageLife();
+ 			// Is there a memory leak?
 		}
 
 	},
@@ -567,6 +574,39 @@ BasicGame.Game.prototype = {
 	damageLife:	function()	{
 		this.lives--;
 		this.livesCounter.setText("Lives: "+this.lives);
+		// Kill rock here somehow
+		this.rock.visible=	false;
+		this.rock.kill();
+		this.deathRock.body.x=	this.rock.body.x;
+		this.deathRock.body.y=	this.rock.body.y;
+		this.deathRock.visible=	true;
+		this.deathRock.body.static=	true;
+		this.deathRock.animations.play("toheaven", 2, true);
+		if(this.rock.scale.x== 0.2)
+			this.deathRock.scale.setTo(2, 2);
+		else
+			this.deathRock.scale.setTo(1, 1);
+		this.deathRock.body.velocity.y=	-10;
+		this.deathRock.alpha=	1;
+		// Complex system of levers and pulleys
+		this.time.events.add(Phaser.Timer.SECOND, function()	{
+			this.deathRock.alpha=	0.5;
+		}, this);
+		this.time.events.add(Phaser.Timer.SECOND*2, function()	{
+			this.deathRock.alpha=	0.15;
+		}, this);
+		this.time.events.add(Phaser.Timer.SECOND*3, function()	{
+			this.deathRock.body.velocity.y=	0;
+			this.deathRock.animations.stop("toheaven");
+			this.deathRock.visible=	false;
+			this.rock.visible=	true;
+			this.rock.body.x=	this.world.centerX;
+			this.rock.body.y=	this.world.centerY;
+			this.rock.body.velocity.x=	0;
+			this.rock.body.velocity.y=	10;
+			this.rock.body.angularVelocity=	0;
+			this.rock.revive();
+		}, this);
 		if(this.lives> 0)
 			this.dieYouDie();
 		else
