@@ -163,6 +163,14 @@ BasicGame.Game.prototype = {
 		});
 		this.levelTxt.anchor.set(0.5,0.5);
 		this.levelTxt.lifespan = 2000;
+		
+		// Add lives
+		this.lives=	3;
+		this.livesCounter=	this.add.text(150, this.world.centerY-24, "Lives: "+this.lives,	{
+			fontFamily:	"arial",
+			fontSize:	"16px",
+			fill:	"#101820"
+		});
 	},
 	addToSpecialGroup:	function(group, size, textureID, scaleX, scaleY, modifyEvent)	{
 		for(var i = 0; i<size; i++)
@@ -181,14 +189,10 @@ BasicGame.Game.prototype = {
 			temp.kill();
 		}
 	},
-	getDistance:    function(x, y)
-	{
-		return Math.sqrt(x*x+y*y);
-	},
 	update: function(){
 		if(this.trailing !== 0)
 		{
-			if(this.getDistance(this.rock.body.velocity.x, this.rock.body.velocity.y)> 400)
+			if(this.getSpeed(this.rock.body.velocity.x, this.rock.body.velocity.y)> 400)
 			{
 				this.rockTrailing();
 				this.bStartedTrail=	true;
@@ -407,12 +411,12 @@ BasicGame.Game.prototype = {
 		var molotov = arg.sprite;
 		
 		
-		if(this.getSpeed(this.rock.body.velocity.x, this.rock.body.velocity.y) > BasicGame.breakSpeedMolotov){
+		if(this.getSpeed(this.rock.body.velocity.x, this.rock.body.velocity.y) > BasicGame.breakSpeedMolotov && molotov.alive){
 			molotov.kill();
 			if(BasicGame.sound){
 				this.bottleBreak.play();
 				this.bottleExplode.play();
-				this.dieYouDie();
+				//this.dieYouDie();
 			};
 			
 			//try to make shards
@@ -420,6 +424,7 @@ BasicGame.Game.prototype = {
 			var temp=	this.add.sprite(molotov.x, molotov.y, "firepuff");
 			temp.anchor.setTo(0.5, 0.5);
 			temp.animations.add('explode').play('explode',30,true);
+			this.damageLife();
 			//TODO: memory leak here?  Need to destray (no just kill) this sprite
 			//TODO: add lives or a way to end the game
  
@@ -549,11 +554,22 @@ BasicGame.Game.prototype = {
 	},
 	getSpeed: function(x, y){ return Math.sqrt(x*x+y*y);},
 	dieYouDie: function(){
-		this.levelTxt.setText("You Die!");
+		this.levelTxt.setText("You died!\n"+this.lives+" "+((this.lives> 1) ? "lives" : "life")+" left.");
 		this.levelTxt.revive();
 		this.levelTxt.lifespan = 2000;
-        // Check for remaining lives and change life indicator here
-		
 	},
-
+	dieGameOver:	function()	{
+		this.levelTxt.setText("Game Over!");
+		this.levelTxt.revive();
+		this.levelTxt.lifespan=	2000;
+		// Stop game here somehow or another.
+	},
+	damageLife:	function()	{
+		this.lives--;
+		this.livesCounter.setText("Lives: "+this.lives);
+		if(this.lives> 0)
+			this.dieYouDie();
+		else
+			this.dieGameOver();
+	}
 };
