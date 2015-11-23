@@ -30,8 +30,8 @@ BasicGame.Preloader.prototype = {
 
         //	Here we load the rest of the assets our game needs.
         this.load.image('rock', 'asset/a_0.png');
-        this.load.image('molotov', 'asset/molotov_1.png');
-        this.load.image('darkBottle', 'asset/dark_bottle.png');
+        //this.load.image('molotov', 'asset/molotov_1.png');
+        //this.load.image('darkBottle', 'asset/dark_bottle.png');
         this.load.image('shard01', 'asset/bottle_shard_base.png');
         this.load.image('shard02', 'asset/bottle_shard_middle.png');
         this.load.image('shard03', 'asset/bottle_shard_top.png');
@@ -39,6 +39,8 @@ BasicGame.Preloader.prototype = {
   
         //this.load.image('bottle', 'asset/bottle1.png');
         this.load.spritesheet('bottleSht', 'asset/green_sheet.png', 112.5, 169, 6);
+        this.load.spritesheet('molotovSht','asset/molotov_burn.png',160,268,3);
+        this.load.spritesheet('darkBottleSht','asset/dark_spritesheet.png',160,210,4);
         this.load.spritesheet('firepuff','asset/fireball_spritesheet.png',264,179,14);
 
         this.load.audio('breakBottle', ['asset/bottleBreak2.wav']);
@@ -54,7 +56,7 @@ BasicGame.Preloader.prototype = {
         this.load.spritesheet('musicToggle', 'asset/music_status_new.png',210,160,2);
         this.load.spritesheet('soundfxToggle','asset/fx_status.png',210,160,2);
         this.load.spritesheet('woodBlocker', 'asset/wood_spritesheet.png',110,77,5);
-        
+        this.load.spritesheet("goldenBottle", "asset/bottle_glow.png", 160, 160, 2);  
 
     },
 
