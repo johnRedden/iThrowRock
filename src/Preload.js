@@ -48,7 +48,8 @@ BasicGame.Preloader.prototype = {
         this.load.audio('breakBottle', ['asset/bottleBreak2.wav']);
         this.load.audio('explodeBottle', ['asset/explode.wav']);
         this.load.audio('rockHit', ['asset/rockHit.wav']);
-        this.load.audio('gameMusic', ['asset/pentagram_rage.ogg', 'asset/pentagram_rage.mp3']);
+        this.load.audio('gameMusic', ['asset/pentagram_rage.ogg']);
+        //this.load.audio('gameMusic', ['asset/pentagram_rage.ogg', 'asset/pentagram_rage.mp3']);
 
         //menu stuff
         this.load.image("menubutton", "asset/menu/menubutton.png");
