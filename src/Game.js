@@ -120,8 +120,10 @@ BasicGame.Game.prototype = {
 		this.physics.p2.enable(this.darkBottles,false);
 		this.spawnDarkBottles();
 		
+        // only ever one golden bottle
 		this.goldenBottle=	this.add.sprite(0, 0, "goldenBottle");
-		this.physics.p2.enable(this.goldenBottle);
+		this.physics.p2.enable(this.goldenBottle,false);
+        this.goldenBottle.body.setRectangle(15, 30);
 		this.goldenBottle.animations.add("glow");
 		this.goldenBottle.animations.play("glow", 3, true);
 		this.goldenBottle.scale.setTo(0.65, 0.65);
@@ -438,9 +440,6 @@ BasicGame.Game.prototype = {
 				this.bottleExplode.play();
 				//this.dieYouDie();
 			};
-			
-			//try to make shards
-			
 			var temp=	this.add.sprite(molotov.x, molotov.y, "firepuff");
 			temp.anchor.setTo(0.5, 0.5);
 			temp.animations.add('explode').play('explode',30,true);
