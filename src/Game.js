@@ -184,11 +184,13 @@ BasicGame.Game.prototype = {
 		
 		// Add lives
 		this.lives=	3;
+        /*
 		this.livesCounter=	this.add.text(150, this.world.centerY-24, "Lives: "+this.lives,	{
 			fontFamily:	"arial",
 			fontSize:	"16px",
 			fill:	"#101820"
 		});
+        */
 	},
 	addToSpecialGroup:	function(group, size, textureID, scaleX, scaleY, modifyEvent)	{
 		for(var i = 0; i<size; i++)
@@ -586,7 +588,7 @@ BasicGame.Game.prototype = {
 	},
 	damageLife:	function()	{
 		this.lives--;
-		this.livesCounter.setText("Lives: "+this.lives);
+		//this.livesCounter.setText("Lives: "+this.lives);
 		// Kill rock here somehow
 		this.rock.visible=	false;
 		this.rock.kill();
