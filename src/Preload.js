@@ -43,11 +43,13 @@ BasicGame.Preloader.prototype = {
         this.load.spritesheet('molotovSht','asset/molotov_burn.png',160,268,3);
         this.load.spritesheet('darkBottleSht','asset/dark_spritesheet.png',160,210,4);
         this.load.spritesheet('firepuff','asset/fireball_spritesheet.png',264,179,14);
+        this.load.spritesheet('livesSht','asset/death_score.png',160,173,2);
 
         this.load.audio('breakBottle', ['asset/bottleBreak2.wav']);
         this.load.audio('explodeBottle', ['asset/explode.wav']);
         this.load.audio('rockHit', ['asset/rockHit.wav']);
-        this.load.audio('gameMusic', ['asset/pentagram_rage.ogg', 'asset/pentagram_rage.mp3']);
+        this.load.audio('gameMusic', ['asset/pentagram_rage.ogg']);
+        //this.load.audio('gameMusic', ['asset/pentagram_rage.ogg', 'asset/pentagram_rage.mp3']);
 
         //menu stuff
         this.load.image("menubutton", "asset/menu/menubutton.png");

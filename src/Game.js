@@ -90,6 +90,16 @@ BasicGame.Game.prototype = {
 		this.physics.p2.enable(this.boards, false);
 		this.spawnBoards();
 		//***********************************************
+        // initialize lives boards *******************
+        this.lifeGroup = this.add.group();
+        this.addToSpecialGroup(this.lifeGroup, 3, 'livesSht', 0.3, 0.3);
+        this.lifeGroup.forEach(function(life){
+                life.revive();
+                life.y = this.world.height - 60;
+        },this);
+        this.lifeGroup.getAt(1).x = 50;
+        this.lifeGroup.getAt(2).x = 100;
+        //***********************************************
 		
 		// initialize molotovs boards *******************
 		this.molotovs = this.add.group();
@@ -564,11 +574,14 @@ BasicGame.Game.prototype = {
 		this.levelTxt.setText("You died!\n"+this.lives+" "+((this.lives> 1) ? "lives" : "life")+" left.");
 		this.levelTxt.revive();
 		this.levelTxt.lifespan = 2000;
+        
+         this.lifeGroup.getAt(2-this.lives).frame = 1;
 	},
 	dieGameOver:	function()	{
 		this.levelTxt.setText("Game Over!");
 		this.levelTxt.revive();
 		this.levelTxt.lifespan=	2000;
+        this.lifeGroup.getAt(2).frame = 1;
 		// Stop game here somehow or another.
 	},
 	damageLife:	function()	{
