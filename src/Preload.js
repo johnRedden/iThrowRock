@@ -30,7 +30,7 @@ BasicGame.Preloader.prototype = {
 
         //	Here we load the rest of the assets our game needs.
         this.load.image('rock', 'asset/a_0.png');
-        this.load.spritesheet("deathrock", "asset/rock_death.png", 90, 79, 4);
+        this.load.spritesheet("deathrock", "asset/rock_death.png", 90, 79, 2);
         //this.load.image('molotov', 'asset/molotov_1.png');
         //this.load.image('darkBottle', 'asset/dark_bottle.png');
         this.load.image('shard01', 'asset/bottle_shard_base.png');
@@ -57,7 +57,7 @@ BasicGame.Preloader.prototype = {
         this.load.spritesheet('musicToggle', 'asset/music_status_new.png',210,160,2);
         this.load.spritesheet('soundfxToggle','asset/fx_status.png',210,160,2);
         this.load.spritesheet('woodBlocker', 'asset/wood_spritesheet.png',110,77,5);
-        this.load.spritesheet("goldenBottle", "asset/bottle_glow.png", 160, 160, 2);  
+        this.load.spritesheet("goldenBottle", "asset/bottle_glow.png", 160, 160, 6);  
 
     },
 

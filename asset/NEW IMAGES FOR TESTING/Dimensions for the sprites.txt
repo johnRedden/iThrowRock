@@ -23,6 +23,6 @@ dark_spritesheet 2 pics Each frame ==> W:160  px  H:210 px   4 fps runs smoothes
 
 molotov_burn     2 pics Each frame ==> W:160  px  H:268 px   8 fps runs nice              updated: 11/18/15
 
-rock_death       4 pics Each frame ==> W:90   px  H:79  px   4 fps tested                 updated  11/22/15
+rock_death       2 pics Each frame ==> W:90   px  H:79  px   4 fps tested                 updated  11/22/15
 
 death_score      2 pics Each frame ==> W:160  px  H:173 px                                updated  11/22/15
