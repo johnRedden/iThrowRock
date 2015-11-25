@@ -117,7 +117,7 @@ BasicGame.Game.prototype = {
                 dark.animations.add('toxic');
                 //dark.animations.play('toxic',4,true,false);
         });
-		this.physics.p2.enable(this.darkBottles);
+		this.physics.p2.enable(this.darkBottles,false);
 		this.spawnDarkBottles();
 		
 		this.goldenBottle=	this.add.sprite(0, 0, "goldenBottle");
@@ -472,6 +472,8 @@ BasicGame.Game.prototype = {
 	spawnDarkBottles:	function(){
 		this.spawnSpecialsGroup(this.darkBottles, this.darkBottleCollisionGroup, this.darkBottleHit,function(darkbottle){
 			darkbottle.frame=	0;
+            darkbottle.body.setRectangle(15, 50);
+            darkbottle.body.setCollisionGroup(this.darkBottleCollisionGroup);
             // set the hit box somehow
             // look at spawn molotovs to see how
 		});
