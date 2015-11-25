@@ -126,6 +126,19 @@ BasicGame.Game.prototype = {
 		this.rockHitSnd.addMarker('rockSrt',0.15,0.5);
 		this.rock.body.onBeginContact.add(this.rockHit, this);
 		//*************
+        
+        // initialize lives boards *******************
+		this.lifeGroup = this.add.group();
+		this.addToSpecialGroup(this.lifeGroup, 3, 'livesSht', 0.3, 0.3);
+        this.lifeGroup.forEach(function(life){
+            life.revive();
+            life.y = this.world.height - 60;
+        },this);
+        this.lifeGroup.getAt(1).x = 50;
+        this.lifeGroup.getAt(2).x = 100;
+        
+
+		//***********************************************
 		
 		//input (grab functionality)
 		this.rock.grabbed = false;
@@ -198,7 +211,7 @@ BasicGame.Game.prototype = {
 		}
 	},
 	update: function(){
-		if(this.trailing !== 0)
+        if(this.trailing !== 0)
 		{
 			if(this.getSpeed(this.rock.body.velocity.x, this.rock.body.velocity.y)> 400)
 			{
@@ -418,7 +431,6 @@ BasicGame.Game.prototype = {
 	molotovHit: function(arg){
 		var molotov = arg.sprite;
 		
-		
 		if(this.getSpeed(this.rock.body.velocity.x, this.rock.body.velocity.y) > BasicGame.breakSpeedMolotov && molotov.alive){
 			molotov.kill();
 			if(BasicGame.sound){
@@ -426,8 +438,6 @@ BasicGame.Game.prototype = {
 				this.bottleExplode.play();
 				//this.dieYouDie();
 			};
-			
-			//try to make shards
 			
 			var temp=	this.add.sprite(molotov.x, molotov.y, "firepuff");
 			temp.anchor.setTo(0.5, 0.5);
@@ -564,11 +574,15 @@ BasicGame.Game.prototype = {
 		this.levelTxt.setText("You died!\n"+this.lives+" "+((this.lives> 1) ? "lives" : "life")+" left.");
 		this.levelTxt.revive();
 		this.levelTxt.lifespan = 2000;
+        
+        this.lifeGroup.getAt(2-this.lives).frame = 1;
+
 	},
 	dieGameOver:	function()	{
 		this.levelTxt.setText("Game Over!");
 		this.levelTxt.revive();
 		this.levelTxt.lifespan=	2000;
+        this.lifeGroup.getAt(2).frame = 1;
 		// Stop game here somehow or another.
 	},
 	damageLife:	function()	{
@@ -607,9 +621,9 @@ BasicGame.Game.prototype = {
 			this.rock.body.angularVelocity=	0;
 			this.rock.revive();
 		}, this);
-		if(this.lives> 0)
+		if(this.lives> 0){
 			this.dieYouDie();
-		else
+        }else
 			this.dieGameOver();
 	}
 };
