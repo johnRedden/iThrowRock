@@ -153,22 +153,41 @@ BasicGame.Game.prototype = {
 		// munu at bottom  **************************************
 		this.menuGroup = this.add.group();
 		
-		var menuButton = this.add.button(this.world.width / 1.06,  275, "menubutton", this.toggleMenu,this);
+		var menuButton = this.add.button(this.world.width / 1.06,  this.world.centerY / 1.12, "menubutton", this.toggleMenu,this);
 		menuButton.anchor.set(0.5);
-
-		this.menuGroup.add(menuButton);
-		var resetGame = this.add.button(this.world.width / 2, -30, "resetgame", function () {
+		//this.menuGroup.add(menuButton);
+        
+		var mm = this.add.button(this.world.width / 2, -30, "mainmenu", function () {
 			// game reset functionality
 			//this.backgroundMusic.stop();
 			this.state.start('MainMenu');
 		},this);
-		resetGame.anchor.set(0.5);
-		this.menuGroup.add(resetGame);
-		var thankYou = this.add.button(this.world.width / 2, -90, "thankyou", function () {
+		mm.anchor.set(0.5);
+		this.menuGroup.add(mm);
+		var pa = this.add.button(this.world.width / 2, -80, "playagain", function () {
 			// maybe a credits state here.
 		}, this);
-		thankYou.anchor.set(0.5);
-		this.menuGroup.add(thankYou);
+		pa.anchor.set(0.5);
+		this.menuGroup.add(pa);
+        var mo = this.add.button(this.world.centerX-50, -140, 'musicToggle',function(btn){
+            if(BasicGame.music){
+                BasicGame.backgroundMusic.stop();
+                btn.frame=1;
+                BasicGame.music = false;
+            }else{
+                BasicGame.backgroundMusic.play();
+                btn.frame=0;
+                BasicGame.music = true;
+            }  
+        }, this);
+        BasicGame.music?mo.frame=0:mo.frame=1; // init. button
+        var so = this.add.button(this.world.centerX +50, -140, 'soundfxToggle',function(){}, this);
+        mo.anchor.set(0.5);
+        mo.scale.setTo(0.5,0.5);
+        so.anchor.set(0.5);
+        so.scale.setTo(0.5,0.5);
+        this.menuGroup.add(mo);
+        this.menuGroup.add(so);
 		//******************************************************
 		
 		this.scoreText=	this.add.text(10, this.world.centerY-24, "Score: "+BasicGame.score+"\nLevel: "+BasicGame.level, {
@@ -561,16 +580,18 @@ BasicGame.Game.prototype = {
 	
 	// bottom menu utility methods
 	toggleMenu: function () {
+        
 		 if(this.menuGroup.y === 0){
 			 this.add.tween(this.menuGroup).to({
-				 y: 180     
+				 y: 210     
 			 }, 500, Phaser.Easing.Bounce.Out, true);
 		 }
-		if(this.menuGroup.y == 180){
+		if(this.menuGroup.y === 210){
 			this.add.tween(this.menuGroup).to({
 				y: 0    
 			}, 500, Phaser.Easing.Bounce.Out, true);     
 		}
+        
 	},
 	getSpeed: function(x, y){ return Math.sqrt(x*x+y*y);},
 	dieYouDie: function(){
