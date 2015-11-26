@@ -5,9 +5,23 @@ BasicGame.About = function (game) {
 
 BasicGame.About.prototype = {
 
-    create: function () {        
+    create: function () {   
+        //awesome plugin I found...
+        this.kineticScrolling = this.game.plugins.add(Phaser.Plugin.KineticScrolling);
+        this.kineticScrolling.configure({
+            kineticMovement: true,
+            timeConstantScroll: 325, //really mimic iOS
+            horizontalScroll: false,
+            verticalScroll: true,
+            horizontalWheel: false,
+            verticalWheel: true,
+            deltaWheel: 40
+        });
+        this.kineticScrolling.start();
+        //*********************** works like magik
+
         this.stage.backgroundColor = '#add8e6'; //blue??
-        
+        this.world.setBounds(0,0,this.world.width,3000);
         // title
         this.title=	this.add.text(this.world.centerX, this.world.height, "About\niThrowRock", {
 			fontFamily:	"arial",
@@ -34,7 +48,9 @@ BasicGame.About.prototype = {
 			fontFamily:	"arial",
 			fontSize:	"14px",
 		});
+        
         this.add.sprite(this.world.centerX, 300, 'cory');
+        this.add.sprite(this.world.centerX, 500, 'paul');
 
     },
 
