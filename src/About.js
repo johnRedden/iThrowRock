@@ -19,9 +19,12 @@ BasicGame.About.prototype = {
         });
         this.kineticScrolling.start();
         //*********************** works like magik
+        
+        this.wth = this.world.width;
+        this.lth = this.world.length;
 
         this.stage.backgroundColor = '#add8e6'; //blue??
-        this.world.setBounds(0,0,this.world.width,3000);
+        this.world.setBounds(0,0,this.wth,3000);
         // title
         this.title=	this.add.text(this.world.centerX, this.world.height, "About\niThrowRock", {
 			fontFamily:	"arial",

@@ -7,6 +7,7 @@ BasicGame.MainMenu.prototype = {
 
     create: function () {        
         this.stage.backgroundColor = '#add8e6'; //blue??
+        this.world.setBounds(0,0,window.innerWidth, window.innerHeight);
 
         this.playbtn = this.add.button(this.world.centerX + 35, 100, 'playBtn', this.startGame, this);
         
