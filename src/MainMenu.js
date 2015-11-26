@@ -8,13 +8,16 @@ BasicGame.MainMenu.prototype = {
     create: function () {        
         this.stage.backgroundColor = '#add8e6'; //blue??
 
-        this.playbtn = this.add.button(this.world.centerX + 35, 150, 'playBtn', this.startGame, this);
+        this.playbtn = this.add.button(this.world.centerX + 35, 100, 'playBtn', this.startGame, this);
         
         //music on...off button
         var tmpImg1 = this.cache.getImage('musicToggle');
         var tmpImg2 = this.cache.getImage('soundfxToggle');
         this.musicBtn = this.add.button(this.world.centerX-50, this.world.height - tmpImg1.height/2.0, 'musicToggle',this.changeMusic, this);
         this.soundBtn = this.add.button(this.world.centerX+50, this.world.height - tmpImg1.height/2.0, 'soundfxToggle',this.changeSound, this);
+        this.aboutBtn = this.add.button(this.world.centerX, this.world.centerY+50, 'aboutForward',function(){
+            this.game.state.start('About');
+        }, this);
         this.musicBtn.scale.setTo(0.5,0.5);
         this.musicBtn.anchor.setTo(0.5,0.5);
         this.soundBtn.scale.setTo(0.5,0.5);
@@ -38,7 +41,7 @@ BasicGame.MainMenu.prototype = {
                  y: 50     
         }, 2000, Phaser.Easing.Bounce.Out, true);
         //****************************
-        this.highScoreTxt =	this.add.text(10, this.world.height-20, "High Score: "+BasicGame.highScore +" Level: "+BasicGame.highLevel, {
+        this.highScoreTxt =	this.add.text(this.world.centerX, this.world.centerY, "High Score: "+BasicGame.highScore +"\nHigh Level: "+BasicGame.highLevel, {
 			fontFamily:	"arial",
 			fontSize:	"16px",
 			fill:	"#101820"
