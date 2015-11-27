@@ -42,12 +42,6 @@ BasicGame.Game.prototype = {
 		this.physics.p2.updateBoundsCollisionGroup();
 		
 	},
-
-	preload: function () {
-
-   
-	},
-
 	create: function () {
 		// Add rock to the center of the stage
 		this.rock = this.add.sprite(this.world.centerX, this.world.centerY, 'rock');
@@ -130,7 +124,6 @@ BasicGame.Game.prototype = {
 		this.goldenBottle.kill();
 		this.spawnGoldenBottle();
 		
-		
 		this.bottleBreak =  this.add.audio('breakBottle');
 		this.bottleExplode =  this.add.audio('explodeBottle');
 		this.rockHitSnd =  this.add.audio('rockHit');
@@ -150,46 +143,6 @@ BasicGame.Game.prototype = {
 		this.input.onUp.add(this.rockDrop, this);
 		this.input.addMoveCallback(this.rockMove, this);
 		
-		// munu at bottom  **************************************
-		this.menuGroup = this.add.group();
-		
-		var menuButton = this.add.button(this.world.width / 1.06,  this.world.centerY / 1.12, "menubutton", this.toggleMenu,this);
-		menuButton.anchor.set(0.5);
-		//this.menuGroup.add(menuButton);
-        
-		var mm = this.add.button(this.world.width / 2, -30, "mainmenu", function () {
-			// game reset functionality
-			//this.backgroundMusic.stop();
-			this.state.start('MainMenu');
-		},this);
-		mm.anchor.set(0.5);
-		this.menuGroup.add(mm);
-		var pa = this.add.button(this.world.width / 2, -80, "playagain", function () {
-			// maybe a credits state here.
-		}, this);
-		pa.anchor.set(0.5);
-		this.menuGroup.add(pa);
-        var mo = this.add.button(this.world.centerX-50, -140, 'musicToggle',function(btn){
-            if(BasicGame.music){
-                BasicGame.backgroundMusic.stop();
-                btn.frame=1;
-                BasicGame.music = false;
-            }else{
-                BasicGame.backgroundMusic.play();
-                btn.frame=0;
-                BasicGame.music = true;
-            }  
-        }, this);
-        BasicGame.music?mo.frame=0:mo.frame=1; // init. button
-        var so = this.add.button(this.world.centerX +50, -140, 'soundfxToggle',function(){}, this);
-        mo.anchor.set(0.5);
-        mo.scale.setTo(0.5,0.5);
-        so.anchor.set(0.5);
-        so.scale.setTo(0.5,0.5);
-        this.menuGroup.add(mo);
-        this.menuGroup.add(so);
-		//******************************************************
-		
 		this.scoreText=	this.add.text(10, this.world.centerY-24, "Score: "+BasicGame.score+"\nLevel: "+BasicGame.level, {
 			fontFamily:	"arial",
 			fontSize:	"16px",
@@ -205,13 +158,10 @@ BasicGame.Game.prototype = {
 		
 		// Add lives
 		this.lives=	3;
-        /*
-		this.livesCounter=	this.add.text(150, this.world.centerY-24, "Lives: "+this.lives,	{
-			fontFamily:	"arial",
-			fontSize:	"16px",
-			fill:	"#101820"
-		});
-        */
+        
+        // game overlay menu ... code at very bottom
+        this.initGameMenu();
+        
 	},
 	addToSpecialGroup:	function(group, size, textureID, scaleX, scaleY, modifyEvent)	{
 		for(var i = 0; i<size; i++)
@@ -222,9 +172,6 @@ BasicGame.Game.prototype = {
 			if(modifyEvent)
 			{
                 modifyEvent(temp);
-				//this.deletemelaterfunc=	modifyEvent;
-				//this.deletemelaterfunc(item);
-				//this.deletemelaterfunc=	null;
 			}
 			temp.scale.setTo(scaleX, scaleY);
 			temp.kill();
@@ -577,22 +524,6 @@ BasicGame.Game.prototype = {
 		// update the score
 		this.scoreText.setText("Score: "+BasicGame.score+"\nLevel: "+BasicGame.level);
 	},
-	
-	// bottom menu utility methods
-	toggleMenu: function () {
-        
-		 if(this.menuGroup.y === 0){
-			 this.add.tween(this.menuGroup).to({
-				 y: 210     
-			 }, 500, Phaser.Easing.Bounce.Out, true);
-		 }
-		if(this.menuGroup.y === 210){
-			this.add.tween(this.menuGroup).to({
-				y: 0    
-			}, 500, Phaser.Easing.Bounce.Out, true);     
-		}
-        
-	},
 	getSpeed: function(x, y){ return Math.sqrt(x*x+y*y);},
 	dieYouDie: function(){
 		this.levelTxt.setText("You died!\n"+this.lives+" "+((this.lives> 1) ? "lives" : "life")+" left.");
@@ -600,17 +531,20 @@ BasicGame.Game.prototype = {
 		this.levelTxt.lifespan = 2000;
         
          this.lifeGroup.getAt(2-this.lives).frame = 1;
+
 	},
 	dieGameOver:	function()	{
 		this.levelTxt.setText("Game Over!");
 		this.levelTxt.revive();
 		this.levelTxt.lifespan=	2000;
         this.lifeGroup.getAt(2).frame = 1;
-		// Stop game here somehow or another.
+		// Stop game here dispatch the game overlay menu
+        this.levelTxt.events.onKilled.addOnce(function(){
+            this.toggleMenu();
+        },this);
 	},
 	damageLife:	function()	{
 		this.lives--;
-		//this.livesCounter.setText("Lives: "+this.lives);
 		// Kill rock here somehow
 		this.rock.visible=	false;
 		this.rock.kill();
@@ -636,17 +570,88 @@ BasicGame.Game.prototype = {
 			this.deathRock.body.velocity.y=	0;
 			this.deathRock.animations.stop("toheaven");
 			this.deathRock.visible=	false;
-			this.rock.visible=	true;
+			
 			this.rock.body.x=	this.world.centerX;
 			this.rock.body.y=	this.world.centerY;
 			this.rock.body.velocity.x=	0;
 			this.rock.body.velocity.y=	10;
 			this.rock.body.angularVelocity=	0;
-			this.rock.revive();
+            if(this.lives>0){
+                this.rock.visible=	true;
+                this.rock.revive();
+            }
+			     
 		}, this);
 		if(this.lives> 0)
 			this.dieYouDie();
 		else
 			this.dieGameOver();
-	}
+	},
+    initGameMenu: function(){ // Game Menu Overlay  **************************************
+        		
+		this.menuGroup = this.add.group();
+		
+		var menuButton = this.add.button(this.world.width / 1.06,  this.world.centerY / 1.12, "menubutton", this.toggleMenu,this);
+		menuButton.anchor.set(0.5);
+        
+		var mm = this.add.button(this.world.width / 2, -30, "mainmenu", function () {
+			this.state.start('MainMenu');
+		},this);
+		mm.anchor.set(0.5);
+		this.menuGroup.add(mm);
+        
+		var pa = this.add.button(this.world.width / 2, -80, "playagain", function () {
+			this.lives = 3;
+            BasicGame.score=0;
+            BasicGame.level=1;
+            this.game.state.start('Game');
+            
+		}, this);
+		pa.anchor.set(0.5);
+		this.menuGroup.add(pa);
+        var mo = this.add.button(this.world.centerX-50, -140, 'musicToggle',function(btn){
+            if(BasicGame.music){
+                BasicGame.backgroundMusic.stop();
+                btn.frame=1;
+                BasicGame.music = false;
+            }else{
+                BasicGame.backgroundMusic.play();
+                btn.frame=0;
+                BasicGame.music = true;
+            }  
+        }, this);
+        BasicGame.music?mo.frame=0:mo.frame=1; // init. button
+        
+        var so = this.add.button(this.world.centerX +50, -140, 'soundfxToggle',function(btn){
+            if(BasicGame.sound){
+                btn.frame=1;
+                BasicGame.sound = false;
+            }else{
+                btn.frame=0;
+                BasicGame.sound = true;
+            }             
+        }, this);
+        BasicGame.sound?so.frame=0:so.frame=1; // init. button
+                
+        mo.anchor.set(0.5);
+        mo.scale.setTo(0.5,0.5);
+        so.anchor.set(0.5);
+        so.scale.setTo(0.5,0.5);
+        this.menuGroup.add(mo);
+        this.menuGroup.add(so);
+        
+    },
+	toggleMenu: function () {
+        
+		 if(this.menuGroup.y === 0){
+			 this.add.tween(this.menuGroup).to({
+				 y: 210     
+			 }, 500, Phaser.Easing.Bounce.Out, true);
+		 }else{
+			this.add.tween(this.menuGroup).to({
+				y: 0    
+			}, 500, Phaser.Easing.Bounce.Out, true);     
+		}
+        
+	},
 };
