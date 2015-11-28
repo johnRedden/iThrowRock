@@ -155,6 +155,11 @@ BasicGame.Game.prototype = {
 		});
 		this.levelTxt.anchor.set(0.5,0.5);
 		this.levelTxt.lifespan = 2000;
+        this.highScoreText=	this.add.text(10, this.world.height-75, "High Score: "+BasicGame.highScore, {
+			fontFamily:	"arial",
+			fontSize:	"14px",
+			fill:	"#101820"
+		});
 		
 		// Add lives
 		this.lives=	3;
@@ -534,9 +539,18 @@ BasicGame.Game.prototype = {
 
 	},
 	dieGameOver:	function()	{
-		this.levelTxt.setText("Game Over!");
+
+        
+        if(BasicGame.score>=BasicGame.highScore){
+            BasicGame.highScore = BasicGame.score;
+            this.levelTxt.setText("Game Over.\nHigh Score!");
+            this.highScoreText.setText("High Score: "+BasicGame.highScore);
+        }else{
+            this.levelTxt.setText("Game Over!");
+        }	
 		this.levelTxt.revive();
 		this.levelTxt.lifespan=	2000;
+        
         this.lifeGroup.getAt(2).frame = 1;
 		// Stop game here dispatch the game overlay menu
         this.levelTxt.events.onKilled.addOnce(function(){
@@ -639,6 +653,15 @@ BasicGame.Game.prototype = {
         so.scale.setTo(0.5,0.5);
         this.menuGroup.add(mo);
         this.menuGroup.add(so);
+        
+        var st =	this.add.text(this.world.centerX, 10, "iThrowRock", {
+			fontFamily:	"arial",
+			fontSize:	"14px",
+            fontStyle: "italic",
+			fill:	"#fff"
+		});
+        st.anchor.set(0.5);
+        this.menuGroup.add(st);
         
     },
 	toggleMenu: function () {
