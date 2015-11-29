@@ -53,8 +53,6 @@ BasicGame.Game.prototype = {
 		this.deathRock.animations.add("toheaven");
 		this.deathRock.visible=	false;
 		this.deathRock.anchor.setTo(0.5, 0.5);
-		this.physics.p2.enable(this.deathRock);
-		this.deathRock.static=	true;
 		
 		// turn false the collision circle in production
 		this.physics.p2.enable(this.rock, false); //change to true to see hitcircle
@@ -198,6 +196,8 @@ BasicGame.Game.prototype = {
 				this.bStartedTrail=	false;
 			}
 		}
+		if(this.trails!= null && this.trails.length!= 0)
+			this.deleteRockTrailing();
 		this.bottles.forEachAlive(this.resetObjLocation,this);
 		this.boards.forEachAlive(this.resetObjLocation,this);
 		this.molotovs.forEachAlive(this.resetObjLocation,this);
@@ -289,7 +289,7 @@ BasicGame.Game.prototype = {
 			bottle.sprite.events.onKilled.addOnce(function(){
 				this.spawnGoldenBottle();
 				this.combo++;
-				this.increaseScore((10+2*(BasicGame.level-1))*this.combo);
+				this.increaseScore((10+12*(BasicGame.level-1))*this.combo);
 				if(this.comboText!= null)
 				{
 					if(this.combo> 1)
@@ -568,26 +568,22 @@ BasicGame.Game.prototype = {
 		// Kill rock here somehow
 		this.rock.visible=	false;
 		this.rock.kill();
-		this.deathRock.body.x=	this.rock.body.x;
-		this.deathRock.body.y=	this.rock.body.y;
 		this.deathRock.visible=	true;
-		this.deathRock.body.static=	true;
-		this.deathRock.animations.play("toheaven", 8, true);
+		this.deathRock.x=	this.rock.x;
+		this.deathRock.y=	this.rock.y;
+		this.deathRock.alpha=	1;
+		this.deathRock.animations.play("toheaven", 4, true);
 		if(this.rock.scale.x== 0.2)
 			this.deathRock.scale.setTo(2, 2);
 		else
 			this.deathRock.scale.setTo(1, 1);
-		this.deathRock.body.velocity.y=	-10;
-		this.deathRock.alpha=	1;
-		// Complex system of levers and pulleys
-		this.time.events.add(Phaser.Timer.SECOND, function()	{
-			this.deathRock.alpha=	0.5;
-		}, this);
-		this.time.events.add(Phaser.Timer.SECOND*2, function()	{
-			this.deathRock.alpha=	0.15;
-		}, this);
-		this.time.events.add(Phaser.Timer.SECOND*3, function()	{
-			this.deathRock.body.velocity.y=	0;
+		this.game.add.tween(this.deathRock).to(
+			{
+				x:	this.rock.x,
+				y:	this.rock.y-40,
+				alpha:	0
+			}, 1800, Phaser.Easing.Linear.In
+		).start().onComplete.add(function(){
 			this.deathRock.animations.stop("toheaven");
 			this.deathRock.visible=	false;
 			
@@ -600,7 +596,6 @@ BasicGame.Game.prototype = {
                 this.rock.visible=	true;
                 this.rock.revive();
             }
-			     
 		}, this);
 		if(this.lives> 0)
 			this.dieYouDie();
