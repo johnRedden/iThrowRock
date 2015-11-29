@@ -52,6 +52,7 @@ BasicGame.Preloader.prototype = {
         //this.load.audio('gameMusic', ['asset/pentagram_rage.ogg', 'asset/pentagram_rage.mp3']);
 
         //menu stuff
+        this.load.image("rope", "asset/menu/rope.png");
         this.load.image("menubutton", "asset/menu/menubutton.png");
         this.load.image("mainmenu", "asset/menu/main_menu.png");
         this.load.image("playagain", "asset/menu/play_again.png");

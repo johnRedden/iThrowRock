@@ -610,6 +610,9 @@ BasicGame.Game.prototype = {
     initGameMenu: function(){ // Game Menu Overlay  **************************************
         		
 		this.menuGroup = this.add.group();
+       
+        this.menuGroup.add(this.add.image(this.world.centerX-100, -250, 'rope'));
+        this.menuGroup.add(this.add.image(this.world.centerX+87, -250, 'rope'));
 		
 		var menuButton = this.add.button(this.world.width / 1.06,  this.world.centerY / 1.12, "menubutton", this.toggleMenu,this);
 		menuButton.anchor.set(0.5);
