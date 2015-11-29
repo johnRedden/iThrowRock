@@ -59,6 +59,7 @@ BasicGame.Preloader.prototype = {
         this.load.image("playBtn", "asset/menu/playbutton.png");
         this.load.image("aboutForward", "asset/menu/about_forward.png");
         this.load.image("aboutBack", "asset/menu/about_back.png");
+        this.load.image("bottleTypes", "asset/menu/random_power_spritesheet.png");
         this.load.image("cory", "asset/menu/cory.png");
         this.load.image("paul", "asset/menu/paul.png");
         

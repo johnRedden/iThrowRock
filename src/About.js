@@ -29,6 +29,10 @@ BasicGame.About.prototype = {
         this.initGameMenu();
         this.toggleMenu();
         
+        var pic = this.add.image(this.world.centerX, 200, 'bottleTypes');
+        pic.anchor.setTo(.5);
+        pic.scale.setTo(.5);
+        
         
         /*
         // title
@@ -110,7 +114,7 @@ BasicGame.About.prototype = {
         
 
         
-        var st =	this.add.text(this.world.centerX, 50, "iThrowRock", {
+        var st =	this.add.text(this.world.centerX, 30, "iThrowRock", {
 			fontFamily:	"arial",
 			fontSize:	"28px",
             fontStyle: "italic",
@@ -124,7 +128,7 @@ BasicGame.About.prototype = {
         
 		 if(this.menuGroup.y === 0){
 			 this.add.tween(this.menuGroup).to({
-				 y: 210     
+				 y: 150     
 			 }, 500, Phaser.Easing.Bounce.Out, true);
 		 }else{
 			this.add.tween(this.menuGroup).to({
