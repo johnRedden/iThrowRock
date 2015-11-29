@@ -196,7 +196,7 @@ BasicGame.Game.prototype = {
 				this.bStartedTrail=	false;
 			}
 		}
-		if(this.trails!= null && this.trails.length!= 0)
+		if(this.trails== 0 && this.trails!= null && this.trails.length!= 0)
 			this.deleteRockTrailing();
 		this.bottles.forEachAlive(this.resetObjLocation,this);
 		this.boards.forEachAlive(this.resetObjLocation,this);
