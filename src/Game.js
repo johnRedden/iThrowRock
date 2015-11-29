@@ -566,7 +566,7 @@ BasicGame.Game.prototype = {
 		this.deathRock.body.y=	this.rock.body.y;
 		this.deathRock.visible=	true;
 		this.deathRock.body.static=	true;
-		this.deathRock.animations.play("toheaven", 2, true);
+		this.deathRock.animations.play("toheaven", 8, true);
 		if(this.rock.scale.x== 0.2)
 			this.deathRock.scale.setTo(2, 2);
 		else
