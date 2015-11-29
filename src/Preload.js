@@ -77,8 +77,14 @@ BasicGame.Preloader.prototype = {
     },
 
     update: function () {
+        
+        this.game.add.tween(this.world).to({
+				alpha:	0
+			}, 1800, Phaser.Easing.Linear.In).start().onComplete.add(function(){
+               this.game.state.start('MainMenu');
+            }, this);
        
-       //the following code does not work in the emulator.
+       /*  This slows down the startup alot
 		if (this.cache.isSoundDecoded('gameMusic'))
 		{
             BasicGame.backgroundMusic = this.add.audio('gameMusic');
@@ -88,6 +94,7 @@ BasicGame.Preloader.prototype = {
 			//this.ready = true;
 			this.state.start('MainMenu');
 		}
+        */
        
         
 

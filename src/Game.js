@@ -12,6 +12,7 @@ BasicGame.Game.prototype = {
 	init: function () {
 		
 		this.stage.backgroundColor = '#fff'; //white
+        this.world.alpha = 1;
 		
 		this.physics.startSystem(Phaser.Physics.P2JS);
 		this.physics.p2.restitution = 0.2; //this gives bounce
@@ -397,19 +398,16 @@ BasicGame.Game.prototype = {
             // have to reset collision group after rectangle set
 			molotov.body.setRectangle(20, 60);
             molotov.body.setCollisionGroup(this.molotovCollisionGroup);
-			//molotov.events.onKilled.addOnce(this.spawnShards,this);
 		});
 	},
 	molotovHit: function(arg){
 		var molotov = arg.sprite;
-		
 		
 		if(this.getSpeed(this.rock.body.velocity.x, this.rock.body.velocity.y) > BasicGame.breakSpeedMolotov && molotov.alive){
 			molotov.kill();
 			if(BasicGame.sound){
 				this.bottleBreak.play();
 				this.bottleExplode.play();
-				//this.dieYouDie();
 			};
 			var temp=	this.add.sprite(molotov.x, molotov.y, "firepuff");
 			temp.anchor.setTo(0.5, 0.5);
@@ -480,7 +478,7 @@ BasicGame.Game.prototype = {
 	spawnGoldenBottle:	function()	{
 		if(this.goldenBottle.alive || this.trailing!= 0)
 			return;
-		if(this.rnd.integerInRange(0, 25)=== 0) // 4% Chance of spawning
+		if(this.rnd.integerInRange(0, 4)=== 0) // 20% Chance of spawning
 		{
 			this.goldenBottle.body.x=	-10;
 			this.goldenBottle.body.y=	this.world.centerY-this.rnd.integerInRange(10, 100);
@@ -541,11 +539,17 @@ BasicGame.Game.prototype = {
 	},
 	dieGameOver:	function()	{
 
-        
         if(BasicGame.score>=BasicGame.highScore){
             BasicGame.highScore = BasicGame.score;
             this.levelTxt.setText("Game Over.\nHigh Score!");
-            this.highScoreText.setText("High Score: "+BasicGame.highScore);
+            
+            this.game.add.tween(this.scoreText).to({
+				y:	this.highScoreText.y,
+				alpha:	0
+			}, 1800, Phaser.Easing.Linear.In).start().onComplete.add(function(){
+               this.highScoreText.setText("High Score: "+BasicGame.highScore);
+            }, this);
+            
         }else{
             this.levelTxt.setText("Game Over!");
         }	

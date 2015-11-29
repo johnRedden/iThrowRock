@@ -8,6 +8,11 @@ BasicGame.MainMenu.prototype = {
     create: function () {        
         this.stage.backgroundColor = '#add8e6'; //blue??
         this.world.setBounds(0,0,window.innerWidth, window.innerHeight);
+        this.world.alpha = 1;
+        
+        BasicGame.backgroundMusic = this.add.audio('gameMusic');
+        BasicGame.backgroundMusic.volume = 0.3;
+        BasicGame.backgroundMusic.loop = true;
         
         this.initGameMenu();
         this.toggleMenu();
@@ -17,7 +22,7 @@ BasicGame.MainMenu.prototype = {
 			fontSize:	"16px",
 			fill:	"#101820"
 		});
-        this.add.text(this.world.centerX-100, this.world.centerY+100, "Instructions: Break stuff.", {
+        this.add.text(this.world.centerX-100, this.world.centerY+100, "Throw rock - break stuff.", {
 			fontFamily:	"arial",
 			fontSize:	"16px",
 			fill:	"#000"
@@ -148,7 +153,12 @@ BasicGame.MainMenu.prototype = {
 			this.lives = 3;
             BasicGame.score=0;
             BasicGame.level=1;
-            this.game.state.start('Game');
+            //fade into new state
+            this.game.add.tween(this.world).to({
+				alpha:	0
+			}, 1500, Phaser.Easing.Linear.In).start().onComplete.add(function(){
+               this.game.state.start('Game');
+            }, this);
             
 		}, this);
 		pa.anchor.set(0.5);
