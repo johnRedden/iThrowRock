@@ -444,8 +444,6 @@ BasicGame.Game.prototype = {
 			darkbottle.frame=	0;
             darkbottle.body.setRectangle(15, 50);
             darkbottle.body.setCollisionGroup(this.darkBottleCollisionGroup);
-            // set the hit box somehow
-            // look at spawn molotovs to see how
 		});
 	},
 	darkBottleHit: function(args){
@@ -506,8 +504,11 @@ BasicGame.Game.prototype = {
 		 	this.trailing=	1;
             //change color of stage to indicate thrasher mode.
             this.stage.backgroundColor = '#ff0000';
+            //annouce thrasher mode
+            this.levelTxt.setText("Thrasher mode!\nNo death 8 sec.");
+            this.levelTxt.revive();
+            this.levelTxt.lifespan = 2000;
 			
-			//this.rock.body.setRectangle(40,40);
 			this.time.events.add(Phaser.Timer.SECOND *8, function(){
 				this.trailing=	0;
 				this.rock.tint=	0xffffff;
@@ -548,6 +549,11 @@ BasicGame.Game.prototype = {
         }else{
             this.levelTxt.setText("Game Over!");
         }	
+        if(BasicGame.level>=BasicGame.highLevel){
+            BasicGame.highLevel=BasicGame.level;
+            //should probably say something.
+        }
+            
 		this.levelTxt.revive();
 		this.levelTxt.lifespan=	2000;
         
