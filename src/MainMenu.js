@@ -10,10 +10,6 @@ BasicGame.MainMenu.prototype = {
         this.world.setBounds(0,0,window.innerWidth, window.innerHeight);
         this.world.alpha = 1;
         
-        BasicGame.backgroundMusic = this.add.audio('gameMusic');
-        BasicGame.backgroundMusic.volume = 0.3;
-        BasicGame.backgroundMusic.loop = true;
-        
         //HTML5 localStorage
             if(typeof(Storage) !== "undefined") {
                 BasicGame.highScore = localStorage.getItem("highScore");
@@ -21,6 +17,7 @@ BasicGame.MainMenu.prototype = {
             } else {
                 // Sorry! No Web Storage support..
             }
+        //*****************
         
         this.initGameMenu();
         this.toggleMenu();
@@ -35,52 +32,7 @@ BasicGame.MainMenu.prototype = {
 			fontSize:	"16px",
 			fill:	"#000"
 		});
-
-        /*
-        this.playbtn = this.add.button(this.world.centerX + 35, 100, 'playBtn', this.startGame, this);
-        
-        //music on...off button
-        var tmpImg1 = this.cache.getImage('musicToggle');
-        var tmpImg2 = this.cache.getImage('soundfxToggle');
-        this.musicBtn = this.add.button(this.world.centerX-50, this.world.height - tmpImg1.height/2.0, 'musicToggle',this.changeMusic, this);
-        this.soundBtn = this.add.button(this.world.centerX+50, this.world.height - tmpImg1.height/2.0, 'soundfxToggle',this.changeSound, this);
-        this.aboutBtn = this.add.button(this.world.centerX, this.world.centerY+50, 'aboutForward',function(){
-            this.game.state.start('About');
-        }, this);
-        this.musicBtn.scale.setTo(0.5,0.5);
-        this.musicBtn.anchor.setTo(0.5,0.5);
-        this.soundBtn.scale.setTo(0.5,0.5);
-        this.soundBtn.anchor.setTo(0.5,0.5);
-        
-        // change music global in Boot if wanting music on init.
-        this.musicCheck();
-        this.soundCheck();
-        //***********************
-        
-        // title
-        this.title=	this.add.text(this.world.centerX, this.world.height, "iThrowRock", {
-			fontFamily:	"arial",
-			fontSize:	"48px",
-            fontStyle: "italic",
-			fill:	"#fff"
-		});
-        this.title.anchor.setTo(0.5, 0.5);
-        
-        this.add.tween(this.title).to({
-                 y: 50     
-        }, 2000, Phaser.Easing.Bounce.Out, true);
-        //****************************
-        this.highScoreTxt =	this.add.text(this.world.centerX, this.world.centerY, "High Score: "+BasicGame.highScore +"\nHigh Level: "+BasicGame.highLevel, {
-			fontFamily:	"arial",
-			fontSize:	"16px",
-			fill:	"#101820"
-		});
-        
-        BasicGame.level = 1;
-        BasicGame.score = 0;
-        */
    
-
     },
 
     update: function () {
@@ -89,49 +41,6 @@ BasicGame.MainMenu.prototype = {
 
     },
     
-    changeMusic: function(){
-        //change logic
-        if(BasicGame.music){
-            // turn music off
-            BasicGame.music = false;
-            this.musicCheck();
-            
-        }else{
-            //turn music on
-            BasicGame.music = true;
-            this.musicCheck();
-        }    
-    },
-    changeSound: function(){
-         //change logic
-        if(BasicGame.sound){
-            // turn sound off
-            BasicGame.sound = false;
-            this.soundCheck();
-            
-        }else{
-            //turn sound on
-            BasicGame.sound = true;
-            this.soundCheck();
-        }  
-    
-    },
-    musicCheck: function(){
-        if(BasicGame.music){
-            BasicGame.backgroundMusic.play();
-            this.musicBtn.frame=0;
-        }else{
-            BasicGame.backgroundMusic.stop();
-            this.musicBtn.frame=1;
-        }  
-    },
-    soundCheck: function(){
-        if(BasicGame.sound){
-            this.soundBtn.frame=0;
-        }else{
-            this.soundBtn.frame=1;
-        }  
-    },
 
     startGame: function (btn) {
 
@@ -141,15 +50,13 @@ BasicGame.MainMenu.prototype = {
         //this.music.stop();
 
     },
-        initGameMenu: function(){ // Game Menu Overlay  **************************************
+    
+    initGameMenu: function(){ // Game Menu Overlay  **************************************
         		
 		this.menuGroup = this.add.group();
        
         this.menuGroup.add(this.add.image(this.world.centerX-100, -250, 'rope'));
         this.menuGroup.add(this.add.image(this.world.centerX+87, -250, 'rope'));
-		
-		//var menuButton = this.add.button(this.world.width / 1.06,  this.world.centerY / 1.12, "menubutton", this.toggleMenu,this);
-		//menuButton.anchor.set(0.5);
         
 		var mm = this.add.button(this.world.width / 2, -30, "aboutForward", function () {
 			this.state.start('About');
@@ -172,6 +79,7 @@ BasicGame.MainMenu.prototype = {
 		pa.anchor.set(0.5);
 		this.menuGroup.add(pa);
         var mo = this.add.button(this.world.centerX-50, -140, 'musicToggle',function(btn){
+            
             if(BasicGame.music){
                 BasicGame.backgroundMusic.stop();
                 btn.frame=1;
@@ -213,7 +121,7 @@ BasicGame.MainMenu.prototype = {
         
     },
 	toggleMenu: function () {
-        
+       
 		 if(this.menuGroup.y === 0){
 			 this.add.tween(this.menuGroup).to({
 				 y: 210     

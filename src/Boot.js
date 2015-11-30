@@ -42,6 +42,8 @@ BasicGame.Boot.prototype = {
         // * Set first to true to force landscape. 
         // * Set second to true to force portrait.
         this.scale.forceOrientation(false, true);
+        
+
 
         if (this.game.device.desktop) {
             //this.scale.setMinMax(480, 260, 1024, 768);

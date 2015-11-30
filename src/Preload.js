@@ -31,8 +31,6 @@ BasicGame.Preloader.prototype = {
         //	Here we load the rest of the assets our game needs.
         this.load.image('rock', 'asset/a_0.png');
         this.load.spritesheet("deathrock", "asset/rock_death.png", 90, 79, 2);
-        //this.load.image('molotov', 'asset/molotov_1.png');
-        //this.load.image('darkBottle', 'asset/dark_bottle.png');
         this.load.image('shard01', 'asset/bottle_shard_base.png');
         this.load.image('shard02', 'asset/bottle_shard_middle.png');
         this.load.image('shard03', 'asset/bottle_shard_top.png');
@@ -56,7 +54,6 @@ BasicGame.Preloader.prototype = {
         this.load.image("menubutton", "asset/menu/menubutton.png");
         this.load.image("mainmenu", "asset/menu/main_menu.png");
         this.load.image("playagain", "asset/menu/play_again.png");
-        this.load.image("playBtn", "asset/menu/playbutton.png");
         this.load.image("aboutForward", "asset/menu/about_forward.png");
         this.load.image("aboutBack", "asset/menu/about_back.png");
         this.load.image("bottleTypes", "asset/menu/random_power_spritesheet.png");
@@ -86,7 +83,7 @@ BasicGame.Preloader.prototype = {
                this.game.state.start('MainMenu');
             }, this);
        
-       /*  This slows down the startup alot
+       //  This slows down the startup alot
 		if (this.cache.isSoundDecoded('gameMusic'))
 		{
             BasicGame.backgroundMusic = this.add.audio('gameMusic');
@@ -96,8 +93,7 @@ BasicGame.Preloader.prototype = {
 			//this.ready = true;
 			this.state.start('MainMenu');
 		}
-        */
-       
+         
         
 
     }
