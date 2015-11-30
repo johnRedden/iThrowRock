@@ -550,11 +550,28 @@ BasicGame.Game.prototype = {
                this.highScoreText.setText("High Score: "+BasicGame.highScore);
             }, this);
             
+            //HTML5 localStorage
+            if(typeof(Storage) !== "undefined") {
+                localStorage.setItem("highScore", BasicGame.highScore);
+                //console.log(localStorage.getItem("highScore"));
+            } else {
+                // Sorry! No Web Storage support..
+            }
+            
+            
+            
         }else{
             this.levelTxt.setText("Game Over!");
         }	
         if(BasicGame.level>=BasicGame.highLevel){
             BasicGame.highLevel=BasicGame.level;
+            //HTML5 localStorage
+            if(typeof(Storage) !== "undefined") {
+                localStorage.setItem("highLevel", BasicGame.highLevel);
+                //console.log(localStorage.getItem("highScore"));
+            } else {
+                // Sorry! No Web Storage support..
+            }
             //should probably say something.
         }
             

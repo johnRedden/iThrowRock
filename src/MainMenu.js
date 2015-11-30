@@ -14,6 +14,14 @@ BasicGame.MainMenu.prototype = {
         BasicGame.backgroundMusic.volume = 0.3;
         BasicGame.backgroundMusic.loop = true;
         
+        //HTML5 localStorage
+            if(typeof(Storage) !== "undefined") {
+                BasicGame.highScore = localStorage.getItem("highScore");
+                BasicGame.highLevel = localStorage.getItem("highLevel");
+            } else {
+                // Sorry! No Web Storage support..
+            }
+        
         this.initGameMenu();
         this.toggleMenu();
         
