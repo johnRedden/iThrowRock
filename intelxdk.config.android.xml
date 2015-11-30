@@ -18,4 +18,5 @@
 <preference name="android-targetSdkVersion" value="19"/>
 <preference name="android-installLocation" value="auto"/>
 <preference name="Orientation" value="portrait"/>
+<preference name="Fullscreen" value="true"/>
 <!--creationInfo:{"src":"","projectTypeName":"com.intel.xdk.projecttype.webapp"}--></widget>
