@@ -29,43 +29,57 @@ BasicGame.About.prototype = {
         this.initGameMenu();
         this.toggleMenu();
         
-        var pic = this.add.image(this.world.centerX, 200, 'bottleTypes');
+        var pic = this.add.image(this.world.centerX, 150, 'bottleTypes');
         pic.anchor.setTo(.5);
         pic.scale.setTo(.5);
         
+        //instructions
+        var instructionsStr = "Throw hard to break bottles.\n"+
+                    "Green Bottle - Points and to level up.\n"+
+                    "Molotov - Hit and die.\n"+
+                    "Golden Bottle - No die thrasher mode.\n"+
+                    "Dark Bottle - Enormous rock potion.";
         
-        /*
-        // title
-        this.title=	this.add.text(this.world.centerX, this.world.height, "About\niThrowRock", {
-			fontFamily:	"arial",
-			fontSize:	"48px",
-            fontStyle: "italic",
-			fill:	"#fff"
-		});
-        this.title.anchor.setTo(0.5, 0.5);
-        
-        this.add.tween(this.title).to({
-                 y: 50     
-        }, 2000, Phaser.Easing.Bounce.Out, true);
-        //****************************
-        
-        */
-        
-        this.backBtn = this.add.button(this.world.centerX, 300, 'aboutBack',function(){
-            this.game.state.start('MainMenu');
-        }, this);
-        
-        //  Text here ... may need scrolling if too big.
-        
-        this.text1 = "This is where we have our bios and INSTRUCTIONS. \nHowever, we are all so dang ugly!";
-        
-        this.add.text(10, 200, this.text1, {
+        var text1 = this.add.text(this.world.centerX, 200, instructionsStr, {
 			fontFamily:	"arial",
 			fontSize:	"14px",
 		});
+        text1.x=this.world.centerX-text1.width*0.5;
+        //****************************************
         
-        this.add.sprite(this.world.centerX, 300, 'cory');
-        this.add.sprite(this.world.centerX, 500, 'paul');
+        // developers
+        var devStyle = {
+            font:	"14px Courier New",
+            align: "center"
+        };
+        var creditStr = "***********************\n"+
+                        "College of the Sequoias\n"+
+                        "SURGE Developers\n"+
+                        "***********************\n";
+        var text2 = this.add.text(this.world.centerX, 330, creditStr, devStyle);
+        text2.x=this.world.centerX-text2.width*0.5;
+        //****************************************
+        
+        var coryTxt = this.add.text(0, 420, "Cory Lewis - some@aolcom", devStyle);
+        coryTxt.x=this.world.centerX-coryTxt.width*0.5;
+        this.add.image(this.world.centerX, 520, 'cory').anchor.setTo(.5);
+        
+        var paulTxt = this.add.text(0, 620, "Paul B-G - some@aolcom", devStyle);
+        paulTxt.x=this.world.centerX-paulTxt.width*0.5;
+        this.add.image(this.world.centerX, 710, 'paul').anchor.setTo(.5);
+        
+        var johnTxt = this.add.text(0, 790, "John Redden - jtredden@gmail.com", devStyle);
+        johnTxt.x=this.world.centerX-johnTxt.width*0.5;
+        this.add.image(this.world.centerX, 890, 'john').anchor.setTo(.5);
+        
+        
+        var specialStr = "***********************\n"+
+                        "Special Thanks to:\n"+
+                        "D Bourquin\n"+
+                        "Isabel Lambert\n"+
+                        "***********************\n";
+        var text5 = this.add.text(this.world.centerX, 1000, specialStr, devStyle);
+        text5.x=this.world.centerX-text5.width*0.5;
 
     },
 
@@ -96,27 +110,9 @@ BasicGame.About.prototype = {
 		mm.anchor.set(0.5);
 		this.menuGroup.add(mm);
         
-		var pa = this.add.button(this.world.width / 2, -80, "playagain", function () {
-			this.lives = 3;
-            BasicGame.score=0;
-            BasicGame.level=1;
-            //fade into new state
-            this.game.add.tween(this.world).to({
-				alpha:	0
-			}, 1500, Phaser.Easing.Linear.In).start().onComplete.add(function(){
-               //this.game.state.start('Game');
-                this.world.alpha = 1;
-            }, this);
-            
-		}, this);
-		pa.anchor.set(0.5);
-		this.menuGroup.add(pa);
-        
-
-        
-        var st =	this.add.text(this.world.centerX, 30, "iThrowRock", {
+        var st = this.add.text(this.world.centerX, -70, "About iThrowRock", {
 			fontFamily:	"arial",
-			fontSize:	"28px",
+			fontSize:	"18px",
             fontStyle: "italic",
 			fill:	"#fff"
 		});
@@ -128,7 +124,7 @@ BasicGame.About.prototype = {
         
 		 if(this.menuGroup.y === 0){
 			 this.add.tween(this.menuGroup).to({
-				 y: 150     
+				 y: 100     
 			 }, 500, Phaser.Easing.Bounce.Out, true);
 		 }else{
 			this.add.tween(this.menuGroup).to({

@@ -62,6 +62,7 @@ BasicGame.Preloader.prototype = {
         this.load.image("bottleTypes", "asset/menu/random_power_spritesheet.png");
         this.load.image("cory", "asset/menu/cory.png");
         this.load.image("paul", "asset/menu/paul.png");
+        this.load.image("john", "asset/menu/john01.png");
         
         this.load.spritesheet('musicToggle', 'asset/music_status_new.png',210,160,2);
         this.load.spritesheet('soundfxToggle','asset/fx_status.png',210,160,2);
