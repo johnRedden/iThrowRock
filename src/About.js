@@ -64,7 +64,7 @@ BasicGame.About.prototype = {
         coryTxt.x=this.world.centerX-coryTxt.width*0.5;
         this.add.image(this.world.centerX, 520, 'cory').anchor.setTo(.5);
         
-        var paulTxt = this.add.text(0, 620, "Paul B-G - some@aolcom", devStyle);
+        var paulTxt = this.add.text(0, 620, "Paul Gonzalez-Becerra - pgonzbecer@gmail.com", devStyle);
         paulTxt.x=this.world.centerX-paulTxt.width*0.5;
         this.add.image(this.world.centerX, 710, 'paul').anchor.setTo(.5);
         
