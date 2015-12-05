@@ -51,7 +51,7 @@ BasicGame.Preloader.prototype = {
 
         //menu stuff
         this.load.image("rope", "asset/menu/rope.png");
-        this.load.image("menubutton", "asset/menu/menubutton.png");
+        this.load.spritesheet("menubutton", "asset/menu/lever_wood.png",150,150,2);
         this.load.image("mainmenu", "asset/menu/main_menu.png");
         this.load.image("playagain", "asset/menu/play_again.png");
         this.load.image("aboutForward", "asset/menu/about_forward.png");
@@ -60,6 +60,7 @@ BasicGame.Preloader.prototype = {
         this.load.image("cory", "asset/menu/cory.png");
         this.load.image("paul", "asset/menu/paul.png");
         this.load.image("john", "asset/menu/john01.png");
+        this.load.image("play1", "asset/menu/play_button.png");
         
         this.load.spritesheet('musicToggle', 'asset/music_status_new.png',210,160,2);
         this.load.spritesheet('soundfxToggle','asset/fx_status.png',210,160,2);

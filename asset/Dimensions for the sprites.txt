@@ -26,3 +26,5 @@ molotov_burn     2 pics Each frame ==> W:160  px  H:268 px   8 fps runs nice    
 rock_death       2 pics Each frame ==> W:90   px  H:79  px   4 fps tested                 updated  11/22/15
 
 death_score      2 pics Each frame ==> W:160  px  H:173 px                                updated  11/22/15
+
+lever_wood       2 pics Each frame ==> W:160  px  H:160 px         

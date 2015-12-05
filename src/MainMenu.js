@@ -64,7 +64,7 @@ BasicGame.MainMenu.prototype = {
 		mm.anchor.set(0.5);
 		this.menuGroup.add(mm);
         
-		var pa = this.add.button(this.world.width / 2, -80, "playagain", function () {
+		var pa = this.add.button(this.world.width / 2, -80, "play1", function () {
 			this.lives = 3;
             BasicGame.score=0;
             BasicGame.level=1;
