@@ -630,8 +630,9 @@ BasicGame.Game.prototype = {
         this.menuGroup.add(this.add.image(this.world.centerX-100, -250, 'rope'));
         this.menuGroup.add(this.add.image(this.world.centerX+87, -250, 'rope'));
 		
-		var menuButton = this.add.button(this.world.width / 1.06,  this.world.centerY / 1.12, "menubutton", this.toggleMenu,this);
-		menuButton.anchor.set(0.5);
+		this.menuButton = this.add.button(this.world.width -5,  this.world.centerY , "menubutton", this.toggleMenu,this);
+		this.menuButton.anchor.set(1,1);
+        this.menuButton.scale.setTo(0.5,0.5);
         
 		var mm = this.add.button(this.world.width / 2, -30, "mainmenu", function () {
 			this.state.start('MainMenu');
@@ -649,6 +650,7 @@ BasicGame.Game.prototype = {
 		pa.anchor.set(0.5);
 		this.menuGroup.add(pa);
         var mo = this.add.button(this.world.centerX-50, -140, 'musicToggle',function(btn){
+            
             if(BasicGame.music){
                 BasicGame.backgroundMusic.stop();
                 btn.frame=1;
@@ -692,10 +694,12 @@ BasicGame.Game.prototype = {
 	toggleMenu: function () {
         
 		 if(this.menuGroup.y === 0){
+             this.menuButton.frame = 1;
 			 this.add.tween(this.menuGroup).to({
 				 y: 210     
 			 }, 500, Phaser.Easing.Bounce.Out, true);
 		 }else{
+             this.menuButton.frame = 0;
 			this.add.tween(this.menuGroup).to({
 				y: 0    
 			}, 500, Phaser.Easing.Bounce.Out, true);     
