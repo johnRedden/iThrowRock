@@ -6,7 +6,7 @@
       "projectTypeName": "com.intel.xdk.projecttype.webapp",
       "src": "",
       "projectGuid": "d7e29b2a-088a-4d12-9db7-c65aa72208f3",
-      "lastModifiedDate": 1448907472942,
+      "lastModifiedDate": 1449361412889,
       "creationDate": 1447016422216
     },
     "sourceDirectory": "",
@@ -39,7 +39,7 @@
           "android-targetSdkVersion": "19",
           "android-installLocation": "auto",
           "Orientation": "portrait",
-          "Fullscreen": true
+          "Fullscreen": false
         },
         "isActive_": true,
         "appName_": "iThrowRock",

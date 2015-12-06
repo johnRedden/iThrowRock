@@ -41,7 +41,7 @@ BasicGame.Game.prototype = {
 		this.darkBottleCollisionGroup = this.physics.p2.createCollisionGroup();
 		this.goldenBottleCollisionGroup=	this.physics.p2.createCollisionGroup();
 		this.physics.p2.updateBoundsCollisionGroup();
-		
+		 
 	},
 	create: function () {
 		// Add rock to the center of the stage
@@ -213,6 +213,7 @@ BasicGame.Game.prototype = {
 	
 	// utility functions for the rock grab *****************
 	rockGrab: function (pointer) {
+        if(this.rock.grabbed==true) this.rockDrop(pointer);
 		if(pointer.y > this.boundaryLine && this.rock.y > this.boundaryLine){
 			this.rock.body.angularVelocity = 0;
 			this.rock.grabbed = true;
@@ -225,20 +226,31 @@ BasicGame.Game.prototype = {
 	},
 	rockMove: function(pointer, x, y, isDown) {
 		if(this.rock.grabbed){
-			this.throwHandle.body.x = x;
-			this.throwHandle.body.y = y;
-			//ROCK DROP at BOUNDARY -- can remove this for testing
-			if(this.rock.body.y<this.boundaryLine){
-				this.rockDrop(pointer);
-			}
+            try{
+                this.throwHandle.body.x = x;
+                this.throwHandle.body.y = y;
+                //ROCK DROP at BOUNDARY -- can remove this for testing
+                if(this.rock.body.y<this.boundaryLine){
+				    this.rockDrop(pointer);
+                }
+            }catch(err){
+                console.log(err);
+
+            }
+
 		}
 	}, 
 	rockDrop: function(pointer){
-		if(this.rock.grabbed){
-			this.physics.p2.removeConstraint(this.throwConstraint);			
-			this.throwConstraint = null;
-			this.rock.grabbed = false;
-		}
+        try{
+            if(this.rock.grabbed){
+                this.physics.p2.removeConstraint(this.throwConstraint);			
+                this.throwConstraint = null;
+                this.rock.grabbed = false;
+            }           
+        }catch(err){
+            console.log("2-"+err);
+        }
+
 	},
 	rockTrailing:   function()  {
 		
@@ -293,12 +305,22 @@ BasicGame.Game.prototype = {
 				this.increaseScore((10+12*(BasicGame.level-1))*this.combo);
 				if(this.comboText!= null)
 				{
-					if(this.combo> 1)
-						this.comboText.setText("Combo! x"+this.combo);
+					if(this.combo> 1){
+                        this.comboText.setText("Combo! x"+this.combo);
+                        this.comboText.x = this.rock.x;
+                        this.comboText.y = this.rock.y;
+                    }
+						
+                    
 				}
 				else
-					this.comboText=	this.add.text(this.world.width-200, this.world.centerY-20,
-						((this.combo> 1) ? "Combo! x"+this.combo : "")
+					this.comboText=	this.add.text(this.rock.x, this.rock.y,
+						((this.combo> 1) ? "Combo! x"+this.combo : ""),
+                        {
+                        fontFamily:	"arial",
+                        fontSize:	"14px",
+                        fill:	"#fff"
+                        }
 					);
 				if(this.comboTimer!= null)
 					this.time.events.remove(this.comboTimer);
@@ -506,8 +528,24 @@ BasicGame.Game.prototype = {
             this.levelTxt.setText("Thrasher mode!\nNo death 8 sec.");
             this.levelTxt.revive();
             this.levelTxt.lifespan = 2000;
-			
+            var tmText = this.add.text(this.rock.x, this.rock.y, "Thrasher\nMode!", {
+                fontFamily:	"arial",
+                fontSize:	"14px",
+                fill:	"#A00000",
+                align: "center"                
+            });
+
+            this.game.add.tween(tmText).to(
+			{
+                x:this.world.centerX,
+                y:this.world.height*0.75,
+				alpha:	0
+			}, 7500, Phaser.Easing.Linear.In).start().onComplete.add(function(){
+                tmText.destroy();
+            }, this);
+            
 			this.time.events.add(Phaser.Timer.SECOND *8, function(){
+               
 				this.trailing=	0;
 				this.rock.tint=	0xffffff;
                 this.stage.backgroundColor = '#ffffff';
@@ -557,7 +595,6 @@ BasicGame.Game.prototype = {
             } else {
                 // Sorry! No Web Storage support..
             }
-            
             
             
         }else{

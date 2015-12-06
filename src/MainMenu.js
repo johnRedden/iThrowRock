@@ -5,17 +5,20 @@ BasicGame.MainMenu = function (game) {
 
 BasicGame.MainMenu.prototype = {
 
-    create: function () {        
+    create: function () {   
         this.stage.backgroundColor = '#add8e6'; //blue??
         this.world.setBounds(0,0,window.innerWidth, window.innerHeight);
         this.world.alpha = 1;
         
         //HTML5 localStorage
             if(typeof(Storage) !== "undefined") {
-                BasicGame.highScore = localStorage.getItem("highScore");
-                BasicGame.highLevel = localStorage.getItem("highLevel");
+                BasicGame.highScore = localStorage.getItem("highScore")?localStorage.getItem("highScore"):0;
+                BasicGame.highLevel = localStorage.getItem("highLevel")?localStorage.getItem("highScore"):0;
             } else {
                 // Sorry! No Web Storage support..
+                BasicGame.highScore = 0;
+                BasicGame.highLevel = 0;
+                
             }
         //*****************
         
@@ -27,10 +30,10 @@ BasicGame.MainMenu.prototype = {
 			fontSize:	"16px",
 			fill:	"#101820"
 		});
-        this.add.text(this.world.centerX-100, this.world.centerY+100, "Throw rock - break stuff.", {
+        this.add.text(this.world.centerX-100, this.world.centerY+120, "Throw rock - break stuff.", {
 			fontFamily:	"arial",
 			fontSize:	"16px",
-			fill:	"#000"
+			fill:	"#fff"
 		});
    
     },
