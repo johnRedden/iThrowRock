@@ -10,7 +10,7 @@ BasicGame.MainMenu.prototype = {
         this.world.setBounds(0,0,window.innerWidth, window.innerHeight);
         this.world.alpha = 1;
         
-        //HTML5 localStorage
+        //HTML5 localStorage zero if empty
             if(typeof(Storage) !== "undefined") {
                 BasicGame.highScore = localStorage.getItem("highScore")?localStorage.getItem("highScore"):0;
                 BasicGame.highLevel = localStorage.getItem("highLevel")?localStorage.getItem("highScore"):0;
@@ -18,12 +18,10 @@ BasicGame.MainMenu.prototype = {
                 // Sorry! No Web Storage support..
                 BasicGame.highScore = 0;
                 BasicGame.highLevel = 0;
-                
             }
         //*****************
         
         this.initGameMenu();
-        this.toggleMenu();
         
         this.add.text(this.world.centerX-100, this.world.centerY+50, "High Score: "+BasicGame.highScore +"\nHigh Level: "+BasicGame.highLevel, {
 			fontFamily:	"arial",
@@ -49,23 +47,20 @@ BasicGame.MainMenu.prototype = {
 
         this.game.state.start('Game');
 
-        //	Ok, the Play Button has been clicked or touched, so let's stop the music (otherwise it'll carry on playing)
-        //this.music.stop();
-
     },
     
     initGameMenu: function(){ // Game Menu Overlay  **************************************
         		
-		this.menuGroup = this.add.group();
+		var mnuGrp = this.add.group();
        
-        this.menuGroup.add(this.add.image(this.world.centerX-100, -250, 'rope'));
-        this.menuGroup.add(this.add.image(this.world.centerX+87, -250, 'rope'));
+        mnuGrp.add(this.add.image(this.world.centerX-100, -250, 'rope'));
+        mnuGrp.add(this.add.image(this.world.centerX+87, -250, 'rope'));
         
 		var mm = this.add.button(this.world.width / 2, -30, "aboutForward", function () {
 			this.state.start('About');
 		},this);
 		mm.anchor.set(0.5);
-		this.menuGroup.add(mm);
+		mnuGrp.add(mm);
         
 		var pa = this.add.button(this.world.width / 2, -80, "play1", function () {
 			this.lives = 3;
@@ -80,16 +75,16 @@ BasicGame.MainMenu.prototype = {
             
 		}, this);
 		pa.anchor.set(0.5);
-		this.menuGroup.add(pa);
-        var mo = this.add.button(this.world.centerX-50, -140, 'musicToggle',function(btn){
-            
+		mnuGrp.add(pa);
+        
+        var mo = this.add.button(this.world.centerX-50, -140, 'musicToggle',function(arg){
             if(BasicGame.music){
+                arg.frame=1;
                 BasicGame.backgroundMusic.stop();
-                btn.frame=1;
                 BasicGame.music = false;
             }else{
+                arg.frame=0;
                 BasicGame.backgroundMusic.play();
-                btn.frame=0;
                 BasicGame.music = true;
             }  
         }, this);
@@ -110,8 +105,8 @@ BasicGame.MainMenu.prototype = {
         mo.scale.setTo(0.5,0.5);
         so.anchor.set(0.5);
         so.scale.setTo(0.5,0.5);
-        this.menuGroup.add(mo);
-        this.menuGroup.add(so);
+        mnuGrp.add(mo);
+        mnuGrp.add(so);
         
         var st =	this.add.text(this.world.centerX, 50, "iThrowRock", {
 			fontFamily:	"arial",
@@ -120,21 +115,12 @@ BasicGame.MainMenu.prototype = {
 			fill:	"#fff"
 		});
         st.anchor.set(0.5);
-        this.menuGroup.add(st);
+        mnuGrp.add(st);
         
-    },
-	toggleMenu: function () {
-       
-		 if(this.menuGroup.y === 0){
-			 this.add.tween(this.menuGroup).to({
+        this.add.tween(mnuGrp).to({
 				 y: 210     
-			 }, 500, Phaser.Easing.Bounce.Out, true);
-		 }else{
-			this.add.tween(this.menuGroup).to({
-				y: 0    
-			}, 500, Phaser.Easing.Bounce.Out, true);     
-		}
+        }, 500, Phaser.Easing.Bounce.Out, true);
         
-	},
+    }
 
 };

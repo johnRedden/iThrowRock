@@ -311,15 +311,14 @@ BasicGame.Game.prototype = {
                         this.comboText.y = this.rock.y;
                     }
 						
-                    
 				}
 				else
 					this.comboText=	this.add.text(this.rock.x, this.rock.y,
 						((this.combo> 1) ? "Combo! x"+this.combo : ""),
                         {
-                        fontFamily:	"arial",
-                        fontSize:	"14px",
-                        fill:	"#fff"
+                            fontFamily:	"arial",
+                            fontSize:	"14px",
+                            fill:	"#fff"
                         }
 					);
 				if(this.comboTimer!= null)
@@ -404,7 +403,6 @@ BasicGame.Game.prototype = {
 	},
 	boardHit: function(arg){
 		var board = arg.sprite;
-		// each board is a spritesheet
 		if(board.frame===4){
 			board.lifespan = 1000;
 			board.body.velocity.y=75;
@@ -416,8 +414,6 @@ BasicGame.Game.prototype = {
 	},
 	spawnMolotovs: function(){
 		this.spawnSpecialsGroup(this.molotovs, this.molotovCollisionGroup, this.molotovHit, function(molotov)	{
-            // implement ghost rock when death occurs
-            // have to reset collision group after rectangle set
 			molotov.body.setRectangle(20, 60);
             molotov.body.setCollisionGroup(this.molotovCollisionGroup);
 		});
@@ -436,13 +432,13 @@ BasicGame.Game.prototype = {
 			temp.animations.add('explode').play('explode',30,true);
 			if(this.trailing== 0) // Only take damage if thrasher mode is off
 				this.damageLife();
- 			// Is there a memory leak?
+            else // get points for molotov kill if thrasher mode is on
+                this.increaseScore(25);
 		}
 
 	},
 	spawnShards: function(sprite){
 			var shards =	this.add.group();
-	  
 			shards.create(sprite.body.x,sprite.body.y,'shard01');
 			shards.create(sprite.body.x,sprite.body.y,'shard02');
 			shards.create(sprite.body.x,sprite.body.y,'shard03');
@@ -517,7 +513,7 @@ BasicGame.Game.prototype = {
 	},
 	goldenBottleHit:	function(args)	{
 		if(this.getSpeed(this.rock.body.velocity.x, this.rock.body.velocity.y) > BasicGame.breakSpeedDarkBottle){
-			// Thrasher mode for 3 seconds or so
+			
 			if(BasicGame.sound){this.bottleBreak.play()};
 			this.goldenBottle.kill();
 		 	
@@ -540,12 +536,11 @@ BasicGame.Game.prototype = {
                 x:this.world.centerX,
                 y:this.world.height*0.75,
 				alpha:	0
-			}, 7500, Phaser.Easing.Linear.In).start().onComplete.add(function(){
+			}, 7000, Phaser.Easing.Linear.In).start().onComplete.add(function(){
                 tmText.destroy();
             }, this);
             
 			this.time.events.add(Phaser.Timer.SECOND *8, function(){
-               
 				this.trailing=	0;
 				this.rock.tint=	0xffffff;
                 this.stage.backgroundColor = '#ffffff';
