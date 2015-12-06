@@ -78,12 +78,6 @@ BasicGame.Preloader.prototype = {
 
     update: function () {
         
-        this.game.add.tween(this.world).to({
-				alpha:	0
-			}, 1800, Phaser.Easing.Linear.In).start().onComplete.add(function(){
-               this.game.state.start('MainMenu');
-            }, this);
-       
        //  This slows down the startup alot
 		if (this.cache.isSoundDecoded('gameMusic'))
 		{
@@ -91,8 +85,9 @@ BasicGame.Preloader.prototype = {
             BasicGame.backgroundMusic.volume = 0.3;
             BasicGame.backgroundMusic.loop = true;
             //BasicGame.backgroundMusic.stop();
-			//this.ready = true;
-			this.state.start('MainMenu');
+            this.game.state.start('MainMenu');
+
+
 		}
          
         
