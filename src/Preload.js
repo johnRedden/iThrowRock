@@ -7,21 +7,18 @@ BasicGame.Preloader = function (game) {
 BasicGame.Preloader.prototype = {
 
     preload: function () {
-
-        //	These are the assets we loaded in Boot.js
-        //	A nice sparkly background and a loading progress bar
-        //var tmpImg1 = this.cache.getImage('preloaderBackground');
-        //this.add.sprite(this.world.centerX - tmpImg1.width / 2.0, 20, 'preloaderBackground');
+        this.stage.backgroundColor = '#fff'; //blue??
+        this.add.image(this.world.centerX, 10, 'splash').anchor.setTo(0.5,0);
         
                 // title
-        this.title=	this.add.text(20, 20, "iThrowRock - \nNeed a SplashScreen \nLoading...", {
+        this.title=	this.add.text(this.world.centerX, 175, "Loading...", {
 			fontFamily:	"arial",
 			fontSize:	"24px",
             fontStyle: "italic",
-			fill:	"#bfbfdf"
-		});
+			fill:	"#c0c0c0"
+		}).anchor.setTo(0.5,0.5);
 
-        this.preloadBar = this.add.sprite(50, 170, 'preloaderBar');
+        this.preloadBar = this.add.sprite(this.world.centerX-110, 220, 'preloaderBar');
 
         //	This sets the preloadBar sprite as a loader sprite.
         //	What that does is automatically crop the sprite from 0 to full-width
