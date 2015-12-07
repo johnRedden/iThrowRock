@@ -27,7 +27,7 @@ BasicGame.Game.prototype = {
 		graphics.beginFill(0x98fb98,0.5); //green 0.5 opacity
 		graphics.drawRect(0,this.boundaryLine,this.world.width,this.boundaryLine);
 		
-		graphics.lineStyle(6, 0xc0c0c0, 1);//light gray
+		graphics.lineStyle(6, 0x6F4E37, 1);//The line across the screen
 		graphics.moveTo(0, this.boundaryLine);
 		graphics.lineTo(this.world.width, this.boundaryLine); 
 		
@@ -142,7 +142,7 @@ BasicGame.Game.prototype = {
 		this.input.onUp.add(this.rockDrop, this);
 		this.input.addMoveCallback(this.rockMove, this);
 		
-		this.scoreText=	this.add.text(10, this.world.centerY-24, "Score: "+BasicGame.score+"\nLevel: "+BasicGame.level, {
+		this.scoreText=	this.add.text(10, this.world.centerY-22, "Score: "+BasicGame.score+"\nLevel: "+BasicGame.level, {
 			fontFamily:	"arial",
 			fontSize:	"16px",
 			fill:	"#101820"
@@ -713,7 +713,7 @@ BasicGame.Game.prototype = {
         this.menuGroup.add(mo);
         this.menuGroup.add(so);
         
-        var st =	this.add.text(this.world.centerX, 10, "iThrowRock", {
+        var st =	this.add.text(this.world.centerX, 14, "iThrowRock", {
 			fontFamily:	"arial",
 			fontSize:	"14px",
             fontStyle: "italic",

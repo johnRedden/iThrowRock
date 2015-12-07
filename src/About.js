@@ -60,17 +60,17 @@ BasicGame.About.prototype = {
         text2.x=this.world.centerX-text2.width*0.5;
         //****************************************
         
-        var coryTxt = this.add.text(0, 420, "Cory Lewis - cjl9703@yahoo.com", devStyle);
+        var coryTxt = this.add.text(0, 420, "Cory Lewis\ncjl9703@yahoo.com", devStyle);
         coryTxt.x=this.world.centerX-coryTxt.width*0.5;
-        this.add.image(this.world.centerX, 520, 'cory').anchor.setTo(.5);
+        this.add.image(this.world.centerX, 540, 'cory').anchor.setTo(.5);
         
-        var paulTxt = this.add.text(0, 620, "Paul Gonzalez-Becerra - pgonzbecer@gmail.com", devStyle);
+        var paulTxt = this.add.text(0, 640, "Paul Gonzalez-Becerra\npgonzbecer@gmail.com", devStyle);
         paulTxt.x=this.world.centerX-paulTxt.width*0.5;
-        this.add.image(this.world.centerX, 710, 'paul').anchor.setTo(.5);
+        this.add.image(this.world.centerX, 745, 'paul').anchor.setTo(.5);
         
-        var johnTxt = this.add.text(0, 790, "John Redden - jtredden@gmail.com", devStyle);
+        var johnTxt = this.add.text(0, 830, "John Redden\njtredden@gmail.com", devStyle);
         johnTxt.x=this.world.centerX-johnTxt.width*0.5;
-        this.add.image(this.world.centerX, 890, 'john').anchor.setTo(.5);
+        this.add.image(this.world.centerX, 950, 'john').anchor.setTo(.5);
         
         
         var specialStr = "***********************\n"+
@@ -78,8 +78,23 @@ BasicGame.About.prototype = {
                         "D Bourquin\n"+
                         "Isabel Lambert\n"+
                         "***********************\n";
-        var text5 = this.add.text(this.world.centerX, 1000, specialStr, devStyle);
+        var text5 = this.add.text(this.world.centerX, 1050, specialStr, devStyle);
         text5.x=this.world.centerX-text5.width*0.5;
+                
+        var creditStyle = {
+            font:	"10px Courier New",
+            align: "center"
+        };
+        var creditStr = "***********************\n"+
+                        "Pentagram by Audionautix\n"+
+                        "is licensed under a\n"+
+                        "Creative Commons Attribution license\n"+
+                        "(https://creativecommons.org/licenses/by/4.0/)\n"+
+                        "Artist: http://audionautix.com/\n"+
+                        "\n\nmore can go here.\n"+
+                        "***********************\n";
+        var credits = this.add.text(this.world.centerX, 1200, creditStr, creditStyle);
+        credits.x=this.world.centerX-credits.width*0.5;
 
     },
 

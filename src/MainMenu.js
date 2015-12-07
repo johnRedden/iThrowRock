@@ -13,7 +13,7 @@ BasicGame.MainMenu.prototype = {
         //HTML5 localStorage zero if empty
             if(typeof(Storage) !== "undefined") {
                 BasicGame.highScore = localStorage.getItem("highScore")?localStorage.getItem("highScore"):0;
-                BasicGame.highLevel = localStorage.getItem("highLevel")?localStorage.getItem("highScore"):0;
+                BasicGame.highLevel = localStorage.getItem("highLevel")?localStorage.getItem("highLevel"):0;
             } else {
                 // Sorry! No Web Storage support..
                 BasicGame.highScore = 0;
@@ -108,14 +108,24 @@ BasicGame.MainMenu.prototype = {
         mnuGrp.add(mo);
         mnuGrp.add(so);
         
-        var st =	this.add.text(this.world.centerX, 50, "iThrowRock", {
+        var st =	this.add.text(this.world.centerX, 50, "iThrowRock\n", {
 			fontFamily:	"arial",
 			fontSize:	"28px",
             fontStyle: "italic",
-			fill:	"#fff"
+			fill:	"#fff",
+            align: "center"
 		});
         st.anchor.set(0.5);
         mnuGrp.add(st);
+        var ver =	this.add.text(this.world.centerX, 60, "Version: "+BasicGame.version, {
+			fontFamily:	"arial",
+			fontSize:	"14px",
+            fontStyle: "italic",
+			fill:	"#fff",
+            align: "center"
+		});
+        ver.anchor.set(0.5);
+        mnuGrp.add(ver);
         
         this.add.tween(mnuGrp).to({
 				 y: 210     

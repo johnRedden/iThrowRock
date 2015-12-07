@@ -29,6 +29,13 @@ BasicGame.Preloader.prototype = {
         this.load.setPreloadSprite(this.preloadBar);
 
         //	Here we load the rest of the assets our game needs.
+        this.load.audio('gameMusic', ['asset/pentagram_rage.ogg']);
+        //this.load.audio('gameMusic', ['asset/pentagram_rage.ogg', 'asset/pentagram_rage.mp3']);
+        this.load.audio('breakBottle', ['asset/bottleBreak2.wav']);
+        this.load.audio('explodeBottle', ['asset/explode.wav']);
+        this.load.audio('rockHit', ['asset/rockHit.wav']);
+        
+        
         this.load.image('rock', 'asset/a_0.png');
         this.load.spritesheet("deathrock", "asset/rock_death.png", 90, 79, 2);
         this.load.image('shard01', 'asset/bottle_shard_base.png');
@@ -43,11 +50,7 @@ BasicGame.Preloader.prototype = {
         this.load.spritesheet('firepuff','asset/fireball_spritesheet.png',264,179,14);
         this.load.spritesheet('livesSht','asset/death_score.png',160,173,2);
 
-        this.load.audio('breakBottle', ['asset/bottleBreak2.wav']);
-        this.load.audio('explodeBottle', ['asset/explode.wav']);
-        this.load.audio('rockHit', ['asset/rockHit.wav']);
-        this.load.audio('gameMusic', ['asset/pentagram_rage.ogg']);
-        //this.load.audio('gameMusic', ['asset/pentagram_rage.ogg', 'asset/pentagram_rage.mp3']);
+
 
         //menu stuff
         this.load.image("rope", "asset/menu/rope.png");
