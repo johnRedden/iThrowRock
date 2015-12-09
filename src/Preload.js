@@ -51,7 +51,8 @@ BasicGame.Preloader.prototype = {
 
         //menu stuff
         this.load.image("rope", "asset/menu/rope.png");
-        this.load.spritesheet("menubutton", "asset/menu/lever_wood.png",150,150,2);
+        //this.load.spritesheet("menubutton", "asset/menu/lever_wood.png",150,150,2);
+        this.load.spritesheet("menubutton", "asset/menu/lever_wood.png",128,128,2);
         this.load.image("mainmenu", "asset/menu/main_menu.png");
         this.load.image("playagain", "asset/menu/play_again.png");
         this.load.image("aboutForward", "asset/menu/about_forward.png");

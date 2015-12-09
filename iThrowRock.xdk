@@ -6,7 +6,7 @@
       "projectTypeName": "com.intel.xdk.projecttype.webapp",
       "src": "",
       "projectGuid": "d7e29b2a-088a-4d12-9db7-c65aa72208f3",
-      "lastModifiedDate": 1449361412889,
+      "lastModifiedDate": 1449651555169,
       "creationDate": 1447016422216
     },
     "sourceDirectory": "",
@@ -54,28 +54,28 @@
         },
         "icons_": [
           {
-            "relPath": "icons/smallest_icon_test_36x36.png",
+            "relPath": "icons/icon_96x96.png",
+            "density": "xhdpi",
+            "height": 96,
+            "width": 96
+          },
+          {
+            "relPath": "icons/holo_icon_36x36.png",
             "density": "ldpi",
             "height": 36,
             "width": 36
           },
           {
-            "relPath": "icons/icon_48x48.png",
+            "relPath": "icons/holo_icon_48x48.png",
             "density": "mdpi",
             "height": 48,
             "width": 48
           },
           {
-            "relPath": "icons/icon_72x72.png",
+            "relPath": "icons/holo_icon_72x72.png",
             "density": "hdpi",
             "height": 72,
             "width": 72
-          },
-          {
-            "relPath": "icons/icon_96x96.png",
-            "density": "xhdpi",
-            "height": 96,
-            "width": 96
           }
         ],
         "splashes_": [],
