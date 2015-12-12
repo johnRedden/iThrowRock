@@ -34,7 +34,7 @@ BasicGame.Boot.prototype = {
 
         this.input.maxPointers = 1;
         this.stage.disableVisibilityChange = true;
-        this.stage.backgroundColor = '#fff';
+        this.stage.backgroundColor = '#fff';//2892dc';
 
         this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
         this.scale.pageAlignHorizontally = true;
