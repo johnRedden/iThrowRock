@@ -6,9 +6,6 @@ BasicGame.Game = function (game) {
 };
 // set Game function prototype
 BasicGame.Game.prototype = {
-	bStartedTrail:	false,
-	trailing:	0,
-	combo:	0,
 	init: function () {
 		
 		this.stage.backgroundColor = '#fff'; //white
@@ -182,22 +179,18 @@ BasicGame.Game.prototype = {
 		}
 	},
 	update: function(){
-		if(this.trailing !== 0)
+		if(this.bThrasherMode)
 		{
 			if(this.getSpeed(this.rock.body.velocity.x, this.rock.body.velocity.y)> 400)
-			{
 				this.rockTrailing();
-				this.bStartedTrail=	true;
-			}
 			else
 			{
 				this.rock.tint=	0xffffff;
 				if(this.trails!== null)
 					this.deleteRockTrailing();
-				this.bStartedTrail=	false;
 			}
 		}
-		if(this.trails== 0 && this.trails!= null && this.trails.length!= 0)
+		if(!this.bThrasherMode && this.trails!= null && this.trails.length!= 0)
 			this.deleteRockTrailing();
 		this.bottles.forEachAlive(this.resetObjLocation,this);
 		this.boards.forEachAlive(this.resetObjLocation,this);
@@ -257,12 +250,8 @@ BasicGame.Game.prototype = {
 		// Variables
 		var	temp;
 		
-		if(!this.bStartedTrail)
-		{
-			if(this.trails!= null)
-				this.trails.removeAll(true);
+		if(this.trails== null)
 			this.trails=	this.add.group();
-		}
 		if(this.trails.length> 10)
 			this.trails.removeChildAt(0);
 
@@ -270,7 +259,6 @@ BasicGame.Game.prototype = {
 		temp.anchor.setTo(0.5, 0.5);
 		temp.scale.setTo(this.rock.scale.x*4, this.rock.scale.y*4);
 		temp=	temp.sendToBack();
-		//temp.tint=	0xde0000;
 		temp.animations.add('light').play('light');
 		this.rock.bringToTop();
 		this.rock.tint=	0xac2010;
@@ -301,6 +289,8 @@ BasicGame.Game.prototype = {
 			this.spawnShards(bottle.sprite);
 			bottle.sprite.events.onKilled.addOnce(function(){
 				this.spawnGoldenBottle();
+				if(this.combo== null)
+					this.combo=	0;
 				this.combo++;
 				this.increaseScore((10+12*(BasicGame.level-1))*this.combo);
 				if(this.comboText!= null)
@@ -430,7 +420,7 @@ BasicGame.Game.prototype = {
 			var temp=	this.add.sprite(molotov.x, molotov.y, "firepuff");
 			temp.anchor.setTo(0.5, 0.5);
 			temp.animations.add('explode').play('explode',30,true);
-			if(this.trailing== 0) // Only take damage if thrasher mode is off
+			if(!this.bThrasherMode) // Only take damage if thrasher mode is off
 				this.damageLife();
             else // get points for molotov kill if thrasher mode is on
                 this.increaseScore(25);
@@ -494,7 +484,7 @@ BasicGame.Game.prototype = {
 		}
 	},
 	spawnGoldenBottle:	function()	{
-		if(this.goldenBottle.alive || this.trailing!= 0)
+		if(this.goldenBottle.alive || this.bThrasherMode)
 			return;
 		if(this.rnd.integerInRange(0, 4)=== 0) // 20% Chance of spawning
 		{
@@ -517,7 +507,7 @@ BasicGame.Game.prototype = {
 			if(BasicGame.sound){this.bottleBreak.play()};
 			this.goldenBottle.kill();
 		 	
-		 	this.trailing=	1;
+		 	this.bThrasherMode=	true;
             //change color of stage to indicate thrasher mode.
             this.stage.backgroundColor = '#ff0000';
             //annouce thrasher mode
@@ -541,7 +531,7 @@ BasicGame.Game.prototype = {
             }, this);
             
 			this.time.events.add(Phaser.Timer.SECOND *8, function(){
-				this.trailing=	0;
+				this.bThrasherMode=	false;
 				this.rock.tint=	0xffffff;
                 this.stage.backgroundColor = '#ffffff';
 				this.spawnGoldenBottle();
