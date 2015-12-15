@@ -280,53 +280,54 @@ BasicGame.Game.prototype = {
 
 	// Rock2 Bottle utility methods
 	bottleHit2: function(bottle,rock){
-		// bottle needs to be going fast enough and not playing its animation
-		if(this.getSpeed(rock.velocity.x, rock.velocity.y) > BasicGame.breakSpeedGreenBottle && !bottle.sprite.animations.currentAnim.isPlaying){
-			if(BasicGame.sound){ 
-				 this.bottleBreak.play();
-			}
-			bottle.sprite.animations.play('splode',30,false,true); 
-			this.spawnShards(bottle.sprite);
-			bottle.sprite.events.onKilled.addOnce(function(){
-				this.spawnGoldenBottle();
-				if(this.combo== null)
-					this.combo=	0;
-				this.combo++;
-				this.increaseScore((10+12*(BasicGame.level-1))*this.combo);
-				if(this.comboText!= null)
-				{
-					if(this.combo> 1){
-                        this.comboText.setText("Combo! x"+this.combo);
-                        this.comboText.x = this.rock.x;
-                        this.comboText.y = this.rock.y;
-                    }
-						
+		try	{
+			// bottle needs to be going fast enough and not playing its animation
+			if(this.getSpeed(rock.velocity.x, rock.velocity.y) > BasicGame.breakSpeedGreenBottle && !bottle.sprite.animations.currentAnim.isPlaying){
+				if(BasicGame.sound){ 
+					 this.bottleBreak.play();
 				}
-				else
-					this.comboText=	this.add.text(this.rock.x, this.rock.y,
-						((this.combo> 1) ? "Combo! x"+this.combo : ""),
-                        {
-                            fontFamily:	"arial",
-                            fontSize:	"14px",
-                            fill:	"#fff"
-                        }
-					);
-				if(this.comboTimer!= null)
-					this.time.events.remove(this.comboTimer);
-				this.comboTimer=	this.time.events.add(Phaser.Timer.SECOND, function(){
-					this.combo= 0;
-					this.comboText.setText("");
-				}, this);
-				if(this.bottles.countDead()===BasicGame.numGreenBottles){
-					BasicGame.level+=1;
-					this.announceLevel();
-					this.spawnBottles();
-					this.spawnBoards();
-					this.spawnMolotovs();
-				};
-			},this);
-		}
-		
+				bottle.sprite.animations.play('splode',30,false,true); 
+				this.spawnShards(bottle.sprite);
+				bottle.sprite.events.onKilled.addOnce(function(){
+					this.spawnGoldenBottle();
+					if(this.combo== null)
+						this.combo=	0;
+					this.combo++;
+					this.increaseScore((10+12*(BasicGame.level-1))*this.combo);
+					if(this.comboText!= null)
+					{
+						if(this.combo> 1){
+	                        this.comboText.setText("Combo! x"+this.combo);
+	                        this.comboText.x = this.rock.x;
+	                        this.comboText.y = this.rock.y;
+	                    }
+							
+					}
+					else
+						this.comboText=	this.add.text(this.rock.x, this.rock.y,
+							((this.combo> 1) ? "Combo! x"+this.combo : ""),
+	                        {
+	                            fontFamily:	"arial",
+	                            fontSize:	"14px",
+	                            fill:	"#fff"
+	                        }
+						);
+					if(this.comboTimer!= null)
+						this.time.events.remove(this.comboTimer);
+					this.comboTimer=	this.time.events.add(Phaser.Timer.SECOND, function(){
+						this.combo= 0;
+						this.comboText.setText("");
+					}, this);
+					if(this.bottles.countDead()===BasicGame.numGreenBottles){
+						BasicGame.level+=1;
+						this.announceLevel();
+						this.spawnBottles();
+						this.spawnBoards();
+						this.spawnMolotovs();
+					};
+				},this);
+			}
+		}catch(e){}
 	},
 
 	spawnBottles: function(){
