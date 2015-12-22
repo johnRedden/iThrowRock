@@ -125,6 +125,7 @@ BasicGame.Game.prototype = {
 		this.rockHitSnd =  this.add.audio('rockHit');
 		//add start marker to rock hit sound
 		this.rockHitSnd.addMarker('rockSrt',0.15,0.5);
+        //this.bottleBreak.addMarker('breakSrt',0,1);
 		this.rock.body.onBeginContact.add(this.rockHit, this);
 		//*************
 		
@@ -205,45 +206,42 @@ BasicGame.Game.prototype = {
 	},
 	
 	// utility functions for the rock grab *****************
-	rockGrab: function (pointer) {
-        if(this.rock.grabbed==true) this.rockDrop(pointer);
-		if(pointer.y > this.boundaryLine && this.rock.y > this.boundaryLine){
+	rockGrab: function (pointer) {   
+        //check if rock is alive!!
+		if(pointer.y > this.boundaryLine && this.rock.alive && this.rock.y > this.boundaryLine){
+            
 			this.rock.body.angularVelocity = 0;
 			this.rock.grabbed = true;
 			//move the blank sprite to the pointer
 			this.throwHandle.body.x = pointer.x;
 			this.throwHandle.body.y = pointer.y;
 			//create a constraint with the rock and the blank sprite
-			this.throwConstraint = this.physics.p2.createLockConstraint(this.rock, this.throwHandle );
-		}
+       
+			 this.throwConstraint = this.physics.p2.createLockConstraint(this.rock, this.throwHandle );
+            
+        }
+
 	},
 	rockMove: function(pointer, x, y, isDown) {
+        
 		if(this.rock.grabbed){
-            try{
                 this.throwHandle.body.x = x;
                 this.throwHandle.body.y = y;
                 //ROCK DROP at BOUNDARY -- can remove this for testing
                 if(this.rock.body.y<this.boundaryLine){
-				    this.rockDrop(pointer);
+				    this.rockDrop();
                 }
-            }catch(err){
-                console.log(err);
-
-            }
-
 		}
+       
 	}, 
-	rockDrop: function(pointer){
-        try{
+	rockDrop: function(){
+   
             if(this.rock.grabbed){
                 this.physics.p2.removeConstraint(this.throwConstraint);			
                 this.throwConstraint = null;
                 this.rock.grabbed = false;
             }           
-        }catch(err){
-            console.log("2-"+err);
-        }
-
+    
 	},
 	rockTrailing:   function()  {
 		
@@ -271,7 +269,7 @@ BasicGame.Game.prototype = {
 	rockHit: function(){
 		if(!this.rock.grabbed){
 			if(BasicGame.sound){
-				this.rockHitSnd.play('rockSrt');
+				this.rockHitSnd.play('rockSrt',0,this.rnd.realInRange(0.3,1));//last arg is randome volume
 			}
 		}
 	},
@@ -280,6 +278,7 @@ BasicGame.Game.prototype = {
 
 	// Rock2 Bottle utility methods
 	bottleHit2: function(bottle,rock){
+    
 		try	{
 			// bottle needs to be going fast enough and not playing its animation
 			if(this.getSpeed(rock.velocity.x, rock.velocity.y) > BasicGame.breakSpeedGreenBottle && !bottle.sprite.animations.currentAnim.isPlaying){
@@ -368,6 +367,7 @@ BasicGame.Game.prototype = {
 			{
 				item.body.x=	-10;
 				item.body.y=	this.world.centerY-this.rnd.integerInRange(10, 100);
+                
 				item.body.velocity.x=	this.rnd.integerInRange(50, 200);
 				item.body.velocity.y=	0;
 				item.body.angularVelocity=	this.rnd.integerInRange(-5, 5);
@@ -413,7 +413,8 @@ BasicGame.Game.prototype = {
 		var molotov = arg.sprite;
 		
 		if(this.getSpeed(this.rock.body.velocity.x, this.rock.body.velocity.y) > BasicGame.breakSpeedMolotov && molotov.alive){
-			molotov.kill();
+            
+			molotov.kill(); 
 			if(BasicGame.sound){
 				this.bottleBreak.play();
 				this.bottleExplode.play();
@@ -609,14 +610,17 @@ BasicGame.Game.prototype = {
 	},
 	damageLife:	function()	{
 		this.lives--;
-		// Kill rock here somehow
+        
 		this.rock.visible=	false;
+        this.rockDrop();
 		this.rock.kill();
+        
 		this.deathRock.visible=	true;
 		this.deathRock.x=	this.rock.x;
 		this.deathRock.y=	this.rock.y;
 		this.deathRock.alpha=	1;
 		this.deathRock.animations.play("toheaven", 4, true);
+        
 		if(this.rock.scale.x== 0.2)
 			this.deathRock.scale.setTo(2, 2);
 		else
