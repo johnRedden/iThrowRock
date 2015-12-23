@@ -6,7 +6,7 @@
       "projectTypeName": "com.intel.xdk.projecttype.webapp",
       "src": "",
       "projectGuid": "d7e29b2a-088a-4d12-9db7-c65aa72208f3",
-      "lastModifiedDate": 1449896379468,
+      "lastModifiedDate": 1450838219246,
       "creationDate": 1447016422216
     },
     "sourceDirectory": "",
@@ -41,7 +41,7 @@
           "Orientation": "portrait",
           "Fullscreen": false
         },
-        "isActive_": true,
+        "isActive_": false,
         "appName_": "iThrowRock",
         "appID_": "com.edunetsystems.iThrowRock",
         "appAccess_": {
@@ -99,7 +99,7 @@
         },
         "isActive_": true,
         "appName_": "iThrowRock",
-        "appID_": "not.yet.specified",
+        "appID_": "com.eduNetSystems.iThrowRock",
         "appAccess_": {
           "mode": "legacy",
           "network": [
@@ -108,14 +108,41 @@
           "intents": [],
           "navigation": []
         },
-        "icons_": [],
+        "icons_": [
+          {
+            "relPath": "icons/wood_icon_36x36.png",
+            "density": "ldpi",
+            "height": 36,
+            "width": 36
+          },
+          {
+            "relPath": "icons/wood_icon_48x48.png",
+            "density": "mdpi",
+            "height": 48,
+            "width": 48
+          },
+          {
+            "relPath": "icons/wood_icon_72x72.png",
+            "density": "hdpi",
+            "height": 72,
+            "width": 72
+          },
+          {
+            "relPath": "icons/wood_icon_96x96.png",
+            "density": "xhdpi",
+            "height": 96,
+            "width": 96
+          }
+        ],
         "splashes_": [],
         "addlPermissions_": "",
         "excludedLibraries_": "",
         "appVersion_": "0.0.1",
         "appVersionCode_": "1",
         "crosswalkVersion_": "15",
-        "cordovaCLIVersion_": "5.1.1"
+        "cordovaCLIVersion_": "5.1.1",
+        "appDescription_": "Throw rock -- break stuff.",
+        "appAuthor_": "taco team"
       },
       "iOS": {
         "platform_": "ios",
@@ -125,9 +152,9 @@
           "ios-target": "6",
           "ios-configuration": "adhoc"
         },
-        "isActive_": true,
+        "isActive_": false,
         "appName_": "iThrowRock",
-        "appID_": "not.yet.specified",
+        "appID_": "com.edunetsystems.iThrowRock",
         "appAccess_": {
           "mode": "legacy",
           "network": [
@@ -149,7 +176,7 @@
         "runtime_": "W3C on Cordova",
         "name_": "Windows8",
         "preferences_": {},
-        "isActive_": true,
+        "isActive_": false,
         "appName_": "iThrowRock",
         "appID_": "not.yet.specified",
         "appAccess_": {
