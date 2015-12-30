@@ -6,7 +6,7 @@
       "projectTypeName": "com.intel.xdk.projecttype.webapp",
       "src": "",
       "projectGuid": "d7e29b2a-088a-4d12-9db7-c65aa72208f3",
-      "lastModifiedDate": 1450838219246,
+      "lastModifiedDate": 1451454035976,
       "creationDate": 1447016422216
     },
     "sourceDirectory": "",
@@ -95,7 +95,9 @@
         "preferences_": {
           "android-minSdkVersion": "14",
           "android-targetSdkVersion": "19",
-          "android-installLocation": "auto"
+          "android-installLocation": "auto",
+          "Orientation": "portrait",
+          "Fullscreen": true
         },
         "isActive_": true,
         "appName_": "iThrowRock",
@@ -137,8 +139,8 @@
         "splashes_": [],
         "addlPermissions_": "",
         "excludedLibraries_": "",
-        "appVersion_": "0.0.1",
-        "appVersionCode_": "1",
+        "appVersion_": "0.0.2",
+        "appVersionCode_": "2",
         "crosswalkVersion_": "15",
         "cordovaCLIVersion_": "5.1.1",
         "appDescription_": "Throw rock -- break stuff.",

@@ -245,7 +245,6 @@ BasicGame.Game.prototype = {
 	},
 	rockTrailing:   function()  {
 		
-		// Variables
 		var	temp;
 		
 		if(this.trails== null)
@@ -318,7 +317,7 @@ BasicGame.Game.prototype = {
 						this.comboText.setText("");
 					}, this);
 					if(this.bottles.countDead()===BasicGame.numGreenBottles){
-						BasicGame.level+=1;
+                        BasicGame.level+=1;
 						this.announceLevel();
 						this.spawnBottles();
 						this.spawnBoards();
@@ -332,9 +331,12 @@ BasicGame.Game.prototype = {
 	spawnBottles: function(){
 		this.bottles.forEach(function (bottle) {
 			bottle.animations.stop('splode',true);
-			bottle.body.x = -10;
+			bottle.body.x = -1*this.rnd.integerInRange(10,90);
 			// NEED a better level up AI
-			bottle.body.velocity.x = this.rnd.integerInRange(50,150)*BasicGame.level/2.0; // whoa...
+            if(BasicGame.level<14) 
+			     bottle.body.velocity.x = this.rnd.integerInRange(50,170)*BasicGame.level/2.0; // whoa...
+            else 
+                bottle.body.velocity.x = this.rnd.integerInRange(50,170)*13/2.0;
 			bottle.body.angularVelocity = this.rnd.integerInRange(-5,5);
 			if(bottle.body.angularVelocity== 0)
 				bottle.body.angularVelocity=	4;
