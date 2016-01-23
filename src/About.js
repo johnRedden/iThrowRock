@@ -24,7 +24,7 @@ BasicGame.About.prototype = {
         this.lth = this.world.length;
 
         this.stage.backgroundColor = '#add8e6'; //blue??
-        this.world.setBounds(0,0,this.wth,3000);
+        this.world.setBounds(0,0,this.wth,2000);
         
         this.initGameMenu();
         this.toggleMenu();
@@ -86,12 +86,11 @@ BasicGame.About.prototype = {
             align: "center"
         };
         var creditStr = "***********************\n"+
-                        "Pentagram by Audionautix\n"+
+                        "Music by Audionautix\n"+
                         "is licensed under a\n"+
                         "Creative Commons Attribution license\n"+
                         "(https://creativecommons.org/licenses/by/4.0/)\n"+
                         "Artist: http://audionautix.com/\n"+
-                        "\n\nmore can go here.\n"+
                         "***********************\n";
         var credits = this.add.text(this.world.centerX, 1200, creditStr, creditStyle);
         credits.x=this.world.centerX-credits.width*0.5;

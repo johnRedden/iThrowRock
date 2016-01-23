@@ -464,7 +464,6 @@ BasicGame.Game.prototype = {
 			// this.rock gets BIG for 3 seconds or so
 			if(BasicGame.sound){this.bottleBreak.play()};
             dbottle.animations.play('toxic',15,false,true); // last true gives a kill
-			//dbottle.kill();
 		 
 			this.rock.scale.setTo(0.2,0.2);
 			this.rock.body.setRectangle(100, 85);

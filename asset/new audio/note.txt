@@ -1,1 +1,0 @@
-not sure if phaser supports FLAC audio type but its supposed to be pretty good in performance.
