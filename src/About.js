@@ -66,11 +66,11 @@ BasicGame.About.prototype = {
         
         var paulTxt = this.add.text(0, 640, "Paul Gonzalez-Becerra\npgonzbecer@gmail.com", devStyle);
         paulTxt.x=this.world.centerX-paulTxt.width*0.5;
-        this.add.image(this.world.centerX, 745, 'paul').anchor.setTo(.5);
+        this.add.image(this.world.centerX, 755, 'paul').anchor.setTo(.5);
         
-        var johnTxt = this.add.text(0, 830, "John Redden\njtredden@gmail.com", devStyle);
+        var johnTxt = this.add.text(0, 850, "John Redden\njtredden@gmail.com", devStyle);
         johnTxt.x=this.world.centerX-johnTxt.width*0.5;
-        this.add.image(this.world.centerX, 950, 'john').anchor.setTo(.5);
+        this.add.image(this.world.centerX, 970, 'john').anchor.setTo(.5);
         
         
         var specialStr = "***********************\n"+
@@ -78,7 +78,7 @@ BasicGame.About.prototype = {
                         "D Bourquin\n"+
                         "Isabel Lambert\n"+
                         "***********************\n";
-        var text5 = this.add.text(this.world.centerX, 1050, specialStr, devStyle);
+        var text5 = this.add.text(this.world.centerX, 1070, specialStr, devStyle);
         text5.x=this.world.centerX-text5.width*0.5;
                 
         var creditStyle = {

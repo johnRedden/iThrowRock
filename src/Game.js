@@ -41,6 +41,17 @@ BasicGame.Game.prototype = {
 		 
 	},
 	create: function () {
+        this.clouds = this.add.group();
+        
+        for(var i = 0; i<3; i++){
+			var cloud = this.clouds.create(this.rnd.integerInRange(-50,this.world.width)
+                                           ,this.rnd.integerInRange(30,200)
+                                           ,'cloud');
+            cloud.angle=this.rnd.integerInRange(-20,20);
+            var rand = this.rnd.realInRange(0.4, 1);
+            cloud.scale.setTo(rand,rand);
+            cloud.alpha = this.rnd.realInRange(0.6, 1);
+		}
 		// Add rock to the center of the stage
 		this.rock = this.add.sprite(this.world.centerX, this.world.centerY, 'rock');
 		this.rock.anchor.setTo(0.5, 0.5);
@@ -180,6 +191,14 @@ BasicGame.Game.prototype = {
 		}
 	},
 	update: function(){
+        this.clouds.children.forEach(function(cloud){
+            if(cloud.x>this.world.width){
+                cloud.x = -10;
+                cloud.angle=this.rnd.integerInRange(-20,20);
+            }else{
+                cloud.x+=0.5;
+            }
+        },this);
 		if(this.bThrasherMode)
 		{
 			if(this.getSpeed(this.rock.body.velocity.x, this.rock.body.velocity.y)> 400)
