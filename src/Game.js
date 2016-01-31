@@ -162,12 +162,19 @@ BasicGame.Game.prototype = {
 			fill:	"#fff"
 		});
 		this.levelTxt.anchor.set(0.5,0.5);
-		this.levelTxt.lifespan = 2000;
+		this.levelTxt.lifespan = 2500;
         this.highScoreText=	this.add.text(10, this.world.height-75, "High Score: "+BasicGame.highScore, {
 			fontFamily:	"arial",
 			fontSize:	"14px",
 			fill:	"#101820"
 		});
+        this.gameoverTxt =	this.add.text(this.world.centerX, this.world.centerY+100, "Throw the Rock.", {
+			fontFamily:	"arial",
+			fontSize:	"28px",
+			fill:	"#fff"
+		});
+		this.gameoverTxt.anchor.set(0.5,0.5);
+        this.gameoverTxt.lifespan = 1500;
 		
 		// Add lives
 		this.lives=	3;
@@ -263,7 +270,6 @@ BasicGame.Game.prototype = {
     
 	},
 	rockTrailing:   function()  {
-		
 		var	temp;
 		
 		if(this.trails== null)
@@ -305,12 +311,12 @@ BasicGame.Game.prototype = {
 				}
 				bottle.sprite.animations.play('splode',30,false,true); 
 				this.spawnShards(bottle.sprite);
-				bottle.sprite.events.onKilled.addOnce(function(){
+				bottle.sprite.events.onKilled.addOnce(function(arg){
 					this.spawnGoldenBottle();
 					if(this.combo== null)
 						this.combo=	0;
 					this.combo++;
-					this.increaseScore((10+12*(BasicGame.level-1))*this.combo);
+					this.increaseScore((10+12*(BasicGame.level-1))*this.combo,arg.x,arg.y);
 					if(this.comboText!= null)
 					{
 						if(this.combo> 1){
@@ -419,7 +425,7 @@ BasicGame.Game.prototype = {
 			board.lifespan = 1000;
 			board.body.velocity.y=75;
 			board.body.angularVelocity = this.rnd.integerInRange(20,45);
-			this.increaseScore(50);
+			this.increaseScore(50,board.x,board.y);
 		}else{
 			board.frame+=1;
 		}
@@ -446,7 +452,7 @@ BasicGame.Game.prototype = {
 			if(!this.bThrasherMode) // Only take damage if thrasher mode is off
 				this.damageLife();
             else // get points for molotov kill if thrasher mode is on
-                this.increaseScore(25);
+                this.increaseScore(25,molotov.x,molotov.y);
 		}
 
 	},
@@ -508,7 +514,7 @@ BasicGame.Game.prototype = {
 	spawnGoldenBottle:	function()	{
 		if(this.goldenBottle.alive || this.bThrasherMode)
 			return;
-		if(this.rnd.integerInRange(0, 4)=== 0) // 20% Chance of spawning
+		if(this.rnd.integerInRange(0, 3)=== 0) // 25% Chance of spawning 
 		{
 			this.goldenBottle.body.x=	-10;
 			this.goldenBottle.body.y=	this.world.centerY-this.rnd.integerInRange(10, 100);
@@ -561,10 +567,20 @@ BasicGame.Game.prototype = {
 			
 		}
 	},
-	increaseScore:	function(amount)
+	increaseScore:	function(amount,positionX,positionY)
 	{
 		BasicGame.score+=	amount;
 		this.scoreText.setText("Score: "+BasicGame.score+"\nLevel: "+BasicGame.level);
+        
+        var stylePoints = { font: "bold 14px Arial ", fill: "#fff", align: "center" };
+        var pointsTxt = this.add.text(positionX, positionY, "+"+amount, stylePoints);
+        
+        this.game.add.tween(pointsTxt).to({
+				y:	this.world.centerY/2,
+				alpha:	0
+			}, 1800, Phaser.Easing.Linear.In).start().onComplete.add(function(){
+               pointsTxt.destroy();
+            }, this);
 	},
 	announceLevel: function(){
 		this.levelTxt.setText("Level: "+BasicGame.level);
@@ -583,6 +599,8 @@ BasicGame.Game.prototype = {
 
 	},
 	dieGameOver:	function()	{
+        this.gameoverTxt.setText("Game Over!");
+        this.gameoverTxt.revive();
 
         if(BasicGame.score>=BasicGame.highScore){
             BasicGame.highScore = BasicGame.score;
