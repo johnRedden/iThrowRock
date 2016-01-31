@@ -21,6 +21,18 @@ BasicGame.MainMenu.prototype = {
             }
         //*****************
         
+        this.clouds = this.add.group();
+        
+        for(var i = 0; i<3; i++){
+			var cloud = this.clouds.create(this.rnd.integerInRange(-50,this.world.width)
+                                           ,this.rnd.integerInRange(30,200)
+                                           ,'cloud');
+            cloud.angle=this.rnd.integerInRange(-20,20);
+            var rand = this.rnd.realInRange(0.4, 1);
+            cloud.scale.setTo(rand,rand);
+            cloud.alpha = this.rnd.realInRange(0.6, 1);
+		}
+        
         this.initGameMenu();
         
         this.add.text(this.world.centerX-100, this.world.centerY+50, "High Score: "+BasicGame.highScore +"\nHigh Level: "+BasicGame.highLevel, {
@@ -31,7 +43,7 @@ BasicGame.MainMenu.prototype = {
         this.add.text(this.world.centerX-100, this.world.centerY+120, "Throw rock - break stuff.", {
 			fontFamily:	"arial",
 			fontSize:	"16px",
-			fill:	"#fff"
+			fill:	"#FDF5E6"
 		});
    
     },
@@ -39,6 +51,18 @@ BasicGame.MainMenu.prototype = {
     update: function () {
 
         //	Do some nice funky main menu effect here
+        this.clouds.children.forEach(function(cloud){
+            if(cloud.x>this.world.width){
+                cloud.x = -50;
+                cloud.y = this.rnd.integerInRange(30,200);
+                cloud.angle=this.rnd.integerInRange(-20,20);
+                var rand = this.rnd.realInRange(0.4, 1);
+                cloud.scale.setTo(rand,rand);
+                cloud.alpha = this.rnd.realInRange(0.6, 1);
+            }else{
+                cloud.x+=0.5;
+            }
+        },this);
 
     },
     
@@ -112,7 +136,7 @@ BasicGame.MainMenu.prototype = {
 			fontFamily:	"arial",
 			fontSize:	"28px",
             fontStyle: "italic",
-			fill:	"#fff",
+			fill:	"#6F4E37",
             align: "center"
 		});
         st.anchor.set(0.5);
@@ -121,7 +145,7 @@ BasicGame.MainMenu.prototype = {
 			fontFamily:	"arial",
 			fontSize:	"14px",
             fontStyle: "italic",
-			fill:	"#fff",
+			fill:	"#FDF5E6",
             align: "center"
 		});
         ver.anchor.set(0.5);

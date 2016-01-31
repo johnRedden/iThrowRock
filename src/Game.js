@@ -159,7 +159,7 @@ BasicGame.Game.prototype = {
 		this.levelTxt =	this.add.text(this.world.centerX, this.world.centerY/2, "Level: "+BasicGame.level, {
 			fontFamily:	"arial",
 			fontSize:	"28px",
-			fill:	"#fff"
+			fill:	"#FDF5E6"
 		});
 		this.levelTxt.anchor.set(0.5,0.5);
 		this.levelTxt.lifespan = 2500;
@@ -171,7 +171,7 @@ BasicGame.Game.prototype = {
         this.gameoverTxt =	this.add.text(this.world.centerX, this.world.centerY+100, "Throw the Rock.", {
 			fontFamily:	"arial",
 			fontSize:	"28px",
-			fill:	"#fff"
+			fill:	"#6F4E37"
 		});
 		this.gameoverTxt.anchor.set(0.5,0.5);
         this.gameoverTxt.lifespan = 1500;
@@ -200,8 +200,12 @@ BasicGame.Game.prototype = {
 	update: function(){
         this.clouds.children.forEach(function(cloud){
             if(cloud.x>this.world.width){
-                cloud.x = -10;
+                cloud.x = -50;
+                cloud.y = this.rnd.integerInRange(30,200);
                 cloud.angle=this.rnd.integerInRange(-20,20);
+                var rand = this.rnd.realInRange(0.4, 1);
+                cloud.scale.setTo(rand,rand);
+                cloud.alpha = this.rnd.realInRange(0.6, 1);
             }else{
                 cloud.x+=0.5;
             }
@@ -421,11 +425,12 @@ BasicGame.Game.prototype = {
 	},
 	boardHit: function(arg){
 		var board = arg.sprite;
+        if(this.bThrasherMode) board.frame=4;
 		if(board.frame===4){
 			board.lifespan = 1000;
 			board.body.velocity.y=75;
 			board.body.angularVelocity = this.rnd.integerInRange(20,45);
-			this.increaseScore(50,board.x,board.y);
+			this.increaseScore(25,board.x,board.y);
 		}else{
 			board.frame+=1;
 		}
