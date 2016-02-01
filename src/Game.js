@@ -221,8 +221,20 @@ BasicGame.Game.prototype = {
 					this.deleteRockTrailing();
 			}
 		}
-		if(!this.bThrasherMode && this.trails!= null && this.trails.length!= 0)
-			this.deleteRockTrailing();
+        // to eliminate remnant smoke trails if not bThrashermode
+		if(!this.bThrasherMode && this.trails!= null){
+            if(this.trails.length!= 0)
+                this.deleteRockTrailing();
+            else
+             this.trails= null;
+        }
+        // kill golden bottle
+        
+        if(this.goldenBottle.alive && this.goldenBottle.body.x>this.world.width)
+            this.goldenBottle.kill();
+        
+			
+        
 		this.bottles.forEachAlive(this.resetObjLocation,this);
 		this.boards.forEachAlive(this.resetObjLocation,this);
 		this.molotovs.forEachAlive(this.resetObjLocation,this);
@@ -351,6 +363,7 @@ BasicGame.Game.prototype = {
 						this.spawnBottles();
 						this.spawnBoards();
 						this.spawnMolotovs();
+                        this.spawnGoldenBottle();
 					};
 				},this);
 			}
@@ -519,7 +532,7 @@ BasicGame.Game.prototype = {
 	spawnGoldenBottle:	function()	{
 		if(this.goldenBottle.alive || this.bThrasherMode)
 			return;
-		if(this.rnd.integerInRange(0, 3)=== 0) // 25% Chance of spawning 
+		if(this.rnd.integerInRange(0, 4)=== 0) // 20% Chance of spawning 
 		{
 			this.goldenBottle.body.x=	-10;
 			this.goldenBottle.body.y=	this.world.centerY-this.rnd.integerInRange(10, 100);
@@ -531,7 +544,8 @@ BasicGame.Game.prototype = {
 			this.goldenBottle.body.setCollisionGroup(this.goldenBottleCollisionGroup);
 			this.goldenBottle.body.collides(this.rockCollisionGroup, this.goldenBottleHit, this);
 			this.goldenBottle.body.static=	true;
-			this.goldenBottle.revive();
+            this.goldenBottle.revive();
+			
 		}
 	},
 	goldenBottleHit:	function(args)	{
