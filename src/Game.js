@@ -6,6 +6,7 @@ BasicGame.Game = function (game) {
 };
 // set Game function prototype
 BasicGame.Game.prototype = {
+	// Called when the game is being initiated, via game.state.add
 	init: function () {
 		
 		this.stage.backgroundColor = '#fff'; //white
@@ -40,6 +41,7 @@ BasicGame.Game.prototype = {
 		this.physics.p2.updateBoundsCollisionGroup();
 		 
 	},
+	// Called when the game is being created, via new BasicGame.Game()
 	create: function () {
         this.clouds = this.add.group();
         
@@ -183,6 +185,7 @@ BasicGame.Game.prototype = {
         this.initGameMenu();
         
 	},
+	// Creates a group for the special items, so we don't repeat ourselves
 	addToSpecialGroup:	function(group, size, textureID, scaleX, scaleY, modifyEvent)	{
 		for(var i = 0; i<size; i++)
 		{
@@ -197,6 +200,7 @@ BasicGame.Game.prototype = {
 			temp.kill();
 		}
 	},
+	// Updates the game. Remember it should be at 60Hz
 	update: function(){
         this.clouds.children.forEach(function(cloud){
             if(cloud.x>this.world.width){
@@ -244,7 +248,7 @@ BasicGame.Game.prototype = {
 		this.darkBottles.forEachAlive(this.resetObjLocation, this);
 		//****************************************
 	},
-	
+	// Resets the location to the begining of any given Phaser P2 Physics object
 	resetObjLocation:	function(obj)	{
 		if(obj.body.x> this.world.width+25)
 			obj.body.x=	-10;
@@ -288,6 +292,7 @@ BasicGame.Game.prototype = {
             }           
     
 	},
+	// Creates the rock's trailing effect
 	rockTrailing:   function()  {
 		var	temp;
 		
@@ -305,10 +310,12 @@ BasicGame.Game.prototype = {
 		this.rock.tint=	0xac2010;
 		this.trails.add(temp);
 	},
+	// Slowly deletes the rock's trailing effect one by one, to not overload with objects and to not completely destroy the trail
 	deleteRockTrailing:	function()	{
 		if(this.trails!= null && this.trails.length> 0)
 			this.trails.removeChildAt(0);
 	},
+	// Called when the rock has hit an object of the respective collision group
 	rockHit: function(){
 		if(!this.rock.grabbed){
 			if(BasicGame.sound){
@@ -320,6 +327,7 @@ BasicGame.Game.prototype = {
 	
 
 	// Rock2 Bottle utility methods
+	// Called when the green bottle has been hit
 	bottleHit2: function(bottle,rock){
     
 		try	{
@@ -372,7 +380,7 @@ BasicGame.Game.prototype = {
 			}
 		}catch(e){}
 	},
-
+	// Spawns the green bottles
 	spawnBottles: function(){
 		this.bottles.forEach(function (bottle) {
 			bottle.animations.stop('splode',true);
@@ -397,6 +405,7 @@ BasicGame.Game.prototype = {
 
 		},this);
 	},
+	// Generalized version to spawn in the specialized items
 	spawnSpecialsGroup:	function(group, collisionGroup, rockHitEvent, modifyEvent)	{
 		// Variables
 		var	num=	0;
@@ -434,11 +443,13 @@ BasicGame.Game.prototype = {
 			}
 		}
 	},
+	// Spawns in the boards
 	spawnBoards: function(){
 		this.spawnSpecialsGroup(this.boards, this.boardCollisionGroup, this.boardHit, function(board){
 			board.frame=	0;
 		});
 	},
+	// Called when the board has been hit by the rock
 	boardHit: function(arg){
 		var board = arg.sprite;
         if(this.bThrasherMode) board.frame=4;
@@ -451,12 +462,14 @@ BasicGame.Game.prototype = {
 			board.frame+=1;
 		}
 	},
+	// Spawns in the molotovs
 	spawnMolotovs: function(){
 		this.spawnSpecialsGroup(this.molotovs, this.molotovCollisionGroup, this.molotovHit, function(molotov)	{
 			molotov.body.setRectangle(20, 60);
             molotov.body.setCollisionGroup(this.molotovCollisionGroup);
 		});
 	},
+	// Called when the molotov has been hit by the rock
 	molotovHit: function(arg){
 		var molotov = arg.sprite;
 		
@@ -477,6 +490,7 @@ BasicGame.Game.prototype = {
 		}
 
 	},
+	// Called when the green bottle gets destroyed, spawns in the shards off it for effect
 	spawnShards: function(sprite){
 			var shards =	this.add.group();
 			shards.create(sprite.body.x,sprite.body.y,'shard01');
@@ -495,6 +509,7 @@ BasicGame.Game.prototype = {
 			},this);
 		   
 	},
+	// Spawns in the dark bottles
 	spawnDarkBottles:	function(){
 		this.spawnSpecialsGroup(this.darkBottles, this.darkBottleCollisionGroup, this.darkBottleHit,function(darkbottle){
 			darkbottle.frame=	0;
@@ -502,6 +517,7 @@ BasicGame.Game.prototype = {
             darkbottle.body.setCollisionGroup(this.darkBottleCollisionGroup);
 		});
 	},
+	// Called when the dark bottle has been hit by the rock
 	darkBottleHit: function(args){
 		// Variables
 		var	dbottle=	args.sprite;
@@ -532,6 +548,7 @@ BasicGame.Game.prototype = {
 			
 		}
 	},
+	// Spawns in the golden bottle
 	spawnGoldenBottle:	function()	{
 		if(this.goldenBottle.alive || this.bThrasherMode)
 			return;
@@ -551,6 +568,7 @@ BasicGame.Game.prototype = {
 			
 		}
 	},
+	// Called when the golden bottle has been hit by the rock
 	goldenBottleHit:	function(args)	{
 		if(this.getSpeed(this.rock.body.velocity.x, this.rock.body.velocity.y) > BasicGame.breakSpeedDarkBottle && this.rock.alive){
 			
@@ -589,6 +607,7 @@ BasicGame.Game.prototype = {
 			
 		}
 	},
+	// Increases the score by the given amount, and shows the score on the given x and y coordinates
 	increaseScore:	function(amount,positionX,positionY)
 	{
 		BasicGame.score+=	amount;
@@ -604,6 +623,7 @@ BasicGame.Game.prototype = {
                pointsTxt.destroy();
             }, this);
 	},
+	// Announces which level the player is on
 	announceLevel: function(){
 		this.levelTxt.setText("Level: "+BasicGame.level);
 		this.levelTxt.revive();
@@ -611,7 +631,9 @@ BasicGame.Game.prototype = {
 		// update the score
 		this.scoreText.setText("Score: "+BasicGame.score+"\nLevel: "+BasicGame.level);
 	},
+	// Gets the speed of the velocity of whatever object, *vector notation
 	getSpeed: function(x, y){ return Math.sqrt(x*x+y*y);},
+	// Called when the player dies, but still has more lives
 	dieYouDie: function(){
 		this.levelTxt.setText("You died!\n"+this.lives+" "+((this.lives> 1) ? "lives" : "life")+" left.");
 		this.levelTxt.revive();
@@ -620,6 +642,7 @@ BasicGame.Game.prototype = {
          this.lifeGroup.getAt(2-this.lives).frame = 1;
 
 	},
+	// Called when the player dies and does not have any more lives
 	dieGameOver:	function()	{
         this.gameoverTxt.setText("Game Over!");
         this.gameoverTxt.revive();
@@ -668,6 +691,7 @@ BasicGame.Game.prototype = {
             this.toggleMenu();
         },this);
 	},
+	// Deals damage to the player, this is for the death rock animation
 	damageLife:	function()	{
 		this.lives--;
         
@@ -710,6 +734,7 @@ BasicGame.Game.prototype = {
 		else
 			this.dieGameOver();
 	},
+	// Initiates the in-game menu
     initGameMenu: function(){ // Game Menu Overlay  **************************************
         		
 		this.menuGroup = this.add.group();
@@ -778,6 +803,7 @@ BasicGame.Game.prototype = {
         this.menuGroup.add(st);
         
     },
+    // Toggles open the in-game menu
 	toggleMenu: function () {
         
 		 if(this.menuGroup.y === 0){
