@@ -210,6 +210,9 @@ BasicGame.Game.prototype = {
                 cloud.x+=0.5;
             }
         },this);
+        if(!this.rock.alive){
+        	this.bThrasherMode= false;
+        }
 		if(this.bThrasherMode)
 		{
 			if(this.getSpeed(this.rock.body.velocity.x, this.rock.body.velocity.y)> 400)
