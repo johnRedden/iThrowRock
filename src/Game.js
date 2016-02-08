@@ -73,7 +73,7 @@ BasicGame.Game.prototype = {
 
 		//new set collision group note: no callbacks on rock.body.collides
 		this.rock.body.setCollisionGroup(this.rockCollisionGroup);
-		this.rock.body.collides([this.bottleCollisionGroup,this.boardCollisionGroup, this.molotovCollisionGroup, this.darkBottleCollisionGroup,this.goldenBottleCollisionGroup]);
+		this.rock.body.collides([this.bottleCollisionGroup,this.boardCollisionGroup, this.goldenBottleCollisionGroup, this.darkBottleCollisionGroup,this.molotovCollisionGroup]);
 		
 		//green BOTTLE group code code ****************
 		this.bottles = this.add.group();
@@ -514,7 +514,7 @@ BasicGame.Game.prototype = {
 			this.rock.scale.setTo(0.2,0.2);
 			this.rock.body.setRectangle(100, 85);
 			this.rock.body.setCollisionGroup(this.rockCollisionGroup);
-			this.rock.body.collides([this.bottleCollisionGroup,this.boardCollisionGroup, this.molotovCollisionGroup, this.darkBottleCollisionGroup,this.goldenBottleCollisionGroup]);
+			this.rock.body.collides([this.bottleCollisionGroup,this.boardCollisionGroup, this.goldenBottleCollisionGroup, this.darkBottleCollisionGroup,this.molotovCollisionGroup]);
 			this.rock.body.collideWorldBounds = true;
 			
 			//this.rock.body.setRectangle(40,40);
@@ -523,7 +523,7 @@ BasicGame.Game.prototype = {
 				this.rock.scale.setTo(0.06,0.06);
 				this.rock.body.setRectangle(25, 20);
 				this.rock.body.setCollisionGroup(this.rockCollisionGroup);
-				this.rock.body.collides([this.bottleCollisionGroup,this.boardCollisionGroup, this.molotovCollisionGroup, this.darkBottleCollisionGroup,this.goldenBottleCollisionGroup]);
+				this.rock.body.collides([this.bottleCollisionGroup,this.boardCollisionGroup, this.goldenBottleCollisionGroup, this.darkBottleCollisionGroup,this.molotovCollisionGroup]);
 				this.rock.body.collideWorldBounds = true;
 				// scale the hit rectangle back
 				//this.rock.body.setRectangle(25,20);
@@ -552,7 +552,7 @@ BasicGame.Game.prototype = {
 		}
 	},
 	goldenBottleHit:	function(args)	{
-		if(this.getSpeed(this.rock.body.velocity.x, this.rock.body.velocity.y) > BasicGame.breakSpeedDarkBottle){
+		if(this.getSpeed(this.rock.body.velocity.x, this.rock.body.velocity.y) > BasicGame.breakSpeedDarkBottle && this.rock.alive){
 			
 			if(BasicGame.sound){this.bottleBreak.play()};
 			this.goldenBottle.kill();
