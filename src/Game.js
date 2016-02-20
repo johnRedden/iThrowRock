@@ -486,7 +486,7 @@ BasicGame.Game.prototype = {
 			if(!this.bThrasherMode) // Only take damage if thrasher mode is off
 				this.damageLife();
             else // get points for molotov kill if thrasher mode is on
-                this.increaseScore(25,molotov.x,molotov.y);
+                this.increaseScore(Math.round(25*BasicGame.level/2),molotov.x,molotov.y);
 		}
 
 	},

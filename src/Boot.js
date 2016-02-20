@@ -17,7 +17,7 @@ BasicGame = {
     breakSpeedGreenBottle: 400,
     breakSpeedDarkBottle: 600,
     breakSpeedMolotov: 800,
-    version: "Beta 0.9"
+    version: "Beta 0.9.6"
 
     /* Your game can check BasicGame.orientated in internal loops to know if it should pause or not */
     //orientated: false,
