@@ -467,8 +467,6 @@ BasicGame.Game.prototype = {
 		this.spawnSpecialsGroup(this.molotovs, this.molotovCollisionGroup, this.molotovHit, function(molotov)	{
 			molotov.body.setRectangle(20, 60);
             molotov.body.setCollisionGroup(this.molotovCollisionGroup);
-            molotov.body.y=	400;
-            molotov.body.velocity.x=	10;
 		});
 	},
 	// Called when the molotov has been hit by the rock
@@ -554,11 +552,11 @@ BasicGame.Game.prototype = {
 	spawnGoldenBottle:	function()	{
 		if(this.goldenBottle.alive || this.bThrasherMode)
 			return;
-		//if(this.rnd.integerInRange(0, 4)=== 0) // 20% Chance of spawning 
+		if(this.rnd.integerInRange(0, 4)=== 0) // 20% Chance of spawning 
 		{
 			this.goldenBottle.body.x=	-10;
-			this.goldenBottle.body.y=	400;//this.world.centerY-this.rnd.integerInRange(10, 100);
-			this.goldenBottle.body.velocity.x=	10;//this.rnd.integerInRange(50, 200);
+			this.goldenBottle.body.y=	this.world.centerY-this.rnd.integerInRange(10, 100);
+			this.goldenBottle.body.velocity.x=	this.rnd.integerInRange(50, 200);
 			this.goldenBottle.body.velocity.y=	0;
 			this.goldenBottle.body.angularVelocity=	this.rnd.integerInRange(-5, 5);
 			if(this.goldenBottle.body.angularVelocity== 0)
