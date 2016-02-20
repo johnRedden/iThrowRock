@@ -204,7 +204,7 @@ BasicGame.Game.prototype = {
 	update: function(){
         this.clouds.children.forEach(function(cloud){
             if(cloud.x>this.world.width){
-                cloud.x = -50;
+                cloud.x = this.rnd.integerInRange(-120,-20);
                 cloud.y = this.rnd.integerInRange(30,200);
                 cloud.angle=this.rnd.integerInRange(-20,20);
                 var rand = this.rnd.realInRange(0.4, 1);
