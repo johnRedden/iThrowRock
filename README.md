@@ -9,3 +9,4 @@ Here is the web browser version:
 https://cdn.rawgit.com/johnRedden/iThrowRock/master/index.html
 
 Thank You!
+https://s3-us-west-1.amazonaws.com/testingphaser/ithrowrock/iThrowRock-master/index.html
